@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -17,8 +18,19 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Sign-Up Page'), centerTitle: true),
-      body: Center(
+      appBar: AppBar(
+        title: Text('Sign-Up Page'),
+        centerTitle: true,
+        leading: IconButton(
+          //back to lgin page
+          onPressed: () {
+            context.go('/');
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
+      ),
+      body: Container(
+        padding: EdgeInsets.all(15),
         child: Form(
           key: _fromkey,
           child: Column(
@@ -40,6 +52,7 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
+  //input function
   TextFormField _inputField(
     TextEditingController controller, {
     String type = 'Name',

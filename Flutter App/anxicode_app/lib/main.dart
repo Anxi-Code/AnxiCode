@@ -1,5 +1,6 @@
-import 'package:anxicode_app/SignUp%20Screen/sign_up.dart';
+//import 'package:anxicode_app/login_page/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:anxicode_app/routes/routes.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,6 +12,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: SignUp());
+    return MaterialApp.router(
+      routerConfig: AppRouter.router,
+      title: 'AnxiCode',
+      debugShowCheckedModeBanner: false,
+    );
   }
 }

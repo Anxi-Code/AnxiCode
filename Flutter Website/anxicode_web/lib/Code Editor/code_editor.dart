@@ -16,16 +16,16 @@ class _CodeEditorState extends State<AnxiCodeEditor> {
   @override
   void initState() {
     _controller = CodeController(
-      text: '''numbers = [1, 2, 3, 4, 5]
+      text: '''
+        numbers = [1, 2, 3, 4, 5]
+        for num in numbers:
+          if num % 2 == 0:
+            print(f"{num} is even")
+          else:
+            print(f"{num} is odd")
 
-for num in numbers:
-    if num % 2 == 0:
-        print(f"{num} is even")
-    else:
-        print(f"{num} is odd")
-
-print("Loop finished!")
-print("All numbers processed.")
+        print("Loop finished!")
+        print("All numbers processed.")
 
 ''',
       language: python,
@@ -52,19 +52,17 @@ print("All numbers processed.")
         children: [
           Expanded(
             flex: 4,
-            child: Container(
-              child: CodeTheme(
-                data: CodeThemeData(styles: atomOneDarkTheme),
-                child: SingleChildScrollView(
-                  child: CodeField(
-                    controller: _controller,
-                    minLines: 30,
-                    textStyle: TextStyle(fontSize: 16),
-                    gutterStyle: GutterStyle(
-                      errorPopupTextStyle: TextStyle(color: Colors.red),
-                      showLineNumbers: true,
-                      width: 70,
-                    ),
+            child: CodeTheme(
+              data: CodeThemeData(styles: atomOneDarkTheme),
+              child: SingleChildScrollView(
+                child: CodeField(
+                  controller: _controller,
+                  minLines: 30,
+                  textStyle: TextStyle(fontSize: 16),
+                  gutterStyle: GutterStyle(
+                    errorPopupTextStyle: TextStyle(color: Colors.red),
+                    showLineNumbers: true,
+                    width: 70,
                   ),
                 ),
               ),
@@ -73,7 +71,10 @@ print("All numbers processed.")
 
           SizedBox(width: 2),
 
-          Expanded(flex: 3, child: Container(color: Colors.grey.withOpacity(0.1))),
+          Expanded(
+            flex: 3,
+            child: Container(color: Colors.grey.withValues(alpha: 0.1)),
+          ),
         ],
       ),
     );

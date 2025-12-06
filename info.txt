@@ -1,0 +1,79 @@
+Here's a quick breakdown of each file/folder:
+
+Root Config Files:
+
+bun.lockb / package-lock.json - Dependency lock files
+components.json - Shadcn UI configuration
+eslint.config.js - Linting rules
+index.html - Entry HTML file
+package.json - Dependencies & scripts
+postcss.config.js - PostCSS config for Tailwind
+tailwind.config.ts - Tailwind theme & design tokens
+tsconfig*.json - TypeScript configurations
+vite.config.ts - Vite bundler settings
+public/ - Static assets (favicon, robots.txt)
+
+src/:
+
+main.tsx - App entry point, renders React
+App.tsx - Router setup, main app wrapper
+App.css - Global animations/styles
+index.css - Design system tokens (colors, fonts)
+src/components/code-battle/ - Your FYP editor:
+
+CodeEditor.tsx - Main code editor with syntax highlighting & autocomplete
+Navbar.tsx - Top bar with Run/Submit buttons, language selector, timer
+Timer.tsx - Battle countdown timer
+ProblemPanel.tsx - Shows coding problem details
+ParticipantList.tsx - Displays 1v1 or team participants
+ThemeToggle.tsx - Dark/light mode switch
+PythonIcon.tsx - Python language icon
+src/components/ui/ - Shadcn UI components (buttons, dialogs, etc.)
+
+src/pages:
+
+Index.tsx - Main battle page layout, orchestrates all components
+NotFound.tsx - 404 page
+src/hooks/ - Custom React hooks (toast notifications, mobile detection)
+
+src/lib/utils.ts - Utility functions (className merging)
+
+Here's a quick breakdown of each file/folder:
+
+Root Config Files:
+
+bun.lockb / package-lock.json - Dependency lock files
+components.json - Shadcn UI configuration
+eslint.config.js - Linting rules
+index.html - Entry HTML file
+package.json - Dependencies & scripts
+postcss.config.js - PostCSS config for Tailwind
+tailwind.config.ts - Tailwind theme & design tokens
+tsconfig*.json - TypeScript configurations
+vite.config.ts - Vite bundler settings
+public/ - Static assets (favicon, robots.txt)
+
+src/:
+
+main.tsx - App entry point, renders React
+App.tsx - Router setup, main app wrapper
+App.css - Global animations/styles
+index.css - Design system tokens (colors, fonts)
+src/components/code-battle/ - Your FYP editor:
+
+CodeEditor.tsx - Main code editor with syntax highlighting & autocomplete
+Navbar.tsx - Top bar with Run/Submit buttons, language selector, timer
+Timer.tsx - Battle countdown timer
+ProblemPanel.tsx - Shows coding problem details
+ParticipantList.tsx - Displays 1v1 or team participants
+ThemeToggle.tsx - Dark/light mode switch
+PythonIcon.tsx - Python language icon
+src/components/ui/ - Shadcn UI components (buttons, dialogs, etc.)
+
+src/pages:
+
+Index.tsx - Main battle page layout, orchestrates all components
+NotFound.tsx - 404 page
+src/hooks/ - Custom React hooks (toast notifications, mobile detection)
+
+src/lib/utils.ts - Utility functions (className merging)

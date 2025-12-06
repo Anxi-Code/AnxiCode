@@ -1,0 +1,25 @@
+buntu
+
+# 1. Install Node.js (if not installed)
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+# 2. Open terminal in project folder
+cd /path/to/your-project
+
+# 3. Install dependencies
+npm install
+
+# 4. Run the dev server
+npm run dev
+Windows
+
+# 1. Install Node.js from https://nodejs.org (LTS version)
+
+# 2. Open terminal in VS Code (Ctrl + `)
+
+# 3. Install dependencies
+npm install
+
+# 4. Run the dev server
+npm run dev

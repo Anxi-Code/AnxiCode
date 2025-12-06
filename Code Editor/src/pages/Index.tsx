@@ -1,0 +1,182 @@
+import { useState, useCallback, useRef } from 'react';
+import { Navbar } from '@/components/code-battle/Navbar';
+import { CodeEditor, SupportedLanguage } from '@/components/code-battle/CodeEditor';
+import { ProblemPanel } from '@/components/code-battle/ProblemPanel';
+import { ParticipantList } from '@/components/code-battle/ParticipantList';
+import { toast } from '@/hooks/use-toast';
+
+const MOCK_PARTICIPANTS = [
+  { id: '1', name: 'CodeMaster', team: 'blue' as const, isLeader: true },
+  { id: '2', name: 'AlgoNinja', team: 'blue' as const },
+  { id: '3', name: 'ByteWarrior', team: 'blue' as const },
+  { id: '4', name: 'DataDragon', team: 'red' as const, isLeader: true },
+  { id: '5', name: 'LogicLord', team: 'red' as const },
+  { id: '6', name: 'SyntaxSage', team: 'red' as const },
+];
+
+// CHANGE HERE for dynamic language switching - File names for each language
+const FILE_NAMES: Record<SupportedLanguage, string> = {
+  python: 'solution.py',
+  cpp: 'solution.cpp',
+  java: 'Solution.java',
+  javascript: 'solution.js'
+};
+
+// CHANGE HERE for dynamic language switching - Language display names
+const LANGUAGE_DISPLAY: Record<SupportedLanguage, string> = {
+  python: 'Python 3.11',
+  cpp: 'C++ 17',
+  java: 'Java 17',
+  javascript: 'JavaScript ES6'
+};
+
+const Index = () => {
+  const [isProblemOpen, setIsProblemOpen] = useState(true);
+  const [battleMode] = useState<'1v1' | 'team'>('team');
+  
+  // CHANGE HERE for dynamic language switching - Set default language
+  // Options: 'python' | 'cpp' | 'java' | 'javascript'
+  const [selectedLanguage, setSelectedLanguage] = useState<SupportedLanguage>('python');
+  
+  // PLAYER 1 CODE ACCESS HERE
+  // PLAYER 2 CODE ACCESS HERE
+  const player1CodeRef = useRef<string>('');
+  const player2CodeRef = useRef<string>('');
+
+  const handleToggleProblem = useCallback(() => {
+    setIsProblemOpen((prev) => !prev);
+    console.log(`[Panel] Problem panel ${!isProblemOpen ? 'opened' : 'closed'}`);
+  }, [isProblemOpen]);
+
+  const handleRun = useCallback(() => {
+    console.log('[Action] Running code...');
+    // PLAYER 1 CODE ACCESS HERE - Get player 1's code
+    console.log('[Player 1 Code]:', player1CodeRef.current);
+    
+    toast({
+      title: 'Running Code',
+      description: 'Executing your solution against test cases...',
+    });
+  }, []);
+
+  const handleSubmit = useCallback(() => {
+    console.log('[Action] Submitting solution...');
+    
+    // PLAYER 1 CODE ACCESS HERE
+    console.log('[Player 1 Code for submission]:', player1CodeRef.current);
+    
+    // PLAYER 2 CODE ACCESS HERE
+    console.log('[Player 2 Code for submission]:', player2CodeRef.current);
+    
+    // TEAM SUBMISSION LOGIC HERE
+    // For team mode: Collect codes from all team members
+    // For 1v1 mode: Collect codes from both players
+    
+    // SAVE CODE TO TEMP FILES HERE (if needed)
+    // const codeData = {
+    //   player1: player1CodeRef.current,
+    //   player2: player2CodeRef.current,
+    //   language: selectedLanguage,
+    //   timestamp: Date.now()
+    // };
+    
+    // Send to AWS Lambda for compilation and AI analysis
+    // await sendToAWS(codeData);
+    
+    toast({
+      title: 'Submitting Solution',
+      description: 'Your code is being evaluated...',
+    });
+  }, [selectedLanguage]);
+
+  // CHANGE HERE for dynamic language switching
+  const handleLanguageChange = useCallback((language: SupportedLanguage) => {
+    setSelectedLanguage(language);
+    console.log(`[Language] Switched to ${language}`);
+  }, []);
+
+  // Track code changes from editor
+  const handleCodeChange = useCallback((code: string) => {
+    // PLAYER 1 CODE ACCESS HERE
+    player1CodeRef.current = code;
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Navigation */}
+      <Navbar
+        isProblemOpen={isProblemOpen}
+        onToggleProblem={handleToggleProblem}
+        onRun={handleRun}
+        onSubmit={handleSubmit}
+        selectedLanguage={selectedLanguage}
+        onLanguageChange={handleLanguageChange}
+      />
+
+      {/* Main Content */}
+      <div className="pt-14 h-screen flex flex-col">
+        {/* Participant Bar */}
+        {/* For 1v1 show single-user icon */}
+        {/* For teams show team icon */}
+        <div className="h-12 bg-card border-b border-border flex items-center justify-center px-4 gaming-gradient">
+          <ParticipantList
+            participants={
+              battleMode === '1v1'
+                ? [MOCK_PARTICIPANTS[0], MOCK_PARTICIPANTS[3]]
+                : MOCK_PARTICIPANTS
+            }
+            mode={battleMode}
+          />
+        </div>
+
+        {/* Editor and Problem Panel */}
+        <div className="flex-1 flex overflow-hidden">
+          {/* Code Editor */}
+          <div
+            className="transition-panel overflow-hidden"
+            style={{ width: isProblemOpen ? '70%' : '100%' }}
+          >
+            <div className="h-full p-4 pb-0">
+              <div className="h-full rounded-lg border border-border overflow-hidden shadow-lg">
+                {/* CHANGE HERE for dynamic language switching - Dynamic file name */}
+                <div className="h-8 bg-card border-b border-border flex items-center px-3 gap-2">
+                  <div className="flex gap-1.5">
+                    <div className="w-3 h-3 rounded-full bg-destructive/80" />
+                    <div className="w-3 h-3 rounded-full bg-warning/80" />
+                    <div className="w-3 h-3 rounded-full bg-success/80" />
+                  </div>
+                  <span className="text-xs text-muted-foreground ml-2 font-mono">
+                    {FILE_NAMES[selectedLanguage]}
+                  </span>
+                </div>
+                <CodeEditor 
+                  className="h-[calc(100%-2rem)]" 
+                  language={selectedLanguage}
+                  onCodeChange={handleCodeChange}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Problem Panel */}
+          <ProblemPanel isOpen={isProblemOpen} />
+        </div>
+
+        {/* Status Bar - Simplified */}
+        <div className="h-6 bg-card border-t border-border flex items-center justify-between px-4 text-xs text-muted-foreground">
+          <div className="flex items-center gap-4">
+            {/* CHANGE HERE for dynamic language switching */}
+            <span>{LANGUAGE_DISPLAY[selectedLanguage]}</span>
+            <span>•</span>
+            <span>UTF-8</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="text-success">Ready</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Index;

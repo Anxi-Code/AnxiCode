@@ -72,7 +72,17 @@ src/components/ui/ - Shadcn UI components (buttons, dialogs, etc.)
 
 src/pages:
 
-Index.tsx - Main battle page layout, orchestrates all components
+Index.tsx - Main battle page layout, orchestrates all components 
+
+
+/////// to integrate the terminal xterm.js 
+For xterm.js terminal integration:
+
+Create new component: src/components/code-battle/Terminal.tsx (or OutputPanel.tsx)
+
+Import and render in: src/pages/Index.tsx — add it below the CodeEditor component, inside the main content area (around line 120-150 where the editor is rendered)
+
+The terminal would sit in the same layout container as the code editor, typically in a resizable panel below it.
 NotFound.tsx - 404 page
 src/hooks/ - Custom React hooks (toast notifications, mobile detection)
 

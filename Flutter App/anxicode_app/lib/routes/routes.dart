@@ -1,3 +1,4 @@
+import 'package:anxicode_app/home_screen/home.dart';
 import 'package:go_router/go_router.dart';
 import 'package:anxicode_app/login_page/login_page.dart';
 import 'package:anxicode_app/sign_up_page/sign_up_page.dart';
@@ -14,6 +15,11 @@ class AppRouter {
         path: '/signup',
         name: 'signup',
         builder: (context, state) => SignUp(),
+      ),
+      GoRoute(
+        path: '/home',
+        name: 'home',
+        builder: (context, state) => Home(),
       ),
     ],
 

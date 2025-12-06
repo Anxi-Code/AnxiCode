@@ -32,6 +32,7 @@ class _LogInState extends State<LogIn> {
               ElevatedButton(
                 onPressed: () {
                   // no function as you said
+                  context.go('/home'); // Navigate to Home page
                 },
                 child: Text("Login"),
               ),

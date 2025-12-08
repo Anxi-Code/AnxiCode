@@ -22,6 +22,7 @@ class _LogInState extends State<LogIn> {
         child: Form(
           key: _fromkey,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _inputField(_emailController, type: 'Email'),
               SizedBox(height: 20),

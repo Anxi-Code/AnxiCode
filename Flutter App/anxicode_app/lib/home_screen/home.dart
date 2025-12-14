@@ -37,40 +37,46 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
 
-      appBar: AppBar(toolbarHeight: 35,backgroundColor: Colors.black,),
-      body: PageView(
-        controller: pageController,
-        scrollDirection: Axis.horizontal,
-        onPageChanged:
-            (index) => {
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(image: AssetImage("assets/images/bg.png"),fit: BoxFit.cover)
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+
+        appBar: AppBar(toolbarHeight: 35,backgroundColor: Colors.transparent,),
+        body: PageView(
+          controller: pageController,
+          scrollDirection: Axis.horizontal,
+          onPageChanged:
+              (index) => {
+                setState(() {
+                  currentIndex = index;
+                }),
+              },
+
+          children: screens,
+        ),
+
+        bottomNavigationBar: Theme(
+          data: Theme.of(
+            context,
+          ).copyWith(iconTheme: IconThemeData(color: Colors.black)),
+          child: CurvedNavigationBar(
+            items: bottomNavBarItems,
+            index: currentIndex,
+            onTap: (index) {
               setState(() {
                 currentIndex = index;
-              }),
+              });
+              pageController.jumpToPage(index);
             },
-
-        children: screens,
-      ),
-
-      bottomNavigationBar: Theme(
-        data: Theme.of(
-          context,
-        ).copyWith(iconTheme: IconThemeData(color: Colors.black)),
-        child: CurvedNavigationBar(
-          items: bottomNavBarItems,
-          index: currentIndex,
-          onTap: (index) {
-            setState(() {
-              currentIndex = index;
-            });
-            pageController.jumpToPage(index);
-          },
-          color: Colors.white,
-          backgroundColor: Colors.transparent,
-          animationDuration: Duration(milliseconds: 300),
-          animationCurve: Curves.easeIn,
+            color: Colors.white,
+            backgroundColor: Colors.transparent,
+            animationDuration: Duration(milliseconds: 300),
+            animationCurve: Curves.easeIn,
+          ),
         ),
       ),
     );

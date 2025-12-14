@@ -1,29 +1,38 @@
+import 'package:anxicode_app/home_screen/Screens/BattleScreen/LanguagesDesign.dart';
 import 'package:flutter/material.dart';
+
 
 class Battle extends StatelessWidget {
   const Battle({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-        scrollDirection:  Axis.vertical,
-        child: Padding(
-          padding: EdgeInsetsGeometry.all(10),
+    return  Padding(
+          padding: EdgeInsets.all(10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Select Programming Language",
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey
-                  )
 
-              )
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(14, 0,0, 0),
+                child: Text("Select Programming Language",
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.black
+                    )
+
+                ),
+              ),
+              SizedBox(height: 20,),
+              LanguagesDesign()
+
+
             ],
           ),
 
-      ),
+
     );
   }
 }

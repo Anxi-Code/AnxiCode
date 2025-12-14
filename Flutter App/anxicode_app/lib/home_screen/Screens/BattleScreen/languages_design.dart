@@ -1,4 +1,3 @@
-
 import 'package:anxicode_app/Designs/glassmorphism.dart';
 import 'package:anxicode_app/Providers/Language_provider.dart';
 import 'package:flutter/material.dart';
@@ -33,8 +32,8 @@ class _LanguagesDesignState extends ConsumerState<LanguagesDesign> {
                 });
               },
               child: Glassmorphism(
-                blur: 6,
-                opacity: 0.4,
+                blur: 4,
+                opacity: 0.2,
                 borderRadius: BorderRadius.circular(18),
                 borderColor:
                     selectedIndex == index ? Colors.blue : Colors.white,
@@ -55,7 +54,7 @@ class _LanguagesDesignState extends ConsumerState<LanguagesDesign> {
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black.withValues(alpha: 0.8),
+                          color: Colors.white.withValues(alpha: 0.8),
                         ),
                       ),
                     ],

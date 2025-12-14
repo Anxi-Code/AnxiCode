@@ -37,15 +37,17 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       decoration: BoxDecoration(
-        image: DecorationImage(image: AssetImage("assets/images/bg.png"),fit: BoxFit.cover)
+        image: DecorationImage(
+          image: AssetImage("assets/images/home_background.jpeg"),
+          fit: BoxFit.cover,
+        ),
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
 
-        appBar: AppBar(toolbarHeight: 35,backgroundColor: Colors.transparent,),
+        appBar: AppBar(toolbarHeight: 35, backgroundColor: Colors.transparent),
         body: PageView(
           controller: pageController,
           scrollDirection: Axis.horizontal,

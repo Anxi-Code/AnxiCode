@@ -1,8 +1,8 @@
-import 'package:anxicode_app/home_screen/Screens/battle_screen.dart';
-import 'package:anxicode_app/home_screen/Screens/chat_screen.dart';
-import 'package:anxicode_app/home_screen/Screens/leaderboard_screen.dart';
-import 'package:anxicode_app/home_screen/Screens/profile_screen.dart';
-import 'package:anxicode_app/home_screen/Screens/achievements.dart';
+import 'package:anxicode_app/home_screen/Screens/BattleScreen/battle_screen.dart';
+import 'package:anxicode_app/home_screen/Screens/ChatScreen/chat_screen.dart';
+import 'package:anxicode_app/home_screen/Screens/LeaderBoardScreen/leaderboard_screen.dart';
+import 'package:anxicode_app/home_screen/Screens/Profle/profile_screen.dart';
+import 'package:anxicode_app/home_screen/Screens/Achievements/achievements.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -38,7 +38,9 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Home Page'), centerTitle: true),
+      backgroundColor: Colors.black,
+
+      appBar: AppBar(toolbarHeight: 35,backgroundColor: Colors.black,),
       body: PageView(
         controller: pageController,
         scrollDirection: Axis.horizontal,
@@ -55,7 +57,7 @@ class _HomeState extends State<Home> {
       bottomNavigationBar: Theme(
         data: Theme.of(
           context,
-        ).copyWith(iconTheme: IconThemeData(color: Colors.white)),
+        ).copyWith(iconTheme: IconThemeData(color: Colors.black)),
         child: CurvedNavigationBar(
           items: bottomNavBarItems,
           index: currentIndex,
@@ -65,7 +67,7 @@ class _HomeState extends State<Home> {
             });
             pageController.jumpToPage(index);
           },
-          color: Colors.black,
+          color: Colors.white,
           backgroundColor: Colors.transparent,
           animationDuration: Duration(milliseconds: 300),
           animationCurve: Curves.easeIn,

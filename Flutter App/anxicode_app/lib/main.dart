@@ -1,9 +1,11 @@
 //import 'package:anxicode_app/login_page/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:anxicode_app/routes/routes.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 
 void main() {
-  runApp(const MyApp());
+  runApp(ProviderScope(child:const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

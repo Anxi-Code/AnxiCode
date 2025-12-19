@@ -22,6 +22,7 @@ class _LanguagesDesignState extends ConsumerState<LanguagesDesign> {
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: languages.length,
+        physics: const BouncingScrollPhysics(),
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
@@ -32,14 +33,14 @@ class _LanguagesDesignState extends ConsumerState<LanguagesDesign> {
                 });
               },
               child: Glassmorphism(
-                blur: 4,
-                opacity: 0.2,
+                blur: 3,
+                opacity:0.2,
                 borderRadius: BorderRadius.circular(18),
                 borderColor:
                     selectedIndex == index ? Colors.blue : Colors.white,
 
                 child: SizedBox(
-                  width: 120,
+                  width: 130,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

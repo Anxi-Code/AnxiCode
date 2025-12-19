@@ -39,7 +39,7 @@ class Glassmorphism extends StatelessWidget {
             ),
             border: Border.all(
               color: borderColor.withValues(alpha: (o + 0.2).clamp(0.0, 1.0)),
-              width: 1.2,
+              width: 1.5,
             ),
           ),
           child: child,

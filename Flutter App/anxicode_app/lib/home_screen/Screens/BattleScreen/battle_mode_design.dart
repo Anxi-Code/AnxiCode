@@ -33,12 +33,12 @@ class _BattleModeDesignState extends State<BattleModeDesign> {
                 borderColor:
                 selectedIndex == 0 ? Colors.blue : Colors.white,
                 child: SizedBox(
-                  width: 130,
-                  height: 115,
+
+                  height: 90,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.emoji_events,size: 60,color: Colors.yellow,),
+                      Icon(Icons.emoji_events,size: 30,color: Colors.yellow,),
                       SizedBox(height: 10),
                       Text(
                         "Ranked",
@@ -73,12 +73,12 @@ class _BattleModeDesignState extends State<BattleModeDesign> {
                 borderColor:
                 selectedIndex == 1 ? Colors.blue : Colors.white,
                 child: SizedBox(
-                  width: 130,
-                  height: 115,
+
+                  height: 90,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.sports_esports,size: 60,color: Colors.blue,),
+                      Icon(Icons.sports_esports,size: 30,color: Colors.blue,),
                       SizedBox(height: 10),
                       Text(
                         "Unranked",

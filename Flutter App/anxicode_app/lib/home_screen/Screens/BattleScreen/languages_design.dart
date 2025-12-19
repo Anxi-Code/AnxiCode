@@ -18,7 +18,7 @@ class _LanguagesDesignState extends ConsumerState<LanguagesDesign> {
     final languages = ref.watch(languagesListProvider);
 
     return SizedBox(
-      height: 140,
+      height: 120,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: languages.length,
@@ -46,8 +46,8 @@ class _LanguagesDesignState extends ConsumerState<LanguagesDesign> {
                     children: [
                       Image.asset(
                         languages[index].imagePath,
-                        height: 60,
-                        width: 50,
+                        height: 50,
+                        width: 40,
                       ),
                       SizedBox(height: 10),
                       Text(

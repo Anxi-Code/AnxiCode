@@ -32,12 +32,11 @@ class _OpponentSelectionDesignState extends State<OpponentSelectionDesign> {
                   borderColor:
                   selectedIndex == 0 ? Colors.blue : Colors.white,
                   child: SizedBox(
-                    width: 130,
-                    height: 115,
+                    height: 90,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.people,size: 60,color: Colors.blue,),
+                        Icon(Icons.people,size: 30,color: Colors.blue,),
                         SizedBox(height: 10),
                         Text(
                           "Random",
@@ -72,13 +71,12 @@ class _OpponentSelectionDesignState extends State<OpponentSelectionDesign> {
                   borderColor:
                   selectedIndex == 1 ? Colors.blue : Colors.white,
                   child: SizedBox(
-                    width: 130,
-                    height: 115,
+                    height: 90,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Icon(Icons.person,size: 60,color: Colors.green,),
+                        Icon(Icons.person,size: 30,color: Colors.green,),
                         SizedBox(height: 10),
                         Text(
                           "Friend",

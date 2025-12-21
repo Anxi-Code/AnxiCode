@@ -1,7 +1,7 @@
-import 'package:anxicode_app/Designs/glassmorphism.dart';
 import 'package:anxicode_app/Providers/Language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:glassmorphism/glassmorphism.dart';
 
 class LanguagesDesign extends ConsumerStatefulWidget {
   const LanguagesDesign({super.key});
@@ -32,16 +32,39 @@ class _LanguagesDesignState extends ConsumerState<LanguagesDesign> {
                   selectedIndex = index;
                 });
               },
-              child: Glassmorphism(
-                blur: 3,
-                opacity:0.2,
-                borderRadius: BorderRadius.circular(18),
-                borderColor:
-                    selectedIndex == index ? Colors.blue : Colors.white,
-
-                child: SizedBox(
-                  width: 130,
-                  child: Column(
+              child: GlassmorphicContainer(
+                width: 130,
+                height: 120,
+                borderRadius: 20,
+                blur: 4,
+                alignment: Alignment.bottomCenter,
+                border: 1.5,
+                linearGradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Colors.white.withValues(alpha: 0.1),
+                      Colors.white.withValues(alpha: 0.05),
+                    ],
+                    stops: [
+                      0.1,
+                      1,
+                    ]),
+                borderGradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: selectedIndex == index
+                        ? [
+                      Colors.blue.withValues(alpha: 1.0),
+                      Colors.red.withValues(alpha: 1.0),
+                    ]
+                        : [
+                      Colors.white.withValues(alpha: 0.6),
+                      Colors.white.withValues(alpha: 0.2),
+                    ],
+                    stops: [0.0,0.9]
+                ),
+                child:  Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Image.asset(
@@ -61,8 +84,11 @@ class _LanguagesDesignState extends ConsumerState<LanguagesDesign> {
                     ],
                   ),
                 ),
+
               ),
-            ),
+
+
+
           );
         },
       ),

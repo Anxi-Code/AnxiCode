@@ -1,6 +1,6 @@
 import 'package:anxicode_app/Designs/glassmorphism.dart';
 import 'package:flutter/material.dart';
-
+import 'package:glassmorphism/glassmorphism.dart';
 
 class BattleModeDesign extends StatefulWidget {
   const BattleModeDesign({super.key});
@@ -26,19 +26,43 @@ class _BattleModeDesignState extends State<BattleModeDesign> {
                   selectedIndex=0;
                 });
               },
-              child: Glassmorphism(
-                blur: 3,
-                opacity:0.2,
-                borderRadius: BorderRadius.circular(18),
-                borderColor:
-                selectedIndex == 0 ? Colors.blue : Colors.white,
-                child: SizedBox(
+              child: GlassmorphicContainer(
+                width: double.infinity,
+                height: 90,
+                borderRadius: 20,
+                blur: 4,
+                alignment: Alignment.bottomCenter,
+                border: 1.5,
+                linearGradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Colors.white.withValues(alpha: 0.1),
+                      Colors.white.withValues(alpha: 0.05),
+                    ],
+                    stops: [
+                      0.1,
+                      1,
+                    ]),
+                borderGradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: selectedIndex == 0
+                      ? [
+                    Colors.blue.withValues(alpha: 1.0),
+                    Colors.red.withValues(alpha: 1.0),
+                  ]
+                      : [
+                    Colors.white.withValues(alpha: 0.6),
+                    Colors.white.withValues(alpha: 0.2),
+                  ],
+                  stops: [0.0,0.9]
+                ),
 
-                  height: 90,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.emoji_events,size: 30,color: Colors.yellow,),
+                      Icon(Icons.emoji_events,size: 30,color: Colors.blue,),
                       SizedBox(height: 10),
                       Text(
                         "Ranked",
@@ -56,7 +80,7 @@ class _BattleModeDesignState extends State<BattleModeDesign> {
                 ),
               ),
             ),
-          ),
+
           SizedBox(width: 10,),
           Expanded(
             flex: 1,
@@ -66,19 +90,42 @@ class _BattleModeDesignState extends State<BattleModeDesign> {
                   selectedIndex=1;
                 });
               },
-              child: Glassmorphism(
-                blur: 3,
-                opacity:0.2,
-                borderRadius: BorderRadius.circular(18),
-                borderColor:
-                selectedIndex == 1 ? Colors.blue : Colors.white,
-                child: SizedBox(
-
-                  height: 90,
+              child: GlassmorphicContainer(
+                width: double.infinity,
+                height: 90,
+                borderRadius: 20,
+                blur: 4,
+                alignment: Alignment.bottomCenter,
+                border: 1.5,
+                linearGradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Colors.white.withValues(alpha: 0.1),
+                      Colors.white.withValues(alpha: 0.05),
+                    ],
+                    stops: [
+                      0.1,
+                      1,
+                    ]),
+                borderGradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: selectedIndex == 1
+                        ? [
+                      Colors.blue.withValues(alpha: 1.0),
+                      Colors.red.withValues(alpha: 1.0),
+                    ]
+                        : [
+                      Colors.white.withValues(alpha: 0.6),
+                      Colors.white.withValues(alpha: 0.2),
+                    ],
+                    stops: [0.0,0.9]
+                ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.sports_esports,size: 30,color: Colors.blue,),
+                      Icon(Icons.sports_esports,size: 30,color: Colors.red,),
                       SizedBox(height: 10),
                       Text(
                         "Unranked",
@@ -96,7 +143,7 @@ class _BattleModeDesignState extends State<BattleModeDesign> {
                 ),
               ),
             ),
-          ),
+
           ]
       ),
     );

@@ -3,6 +3,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:anxicode_app/Designs/glassmorphism.dart';
 import 'package:anxicode_app/Providers/problem_categories_provider.dart';
+import 'package:glassmorphism/glassmorphism.dart';
 
 
 class ProblemCategoriesDesign extends ConsumerStatefulWidget {
@@ -18,11 +19,35 @@ class _State extends ConsumerState<ProblemCategoriesDesign> {
     final problemCategories = ref.watch(problemCategoriesListProvider);
     return Padding(
       padding: const EdgeInsets.all(6.0),
-      child: Glassmorphism(
-        blur: 3,
-        opacity:0.2,
-        borderRadius: BorderRadius.circular(18),
+      child: GlassmorphicContainer(
+        width: double.infinity,
+        height: 70,
+        borderRadius: 20,
+        blur: 25,
+        alignment: Alignment.bottomCenter,
+        border: 1.5,
+        linearGradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.white.withValues(alpha: 0.1),
+              Colors.white.withValues(alpha: 0.05),
+            ],
+            stops: [
+              0.1,
+              1,
+            ]),
+        borderGradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors:
+                 [
+              Colors.blue.withValues(alpha: 1.0),
+              Colors.red.withValues(alpha: 1.0),
+            ],
 
+            stops: [0.0,0.7]
+        ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: DropdownButtonFormField2(

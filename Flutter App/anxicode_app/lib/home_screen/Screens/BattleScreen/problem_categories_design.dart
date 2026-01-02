@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:anxicode_app/Designs/glassmorphism.dart';
 import 'package:anxicode_app/Providers/problem_categories_provider.dart';
-import 'package:glassmorphism/glassmorphism.dart';
+import 'package:glass_kit/glass_kit.dart';
 
 
 class ProblemCategoriesDesign extends ConsumerStatefulWidget {
@@ -19,41 +18,42 @@ class _State extends ConsumerState<ProblemCategoriesDesign> {
     final problemCategories = ref.watch(problemCategoriesListProvider);
     return Padding(
       padding: const EdgeInsets.all(6.0),
-      child: GlassmorphicContainer(
+      child: GlassContainer(
         width: double.infinity,
-        height: 70,
-        borderRadius: 20,
-        blur: 25,
-        alignment: Alignment.bottomCenter,
-        border: 1.5,
-        linearGradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Colors.white.withValues(alpha: 0.1),
-              Colors.white.withValues(alpha: 0.05),
-            ],
-            stops: [
-              0.1,
-              1,
-            ]),
+        height: 60,
+        gradient: LinearGradient(
+          colors: [Colors.white.withValues(alpha:0.50), Colors.white.withValues(alpha:0.10)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+
+        blur: 15.0,
+        borderWidth: 1.0,
+        elevation: 4.0,
+        borderRadius: BorderRadius.circular(25),
+        shadowColor: Colors.black.withValues(alpha: 0.2),
+        alignment: Alignment.center,
+        frostedOpacity: 0.2,
+        margin: EdgeInsets.all(8.0),
+        padding: EdgeInsets.all(8.0),
+
         borderGradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors:
                  [
-              Colors.blue.withValues(alpha: 1.0),
-              Colors.red.withValues(alpha: 1.0),
+              Colors.white.withValues(alpha: 4.0),
+              Colors.white.withValues(alpha: 1.0),
             ],
 
             stops: [0.0,0.7]
         ),
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.fromLTRB(8, 1, 8,1),
           child: DropdownButtonFormField2(
               hint: Text(
                 "Choose Problem Type",
-                style: TextStyle(color: Colors.white.withValues(alpha: 0.8)),
+                style: TextStyle(color: Colors.black45,fontSize: 15),
               ),
               isExpanded: true,
               decoration: InputDecoration(
@@ -65,7 +65,7 @@ class _State extends ConsumerState<ProblemCategoriesDesign> {
                       value: item,
                       child: Row(
                         children: [
-                          Text(item, style: TextStyle(color: Colors.white)),
+                          Text(item, style: TextStyle(color: Colors.black45,fontSize: 15)),
                         ],
                       ),
                     );
@@ -77,7 +77,7 @@ class _State extends ConsumerState<ProblemCategoriesDesign> {
               dropdownStyleData: DropdownStyleData(
 
                 decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.9),
+                  color: Colors.white.withValues(alpha: 0.8),
                   borderRadius: BorderRadius.circular(18),
                 ),
               ),

@@ -1,7 +1,7 @@
 import 'package:anxicode_app/Providers/Language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:glassmorphism/glassmorphism.dart';
+import 'package:glass_kit/glass_kit.dart';
 
 class LanguagesDesign extends ConsumerStatefulWidget {
   const LanguagesDesign({super.key});
@@ -18,52 +18,53 @@ class _LanguagesDesignState extends ConsumerState<LanguagesDesign> {
     final languages = ref.watch(languagesListProvider);
 
     return SizedBox(
-      height: 120,
+      height: 130,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: languages.length,
         physics: const BouncingScrollPhysics(),
         itemBuilder: (context, index) {
           return Padding(
-            padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+            padding: const EdgeInsets.fromLTRB(2, 0, 2, 0),
             child: GestureDetector(
               onTap: () {
                 setState(() {
                   selectedIndex = index;
                 });
               },
-              child: GlassmorphicContainer(
+              child: GlassContainer(
                 width: 130,
                 height: 120,
-                borderRadius: 20,
-                blur: 4,
-                alignment: Alignment.bottomCenter,
-                border: 1.5,
-                linearGradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Colors.white.withValues(alpha: 0.1),
-                      Colors.white.withValues(alpha: 0.05),
-                    ],
-                    stops: [
-                      0.1,
-                      1,
-                    ]),
+                gradient: LinearGradient(
+                  colors: [Colors.white.withValues(alpha:0.50), Colors.white.withValues(alpha:0.10)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+
+                blur: 8.0,
+                borderWidth: 1.5,
+                elevation: 4.0,
+                borderRadius: BorderRadius.circular(25),
+                shadowColor: Colors.black.withValues(alpha: 0.2),
+                alignment: Alignment.center,
+                frostedOpacity: 0.35,
+                margin: EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(8.0),
                 borderGradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: selectedIndex == index
                         ? [
                       Colors.blue.withValues(alpha: 1.0),
-                      Colors.red.withValues(alpha: 1.0),
+                      Colors.greenAccent.withValues(alpha: 1.0),
                     ]
                         : [
-                      Colors.white.withValues(alpha: 0.6),
-                      Colors.white.withValues(alpha: 0.2),
+                      Colors.white.withValues(alpha: 0.35),
+                      Colors.white.withValues(alpha: 0.15),
                     ],
-                    stops: [0.0,0.9]
+                    stops: [0.0,0.8]
                 ),
+
                 child:  Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -78,7 +79,7 @@ class _LanguagesDesignState extends ConsumerState<LanguagesDesign> {
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white.withValues(alpha: 0.8),
+                          color: selectedIndex==index ? Colors.black:Colors.black45,
                         ),
                       ),
                     ],

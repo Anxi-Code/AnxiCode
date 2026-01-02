@@ -1,6 +1,6 @@
-
 import 'package:flutter/material.dart';
-import 'package:glassmorphism/glassmorphism.dart';
+import 'package:glass_kit/glass_kit.dart';
+
 class OpponentSelectionDesign extends StatefulWidget {
   const OpponentSelectionDesign({super.key});
 
@@ -25,50 +25,49 @@ class _OpponentSelectionDesignState extends State<OpponentSelectionDesign> {
                     selectedIndex=0;
                   });
                 },
-                child: GlassmorphicContainer(
-                  width: double.infinity,
+                child: GlassContainer(
                   height: 90,
-                  borderRadius: 20,
-                  blur: 4,
-                  alignment: Alignment.bottomCenter,
-                  border: 1.5,
-                  linearGradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Colors.white.withValues(alpha: 0.1),
-                        Colors.white.withValues(alpha:0.05),
-                      ],
-                      stops: [
-                        0.1,
-                        1,
-                      ]),
+                  width: double.infinity,
+                  gradient: LinearGradient(
+                    colors: [Colors.white.withValues(alpha:0.50), Colors.white.withValues(alpha:0.10)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+
+                  blur: 8.0,
+                  borderWidth: 1.5,
+                  elevation: 4.0,
+                  borderRadius: BorderRadius.circular(25),
+                  shadowColor: Colors.black.withValues(alpha: 0.2),
+                  alignment: Alignment.center,
+                  frostedOpacity: 0.35,
+                  margin: EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(8.0),
                   borderGradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: selectedIndex == 0
                           ? [
                         Colors.blue.withValues(alpha: 1.0),
-                        Colors.red.withValues(alpha: 1.0),
+                        Colors.greenAccent.withValues(alpha: 1.0),
                       ]
                           : [
-                        Colors.white.withValues(alpha: 0.6),
-                        Colors.white.withValues(alpha: 0.2),
+                        Colors.white.withValues(alpha: 0.35),
+                        Colors.white.withValues(alpha: 0.15),
                       ],
-                      stops: [0.0,0.9]
+                      stops: [0.0,0.8]
                   ),
-
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.people,size: 30,color: Colors.blue,),
+                      Icon(Icons.people,size: 30,color: Colors.white,),
                       SizedBox(height: 10),
                       Text(
                         "Random",
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white.withValues(alpha: 0.8),
+                          color: selectedIndex==0 ? Colors.black:Colors.black45,
                         ),
                       )
 
@@ -89,49 +88,49 @@ class _OpponentSelectionDesignState extends State<OpponentSelectionDesign> {
                     selectedIndex=1;
                   });
                 },
-                child: GlassmorphicContainer(
-                  width: double.infinity,
+                child: GlassContainer(
                   height: 90,
-                  borderRadius: 20,
-                  blur: 4,
-                  alignment: Alignment.bottomCenter,
-                  border: 1.5,
-                  linearGradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Colors.white.withValues(alpha:0.1),
-                        Colors.white.withValues(alpha:0.05),
-                      ],
-                      stops: [
-                        0.1,
-                        1,
-                      ]),
+                  width: double.infinity,
+                  gradient: LinearGradient(
+                    colors: [Colors.white.withValues(alpha:0.50), Colors.white.withValues(alpha:0.10)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+
+                  blur: 8.0,
+                  borderWidth: 1.5,
+                  elevation: 4.0,
+                  borderRadius: BorderRadius.circular(25),
+                  shadowColor: Colors.black.withValues(alpha: 0.2),
+                  alignment: Alignment.center,
+                  frostedOpacity: 0.35,
+                  margin: EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(8.0),
                   borderGradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: selectedIndex == 1
                           ? [
                         Colors.blue.withValues(alpha: 1.0),
-                        Colors.red.withValues(alpha: 1.0),
+                        Colors.greenAccent.withValues(alpha: 1.0),
                       ]
                           : [
-                        Colors.white.withValues(alpha: 0.6),
-                        Colors.white.withValues(alpha: 0.2),
+                        Colors.white.withValues(alpha: 0.35),
+                        Colors.white.withValues(alpha: 0.15),
                       ],
-                      stops: [0.0,0.9]
+                      stops: [0.0,0.8]
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.person,size: 30,color: Colors.red,),
+                      Icon(Icons.person,size: 30,color: Colors.white,),
                       SizedBox(height: 10),
                       Text(
                         "Friend",
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white.withValues(alpha: 0.8),
+                          color: selectedIndex==1 ? Colors.black:Colors.black45,
                         ),
                       )
 

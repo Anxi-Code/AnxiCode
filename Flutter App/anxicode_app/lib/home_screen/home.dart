@@ -40,7 +40,7 @@ class _HomeState extends State<Home> {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage("assets/images/home_background.jpeg"),
+          image: AssetImage("assets/images/home_bg.jpg"),
           fit: BoxFit.cover,
         ),
       ),

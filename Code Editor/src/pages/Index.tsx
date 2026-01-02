@@ -102,7 +102,18 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[radial-gradient(ellipse_at_top_right,_hsl(var(--primary)/0.15)_0%,_transparent_50%),radial-gradient(ellipse_at_bottom_left,_hsl(var(--success)/0.1)_0%,_transparent_50%),hsl(var(--background))] relative overflow-hidden">
+      {/* Animated mesh gradient background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_80%,_hsl(var(--primary)/0.08)_0%,_transparent_40%)]" />
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_80%_20%,_hsl(var(--success)/0.08)_0%,_transparent_40%)]" />
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,_hsl(var(--warning)/0.05)_0%,_transparent_50%)]" />
+        {/* Floating orbs */}
+        <div className="absolute top-20 right-[20%] w-32 h-32 bg-primary/20 rounded-full blur-3xl animate-float" />
+        <div className="absolute bottom-40 left-[15%] w-40 h-40 bg-success/15 rounded-full blur-3xl animate-float-delayed" />
+        <div className="absolute top-1/2 right-[10%] w-24 h-24 bg-warning/20 rounded-full blur-2xl animate-float-slow" />
+      </div>
+
       {/* Navigation */}
       <Navbar
         isProblemOpen={isProblemOpen}
@@ -118,7 +129,7 @@ const Index = () => {
         {/* Participant Bar */}
         {/* For 1v1 show single-user icon */}
         {/* For teams show team icon */}
-        <div className="h-12 bg-card border-b border-border flex items-center justify-center px-4 gaming-gradient">
+        <div className="h-12 glass-subtle flex items-center justify-center px-4 gaming-gradient">
           <ParticipantList
             participants={
               battleMode === '1v1'
@@ -137,9 +148,9 @@ const Index = () => {
             style={{ width: isProblemOpen ? '70%' : '100%' }}
           >
             <div className="h-full p-4 pb-0">
-              <div className="h-full rounded-lg border border-border overflow-hidden shadow-lg">
+              <div className="h-full rounded-lg glass-editor overflow-hidden">
                 {/* CHANGE HERE for dynamic language switching - Dynamic file name */}
-                <div className="h-8 bg-card border-b border-border flex items-center px-3 gap-2">
+                <div className="h-8 glass-subtle border-b border-border/30 flex items-center px-3 gap-2">
                   <div className="flex gap-1.5">
                     <div className="w-3 h-3 rounded-full bg-destructive/80" />
                     <div className="w-3 h-3 rounded-full bg-warning/80" />
@@ -163,7 +174,7 @@ const Index = () => {
         </div>
 
         {/* Status Bar - Simplified */}
-        <div className="h-6 bg-card border-t border-border flex items-center justify-between px-4 text-xs text-muted-foreground">
+        <div className="h-6 glass-subtle border-t border-border/30 flex items-center justify-between px-4 text-xs text-muted-foreground">
           <div className="flex items-center gap-4">
             {/* CHANGE HERE for dynamic language switching */}
             <span>{LANGUAGE_DISPLAY[selectedLanguage]}</span>

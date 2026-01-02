@@ -591,9 +591,11 @@ export const CodeEditor = ({ initialCode, className, language = 'python', onCode
 
   return (
     <div className={cn(
-      "relative h-full bg-editor rounded-lg overflow-hidden",
-      "border border-border/50 shadow-lg",
-      "transition-shadow duration-300 hover:shadow-xl",
+      "relative h-full rounded-lg overflow-hidden",
+      "bg-editor/80 backdrop-blur-md",
+      "border border-foreground/10",
+      "shadow-lg shadow-primary/5",
+      "transition-shadow duration-300 hover:shadow-xl hover:shadow-primary/10",
       className
     )}>
       {/* Line highlight effect */}

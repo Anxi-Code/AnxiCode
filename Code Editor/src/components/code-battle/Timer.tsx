@@ -54,17 +54,18 @@ export const Timer = ({ initialSeconds = 600, onTimeUp }: TimerProps) => {
     <div
       className={cn(
         "flex items-center gap-2 px-4 py-2 rounded-lg font-mono text-lg font-semibold transition-all duration-300",
-        isCriticalTime && "bg-destructive/20 text-destructive animate-pulse",
-        isLowTime && !isCriticalTime && "bg-warning/20 text-warning",
-        !isLowTime && "bg-secondary text-foreground"
+        "backdrop-blur-md border",
+        isCriticalTime && "bg-destructive/20 text-destructive animate-pulse border-destructive/50 shadow-[0_0_20px_hsl(var(--destructive)/0.3)]",
+        isLowTime && !isCriticalTime && "bg-warning/20 text-warning border-warning/50 shadow-[0_0_15px_hsl(var(--warning)/0.2)]",
+        !isLowTime && "bg-secondary/80 text-foreground border-border/50 hover:border-primary/30 hover:shadow-[0_0_15px_hsl(var(--primary)/0.15)] transition-all duration-300"
       )}
     >
       {isCriticalTime ? (
         <AlertTriangle className="w-5 h-5 animate-pulse" />
       ) : (
-        <Clock className="w-5 h-5" />
+        <Clock className="w-5 h-5 transition-transform duration-300 hover:rotate-12" />
       )}
-      <span className="tabular-nums">{formatTime(seconds)}</span>
+      <span className="tabular-nums tracking-wider">{formatTime(seconds)}</span>
     </div>
   );
 };

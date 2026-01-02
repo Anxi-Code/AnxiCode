@@ -45,19 +45,19 @@ export const Navbar = ({
   const problemTimeLimit = 600;
 
   return (
-    <nav className="fixed top-0 left-0 right-0 h-14 bg-card border-b border-border z-50">
+    <nav className="fixed top-0 left-0 right-0 h-14 glass-navbar z-50">
       <div className="h-full px-4 flex items-center justify-between">
         {/* Left Section - Language Selector */}
         {/* CHANGE HERE for dynamic language switching - Language dropdown selector */}
         <div className="flex items-center gap-3">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="secondary" size="sm" className="flex items-center gap-2 px-3 py-1.5">
+              <Button variant="secondary" size="sm" className="flex items-center gap-2 px-3 py-1.5 hover-lift hover:border-primary/30 border border-transparent">
                 {LANGUAGE_CONFIG[selectedLanguage].icon}
                 <span className="font-medium text-sm text-foreground">
                   {LANGUAGE_CONFIG[selectedLanguage].name}
                 </span>
-                <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                <ChevronDown className="w-4 h-4 text-muted-foreground transition-transform duration-200 group-data-[state=open]:rotate-180" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start">
@@ -104,11 +104,11 @@ export const Navbar = ({
             size="sm"
             onClick={onToggleProblem}
             className={cn(
-              "hidden sm:flex items-center gap-2 transition-all duration-200",
-              isProblemOpen && "bg-primary/10 text-primary border-primary/30"
+              "hidden sm:flex items-center gap-2 transition-all duration-300 hover-lift",
+              isProblemOpen && "bg-primary/10 text-primary border-primary/30 shadow-[0_0_15px_hsl(var(--primary)/0.2)]"
             )}
           >
-            <FileText className="w-4 h-4" />
+            <FileText className="w-4 h-4 transition-transform duration-200 group-hover:scale-110" />
             <span>Problem</span>
           </Button>
 
@@ -118,9 +118,9 @@ export const Navbar = ({
             variant="gaming-success"
             size="sm"
             onClick={onRun}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 group"
           >
-            <Play className="w-4 h-4" />
+            <Play className="w-4 h-4 transition-transform duration-200 group-hover:scale-125 group-hover:translate-x-0.5" />
             <span className="hidden sm:inline">Run</span>
           </Button>
 
@@ -131,9 +131,9 @@ export const Navbar = ({
             variant="gaming-warning"
             size="sm"
             onClick={onSubmit}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 group"
           >
-            <Rocket className="w-4 h-4" />
+            <Rocket className="w-4 h-4 transition-transform duration-200 group-hover:scale-110 group-hover:-translate-y-0.5 group-hover:rotate-12" />
             <span className="hidden sm:inline">Submit</span>
           </Button>
 

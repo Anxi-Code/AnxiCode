@@ -11,7 +11,7 @@ export const ProblemPanel = ({ isOpen, className }: ProblemPanelProps) => {
   return (
     <div
       className={cn(
-        "h-full overflow-hidden transition-panel bg-card border-l border-border",
+        "h-full overflow-hidden transition-panel glass-panel",
         isOpen ? "w-[30%] opacity-100" : "w-0 opacity-0",
         className
       )}
@@ -25,13 +25,13 @@ export const ProblemPanel = ({ isOpen, className }: ProblemPanelProps) => {
           <div>
             <h2 className="text-lg font-bold text-foreground">Two Sum</h2>
             <div className="flex items-center gap-2 mt-1">
-              <Badge variant="outline" className="text-success border-success/30 bg-success/10">
+              <Badge variant="outline" className="text-success border-success/30 bg-success/10 hover:bg-success/20 hover:scale-105 transition-all duration-200 cursor-default">
                 Easy
               </Badge>
-              <Badge variant="outline" className="text-muted-foreground">
+              <Badge variant="outline" className="text-muted-foreground hover:text-foreground hover:border-primary/30 hover:scale-105 transition-all duration-200 cursor-default">
                 Array
               </Badge>
-              <Badge variant="outline" className="text-muted-foreground">
+              <Badge variant="outline" className="text-muted-foreground hover:text-foreground hover:border-primary/30 hover:scale-105 transition-all duration-200 cursor-default">
                 Hash Table
               </Badge>
             </div>
@@ -61,7 +61,7 @@ export const ProblemPanel = ({ isOpen, className }: ProblemPanelProps) => {
               Examples
             </h3>
 
-            <div className="bg-secondary/50 rounded-lg p-4 space-y-2">
+            <div className="bg-secondary/50 rounded-lg p-4 space-y-2 hover:bg-secondary/70 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 hover:-translate-y-0.5 cursor-default">
               <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
                 <CheckCircle2 className="w-3 h-3 text-success" />
                 Example 1
@@ -81,7 +81,7 @@ export const ProblemPanel = ({ isOpen, className }: ProblemPanelProps) => {
               </div>
             </div>
 
-            <div className="bg-secondary/50 rounded-lg p-4 space-y-2">
+            <div className="bg-secondary/50 rounded-lg p-4 space-y-2 hover:bg-secondary/70 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 hover:-translate-y-0.5 cursor-default">
               <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
                 <CheckCircle2 className="w-3 h-3 text-success" />
                 Example 2
@@ -98,7 +98,7 @@ export const ProblemPanel = ({ isOpen, className }: ProblemPanelProps) => {
               </div>
             </div>
 
-            <div className="bg-secondary/50 rounded-lg p-4 space-y-2">
+            <div className="bg-secondary/50 rounded-lg p-4 space-y-2 hover:bg-secondary/70 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 hover:-translate-y-0.5 cursor-default">
               <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
                 <CheckCircle2 className="w-3 h-3 text-success" />
                 Example 3

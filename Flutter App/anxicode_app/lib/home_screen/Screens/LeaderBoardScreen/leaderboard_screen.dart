@@ -84,7 +84,7 @@ class _LeaderboardState extends State<Leaderboard> {
               ),
             ),
 
-            const SizedBox(height: 30),
+            const SizedBox(height: 80),
 
 
             Expanded(
@@ -139,7 +139,7 @@ class _LeaderboardState extends State<Leaderboard> {
             const SizedBox(width: 15),
             CircleAvatar(
               backgroundImage: AssetImage(image),
-              radius: 30,
+              radius: 20,
             ),
             const SizedBox(width: 15),
             Column(
@@ -148,11 +148,6 @@ class _LeaderboardState extends State<Leaderboard> {
                 Text(name, style: const TextStyle(fontSize: 15)),
                 Row(
                   children: [
-                    const Image(
-                      image: AssetImage('assets/coin.jpg'),
-                      width: 20,
-                      height: 20,
-                    ),
                     const SizedBox(width: 5),
                     Text(points),
                   ],

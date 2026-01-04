@@ -9,24 +9,24 @@ class Leaderboard extends StatefulWidget {
 
 class _LeaderboardState extends State<Leaderboard> {
   final List<Map<String, dynamic>> leaderboardData = [
-    {"rank": "1", "name": "Meesum Afzaal", "image": "assets/meesum.jpg", "points": "100 pts", "change": "+1"},
-    {"rank": "2", "name": "Shahroz Javed", "image": "assets/shahroz.jpg", "points": "98 pts", "change": "+2"},
-    {"rank": "3", "name": "Affaq Ahmad", "image": "assets/affaq.jpg", "points": "94 pts", "change": "-2"},
-    {"rank": "4", "name": "Waleed Rajpoot", "image": "assets/waleed.jpg", "points": "85 pts", "change": "-1"},
-    {"rank": "5", "name": "Sameer Badar", "image": "assets/sameer.jpg", "points": "80 pts", "change": "+1"},
-    {"rank": "6", "name": "Gujjar Singh", "image": "assets/waleed.jpg", "points": "75 pts", "change": "-4"},
-    {"rank": "7", "name": "Ali Khan", "image": "assets/waleed.jpg", "points": "70 pts", "change": "+3"},
-    {"rank": "8", "name": "Hassan Raza", "image": "assets/waleed.jpg", "points": "68 pts", "change": "-1"},
-    {"rank": "9", "name": "Usman Tariq", "image": "assets/waleed.jpg", "points": "65 pts", "change": "+2"},
-    {"rank": "10", "name": "Bilal Ahmed", "image": "assets/waleed.jpg", "points": "62 pts", "change": "-3"},
+    {"rank": "1", "name": "Mike Wheeler", "image": "assets/images/user1.png", "points": "100 pts", "change": "+1"},
+    {"rank": "2", "name": "Dustin Henderson", "image": "assets/images/user1.png", "points": "98 pts", "change": "+2"},
+    {"rank": "3", "name": "Nancy Wheeler", "image": "assets/images/user1.png", "points": "94 pts", "change": "-2"},
+    {"rank": "4", "name": "Jim Hopper", "image": "assets/images/user1.png", "points": "85 pts", "change": "-1"},
+    {"rank": "5", "name": "Lucas Sinclair", "image": "assets/images/user1.png", "points": "80 pts", "change": "+1"},
+    {"rank": "6", "name": "Max Mayfield", "image": "assets/images/user1.png", "points": "75 pts", "change": "-4"},
+    {"rank": "7", "name": "Joyce Byers", "image": "assets/images/user1.png", "points": "70 pts", "change": "+3"},
+    {"rank": "8", "name": "Will Byers", "image": "assets/images/user1.png", "points": "68 pts", "change": "-1"},
+    {"rank": "9", "name": "Steve Harrington", "image": "assets/images/user1.png", "points": "65 pts", "change": "+2"},
+    {"rank": "10", "name": "Robin Buckley", "image": "assets/images/user1.png", "points": "62 pts", "change": "-3"},
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Leaderboard', style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.black,
+        title: const Text('Leaderboard', style: TextStyle(color: Colors.black)),
+        backgroundColor: Colors.transparent,
         centerTitle: true,
       ),
       body: Container(
@@ -45,8 +45,8 @@ class _LeaderboardState extends State<Leaderboard> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   _topUser(
-                    image: 'assets/affaq.jpg',
-                    name: 'AFFAQ',
+                    image: 'assets/images/user1.png',
+                    name: 'Derek',
                     score: '869',
                     height: 170,
                     radius: 40,
@@ -57,8 +57,8 @@ class _LeaderboardState extends State<Leaderboard> {
                     ),
                   ),
                   _topUser(
-                    image: 'assets/meesum.jpg',
-                    name: 'MEESUM',
+                    image: 'assets/images/user3.png',
+                    name: 'Kevin',
                     score: '1000',
                     height: 200,
                     radius: 50,
@@ -69,8 +69,8 @@ class _LeaderboardState extends State<Leaderboard> {
                     ),
                   ),
                   _topUser(
-                    image: 'assets/shahroz.jpg',
-                    name: 'SHAHROZ',
+                    image: 'assets/images/user1.png',
+                    name: 'Araujo',
                     score: '711',
                     height: 170,
                     radius: 40,
@@ -154,7 +154,6 @@ class _LeaderboardState extends State<Leaderboard> {
                 ),
               ],
             ),
-            const Spacer(),
             Text(
               change,
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),

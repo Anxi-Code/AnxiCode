@@ -14,13 +14,14 @@ class Profile extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         child: StaggeredGrid.count(
           crossAxisCount: 3,
-          mainAxisSpacing: 12,
-          crossAxisSpacing: 12,
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
           children: [
             StaggeredGridTile.count(
               crossAxisCellCount: 2,
               mainAxisCellCount: 1,
               child: bentoBox(Colors.blue, "Box 1"),
+
             ),
             StaggeredGridTile.count(
               crossAxisCellCount: 1,
@@ -31,21 +32,6 @@ class Profile extends StatelessWidget {
               crossAxisCellCount: 2,
               mainAxisCellCount: 1,
               child: bentoBox(Colors.orange, "Box 3"),
-            ),
-            StaggeredGridTile.count(
-              crossAxisCellCount: 1,
-              mainAxisCellCount: 2,
-              child: bentoBox(Colors.red, "Box 4"),
-            ),
-            StaggeredGridTile.count(
-              crossAxisCellCount: 2,
-              mainAxisCellCount: 1,
-              child: bentoBox(Colors.grey, "Box 5"),
-            ),
-            StaggeredGridTile.count(
-              crossAxisCellCount: 2,
-              mainAxisCellCount: 1,
-              child: bentoBox(Colors.purple, "Box 6"),
             ),
           ],
         ),

@@ -6,11 +6,7 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Bento Grid"),
-        centerTitle: true,
-      ),
-      body: Padding(
+    return  Padding(
         padding: const EdgeInsets.all(12),
         child: StaggeredGrid.count(
           crossAxisCount: 3,
@@ -35,7 +31,6 @@ class Profile extends StatelessWidget {
             ),
           ],
         ),
-      ),
     );
   }
 

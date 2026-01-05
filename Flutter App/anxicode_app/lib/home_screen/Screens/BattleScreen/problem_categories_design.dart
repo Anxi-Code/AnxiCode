@@ -42,8 +42,8 @@ class _State extends ConsumerState<ProblemCategoriesDesign> {
             end: Alignment.bottomRight,
             colors:
                  [
-              Colors.white.withValues(alpha: 4.0),
-              Colors.white.withValues(alpha: 1.0),
+              Colors.white.withValues(alpha: 3.15),
+              Colors.white.withValues(alpha: 2.25),
             ],
 
             stops: [0.0,0.7]
@@ -53,7 +53,7 @@ class _State extends ConsumerState<ProblemCategoriesDesign> {
           child: DropdownButtonFormField2(
               hint: Text(
                 "Choose Problem Type",
-                style: TextStyle(color: Colors.black45,fontSize: 15),
+                style: TextStyle(color: Colors.white70,fontSize: 15),
               ),
               isExpanded: true,
               decoration: InputDecoration(
@@ -74,7 +74,15 @@ class _State extends ConsumerState<ProblemCategoriesDesign> {
                 // Do something when changing the item if you want.
 
               },
+            iconStyleData: IconStyleData(
+              icon: Icon(
+                Icons.keyboard_arrow_down_rounded,
+                color: Colors.white, // 👈 arrow color
+              ),
+            ),
+
               dropdownStyleData: DropdownStyleData(
+
 
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.8),

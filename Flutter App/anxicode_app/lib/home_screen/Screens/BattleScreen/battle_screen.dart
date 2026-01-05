@@ -111,7 +111,7 @@ class Battle extends ConsumerWidget {
                         onPressed: () {},
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,
-                          foregroundColor: Colors.black45,
+                          foregroundColor: Colors.white70,
                           shadowColor: Colors.transparent,
                           minimumSize: Size(double.infinity, 60),
                         ),

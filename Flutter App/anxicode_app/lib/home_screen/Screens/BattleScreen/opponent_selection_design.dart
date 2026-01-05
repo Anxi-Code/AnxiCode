@@ -34,7 +34,7 @@ class _OpponentSelectionDesignState extends State<OpponentSelectionDesign> {
                     end: Alignment.bottomRight,
                   ),
 
-                  blur: 8.0,
+                  blur: 15.0,
                   borderWidth: 1.5,
                   elevation: 4.0,
                   borderRadius: BorderRadius.circular(25),
@@ -49,11 +49,11 @@ class _OpponentSelectionDesignState extends State<OpponentSelectionDesign> {
                       colors: selectedIndex == 0
                           ? [
                         Colors.blue.withValues(alpha: 1.0),
-                        Colors.greenAccent.withValues(alpha: 1.0),
+                        Colors.yellow.withValues(alpha: 1.0),
                       ]
                           : [
                         Colors.white.withValues(alpha: 0.35),
-                        Colors.white.withValues(alpha: 0.15),
+                        Colors.white.withValues(alpha: 0.25),
                       ],
                       stops: [0.0,0.8]
                   ),
@@ -67,7 +67,7 @@ class _OpponentSelectionDesignState extends State<OpponentSelectionDesign> {
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
-                          color: selectedIndex==0 ? Colors.black:Colors.black45,
+                          color: selectedIndex==0 ? Colors.white:Colors.white70,
                         ),
                       )
 
@@ -112,11 +112,11 @@ class _OpponentSelectionDesignState extends State<OpponentSelectionDesign> {
                       colors: selectedIndex == 1
                           ? [
                         Colors.blue.withValues(alpha: 1.0),
-                        Colors.greenAccent.withValues(alpha: 1.0),
+                        Colors.yellow.withValues(alpha: 1.0),
                       ]
                           : [
                         Colors.white.withValues(alpha: 0.35),
-                        Colors.white.withValues(alpha: 0.15),
+                        Colors.white.withValues(alpha: 0.25),
                       ],
                       stops: [0.0,0.8]
                   ),
@@ -130,7 +130,7 @@ class _OpponentSelectionDesignState extends State<OpponentSelectionDesign> {
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
-                          color: selectedIndex==1 ? Colors.black:Colors.black45,
+                          color: selectedIndex==1 ? Colors.white:Colors.white70,
                         ),
                       )
 

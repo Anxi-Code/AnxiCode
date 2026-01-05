@@ -55,12 +55,12 @@ class _LanguagesDesignState extends ConsumerState<LanguagesDesign> {
                     end: Alignment.bottomRight,
                     colors: selectedIndex == index
                         ? [
-                      Colors.blue.withValues(alpha: 1.0),
-                      Colors.greenAccent.withValues(alpha: 1.0),
+                      Colors.blue.withValues(alpha: 2.0),
+                      Colors.yellow.withValues(alpha: 1.0),
                     ]
                         : [
                       Colors.white.withValues(alpha: 0.35),
-                      Colors.white.withValues(alpha: 0.15),
+                      Colors.white.withValues(alpha: 0.25),
                     ],
                     stops: [0.0,0.8]
                 ),
@@ -79,7 +79,7 @@ class _LanguagesDesignState extends ConsumerState<LanguagesDesign> {
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
-                          color: selectedIndex==index ? Colors.black:Colors.black45,
+                          color: selectedIndex==index ? Colors.white:Colors.white70,
                         ),
                       ),
                     ],

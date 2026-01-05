@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:glass_kit/glass_kit.dart';
 class Leaderboard extends StatefulWidget {
   const Leaderboard({super.key});
 
@@ -33,7 +33,7 @@ class _LeaderboardState extends State<Leaderboard> {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 20),
+            padding: const EdgeInsets.only(top: 40),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -77,33 +77,63 @@ class _LeaderboardState extends State<Leaderboard> {
             ),
           ),
 
-          const SizedBox(height: 80),
+          const SizedBox(height: 50),
 
           Expanded(
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(30, 40, 30, 20),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(40),
-                  topRight: Radius.circular(40),
-                ),
+            child: GlassContainer(
+              width: double.infinity,
+              height: double.infinity,
+              gradient: LinearGradient(
+                colors: [Colors.white.withValues(alpha:0.50), Colors.white.withValues(alpha:0.10)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-              child: ListView.builder(
-                itemCount: leaderboardData.length,
-                itemBuilder: (context, index) {
-                  final user = leaderboardData[index];
-                  return leaderboardItem(
-                    rank: user["rank"],
-                    name: user["name"],
-                    image: user["image"],
-                    points: user["points"],
-                    change: user["change"],
-                  );
-                },
+
+              blur: 6.0,
+              borderWidth: 1.5,
+              elevation: 4.0,
+              borderRadius: BorderRadius.circular(30.0),
+              shadowColor: Colors.black.withValues(alpha: 0.2),
+              alignment: Alignment.center,
+              frostedOpacity: 0.35,
+              borderGradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Colors.white.withValues(alpha: 0.35),
+                    Colors.white.withValues(alpha: 0.25),
+                  ],
+                  stops: [0.0,0.8]
+              ),
+
+
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(30, 30, 30, 15),
+                decoration: const BoxDecoration(
+
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(50),
+                    topRight: Radius.circular(50),
+                  ),
+                ),
+                child: ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: leaderboardData.length,
+                  itemBuilder: (context, index) {
+                    final user = leaderboardData[index];
+                    return leaderboardItem(
+                      rank: user["rank"],
+                      name: user["name"],
+                      image: user["image"],
+                      points: user["points"],
+                      change: user["change"],
+                    );
+                  },
+                ),
               ),
             ),
           ),
+          SizedBox(height: 10.0,)
         ],
       ),
     );
@@ -117,35 +147,59 @@ class _LeaderboardState extends State<Leaderboard> {
     required String change,
   }) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(10, 5, 20, 5),
-        decoration: BoxDecoration(
-          color: Colors.grey[50],
-          borderRadius: BorderRadius.circular(10),
+      padding: const EdgeInsets.only(bottom: 20.0),
+      child:GlassContainer(height: 70.0, width: double.infinity,
+        gradient: LinearGradient(
+          colors: [Colors.white.withValues(alpha:0.50), Colors.white.withValues(alpha:0.10)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
+
+        blur: 20.0,
+        borderWidth: 1.5,
+        elevation: 4.0,
+        borderRadius: BorderRadius.circular(15.0),
+        shadowColor: Colors.black.withValues(alpha: 0.2),
+        alignment: Alignment.center,
+        padding: EdgeInsets.all(5.0),
+        frostedOpacity: 0.45,
+
+        borderGradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.white.withValues(alpha: 0.35),
+              Colors.white.withValues(alpha: 0.25),
+            ],
+            stops: [0.0,0.8]
+        ),
+
+
         child: Row(
           children: [
-            Text(rank, style: const TextStyle(fontSize: 18)),
-            const SizedBox(width: 20),
+            SizedBox(width: 10.0,),
+            Text(rank, style: const TextStyle(fontSize: 18,color: Colors.black,fontWeight: FontWeight.bold,fontStyle: FontStyle.italic)),
+            const SizedBox(width: 15.0),
             CircleAvatar(
               backgroundImage: AssetImage(image),
-              radius: 22,
+              radius: 25,
             ),
             const SizedBox(width: 15),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(name, style: const TextStyle(fontSize: 15)),
+                SizedBox(height: 6.0,),
+                Text(name, style: const TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color: Colors.white)),
                 const SizedBox(height: 4),
-                Text(points),
+                Text(points,style: TextStyle(color: Colors.white),),
               ],
             ),
             const Spacer(),
             Text(
               change,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20,color: Colors.white70),
             ),
+            SizedBox(width: 10.0,)
           ],
         ),
       ),
@@ -163,14 +217,36 @@ class _LeaderboardState extends State<Leaderboard> {
   }) {
     return Padding(
       padding: EdgeInsets.only(top: height == 170 ? 30 : 0),
-      child: Container(
-        height: height,
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: borderRadius,
+      child: GlassContainer(height: height,width: 120,
+        gradient: LinearGradient(
+          colors: [Colors.white.withValues(alpha:0.50), Colors.white.withValues(alpha:0.10)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
+
+        blur: 20.0,
+        borderWidth: 1.5,
+        elevation: 4.0,
+        borderRadius: borderRadius,
+        shadowColor: Colors.black.withValues(alpha: 0.2),
+        alignment: Alignment.center,
+        padding: EdgeInsets.all(5.0),
+        frostedOpacity: 0.45,
+
+        borderGradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.white.withValues(alpha: 0.01),
+              Colors.white.withValues(alpha: 0),
+            ],
+            stops: [0.0,0.8]
+        ),
+
+
         child: Column(
           children: [
+
             Padding(
               padding: const EdgeInsets.all(10),
               child: CircleAvatar(
@@ -187,9 +263,11 @@ class _LeaderboardState extends State<Leaderboard> {
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
-                fontSize: 20,
+                fontSize: 14,
               ),
             ),
+            SizedBox(height: 10.0,),
+
           ],
         ),
       ),

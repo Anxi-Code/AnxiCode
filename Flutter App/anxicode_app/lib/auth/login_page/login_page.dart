@@ -16,40 +16,45 @@ class _LogInState extends State<LogIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Log-In Page'), centerTitle: true),
+      backgroundColor: Colors.orange.shade100,
+
+      appBar: AppBar(
+        title: const Text('Log-In Page'),
+        centerTitle: true,
+        backgroundColor: Colors.orange.shade100, // ✅ same as background
+        elevation: 0,
+      ),
+
       body: Container(
-        padding: EdgeInsets.all(15),
+        padding: const EdgeInsets.all(15),
         child: Form(
           key: _fromkey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _inputField(_emailController, type: 'Email'),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               _inputField(_passwordController, type: 'Password'),
-              SizedBox(height: 20),
-              // Meesum Start here
-              // by this we login to app
+              const SizedBox(height: 20),
+
               ElevatedButton(
                 onPressed: () {
-                  // no function as you said
-                  context.go('/home'); // Navigate to Home page
+                  context.go('/home');
                 },
-                child: Text("Login"),
+                child: const Text("Login"),
               ),
-              SizedBox(height: 20),
 
-              // Sign Up Navigation Text
+              const SizedBox(height: 20),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Not registered? "),
-
+                  const Text("Not registered? "),
                   GestureDetector(
                     onTap: () {
-                      context.go('/signup'); // Navigate to SignUp page
+                      context.go('/signup');
                     },
-                    child: Text(
+                    child: const Text(
                       "Sign Up",
                       style: TextStyle(
                         color: Colors.blue,
@@ -67,36 +72,34 @@ class _LogInState extends State<LogIn> {
     );
   }
 
-  //input function
   TextFormField _inputField(
-    TextEditingController controller, {
-    String type = 'text',
-  }) {
+      TextEditingController controller, {
+        String type = 'text',
+      }) {
     return TextFormField(
       controller: controller,
       keyboardType:
-          type == "Email" ? TextInputType.emailAddress : TextInputType.text,
+      type == "Email" ? TextInputType.emailAddress : TextInputType.text,
       decoration: InputDecoration(
         hintText: "Enter your $type",
-        border: OutlineInputBorder(),
-        enabledBorder: OutlineInputBorder(
+        border: const OutlineInputBorder(),
+        enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey),
         ),
-        focusedBorder: OutlineInputBorder(
+        focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.blue, width: 2),
         ),
-        errorBorder: OutlineInputBorder(
+        errorBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.red),
         ),
-        focusedErrorBorder: OutlineInputBorder(
+        focusedErrorBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.red, width: 2),
         ),
       ),
-      validator:
-          (value) =>
-              (value == null || value.isEmpty)
-                  ? "Please Enter the $type "
-                  : null,
+      validator: (value) =>
+      (value == null || value.isEmpty)
+          ? "Please Enter the $type"
+          : null,
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:glass_kit/glass_kit.dart';
+
 class Leaderboard extends StatefulWidget {
   const Leaderboard({super.key});
 
@@ -79,43 +79,17 @@ class _LeaderboardState extends State<Leaderboard> {
 
           const SizedBox(height: 50),
 
+          /// MAIN CONTAINER (NO GLASS EFFECT)
           Expanded(
-            child: GlassContainer(
+            child: Container(
               width: double.infinity,
-              height: double.infinity,
-              gradient: LinearGradient(
-                colors: [Colors.white.withValues(alpha:0.50), Colors.white.withValues(alpha:0.10)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+              decoration: BoxDecoration(
+                color: Colors.black, // 🔥 fully solid
+                borderRadius: BorderRadius.circular(30),
               ),
-
-              blur: 6.0,
-              borderWidth: 1.5,
-              elevation: 4.0,
-              borderRadius: BorderRadius.circular(30.0),
-              shadowColor: Colors.black.withValues(alpha: 0.2),
-              alignment: Alignment.center,
-              frostedOpacity: 0.35,
-              borderGradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Colors.white.withValues(alpha: 0.35),
-                    Colors.white.withValues(alpha: 0.25),
-                  ],
-                  stops: [0.0,0.8]
-              ),
-
 
               child: Container(
                 padding: const EdgeInsets.fromLTRB(30, 30, 30, 15),
-                decoration: const BoxDecoration(
-
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(50),
-                    topRight: Radius.circular(50),
-                  ),
-                ),
                 child: ListView.builder(
                   physics: const BouncingScrollPhysics(),
                   itemCount: leaderboardData.length,
@@ -133,7 +107,8 @@ class _LeaderboardState extends State<Leaderboard> {
               ),
             ),
           ),
-          SizedBox(height: 10.0,)
+
+          const SizedBox(height: 10.0),
         ],
       ),
     );
@@ -148,37 +123,24 @@ class _LeaderboardState extends State<Leaderboard> {
   }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 20.0),
-      child:GlassContainer(height: 70.0, width: double.infinity,
-        gradient: LinearGradient(
-          colors: [Colors.white.withValues(alpha:0.50), Colors.white.withValues(alpha:0.10)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+      child: Container(
+        height: 70,
+        width: double.infinity,
+        padding: const EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          color: Colors.grey[900], // 🔥 solid color
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(color: Colors.black26),
         ),
-
-        blur: 20.0,
-        borderWidth: 1.5,
-        elevation: 4.0,
-        borderRadius: BorderRadius.circular(15.0),
-        shadowColor: Colors.black.withValues(alpha: 0.2),
-        alignment: Alignment.center,
-        padding: EdgeInsets.all(5.0),
-        frostedOpacity: 0.45,
-
-        borderGradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Colors.white.withValues(alpha: 0.35),
-              Colors.white.withValues(alpha: 0.25),
-            ],
-            stops: [0.0,0.8]
-        ),
-
-
         child: Row(
           children: [
-            SizedBox(width: 10.0,),
-            Text(rank, style: const TextStyle(fontSize: 18,color: Colors.black,fontWeight: FontWeight.bold,fontStyle: FontStyle.italic)),
+            const SizedBox(width: 10.0),
+            Text(rank,
+                style: const TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.italic)),
             const SizedBox(width: 15.0),
             CircleAvatar(
               backgroundImage: AssetImage(image),
@@ -188,18 +150,26 @@ class _LeaderboardState extends State<Leaderboard> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 6.0,),
-                Text(name, style: const TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color: Colors.white)),
+                const SizedBox(height: 6.0),
+                Text(name,
+                    style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white)),
                 const SizedBox(height: 4),
-                Text(points,style: TextStyle(color: Colors.white),),
+                Text(points,
+                    style: const TextStyle(color: Colors.white70)),
               ],
             ),
             const Spacer(),
             Text(
               change,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20,color: Colors.white70),
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Colors.white70),
             ),
-            SizedBox(width: 10.0,)
+            const SizedBox(width: 10.0),
           ],
         ),
       ),
@@ -217,36 +187,16 @@ class _LeaderboardState extends State<Leaderboard> {
   }) {
     return Padding(
       padding: EdgeInsets.only(top: height == 170 ? 30 : 0),
-      child: GlassContainer(height: height,width: 120,
-        gradient: LinearGradient(
-          colors: [Colors.white.withValues(alpha:0.50), Colors.white.withValues(alpha:0.10)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+      child: Container(
+        height: height,
+        width: 120,
+        decoration: BoxDecoration(
+          color: Colors.grey[850], // 🔥 solid
+          borderRadius: borderRadius,
+          border: Border.all(color: Colors.black26),
         ),
-
-        blur: 20.0,
-        borderWidth: 1.5,
-        elevation: 4.0,
-        borderRadius: borderRadius,
-        shadowColor: Colors.black.withValues(alpha: 0.2),
-        alignment: Alignment.center,
-        padding: EdgeInsets.all(5.0),
-        frostedOpacity: 0.45,
-
-        borderGradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Colors.white.withValues(alpha: 0.01),
-              Colors.white.withValues(alpha: 0),
-            ],
-            stops: [0.0,0.8]
-        ),
-
-
         child: Column(
           children: [
-
             Padding(
               padding: const EdgeInsets.all(10),
               child: CircleAvatar(
@@ -254,20 +204,15 @@ class _LeaderboardState extends State<Leaderboard> {
                 radius: radius,
               ),
             ),
-            Text(
-              name,
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              score,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
-            ),
-            SizedBox(height: 10.0,),
-
+            Text(name,
+                style: const TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.bold)),
+            Text(score,
+                style: const TextStyle(
+                    color: Colors.white70,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14)),
+            const SizedBox(height: 10.0),
           ],
         ),
       ),

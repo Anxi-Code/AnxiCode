@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:anxicode_app/home_screen/Screens/BattleScreen/battle_screen.dart';
@@ -15,7 +14,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  // Screens
   List<Widget> screens = [
     Chat(),
     Leaderboard(),
@@ -24,7 +22,6 @@ class _HomeState extends State<Home> {
     Profile(),
   ];
 
-  // Bottom nav icons
   List<Widget> bottomNavBarItems = [
     Icon(Icons.chat),
     Icon(Icons.leaderboard),
@@ -33,70 +30,49 @@ class _HomeState extends State<Home> {
     Icon(Icons.person),
   ];
 
-  // Index
   int currentIndex = 2;
   PageController pageController = PageController(initialPage: 2);
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
+    return Scaffold(
+      backgroundColor: Colors.orange.shade100,
 
-        Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/bg9.jpg"),
-              fit: BoxFit.cover,
-            ),
-          ),
+      appBar: AppBar(
+        toolbarHeight: 40,
+        backgroundColor: Colors.orange.shade100, // ✅ SAME AS BACKGROUND
+        elevation: 0,
+      ),
+
+      body: Container(
+        color: Colors.orange.shade100,
+        child: PageView(
+          controller: pageController,
+          scrollDirection: Axis.horizontal,
+          onPageChanged: (index) {
+            setState(() {
+              currentIndex = index;
+            });
+          },
+          children: screens,
         ),
+      ),
 
+      bottomNavigationBar: CurvedNavigationBar(
+        items: bottomNavBarItems,
+        index: currentIndex,
+        onTap: (index) {
+          setState(() {
+            currentIndex = index;
+          });
+          pageController.jumpToPage(index);
+        },
 
-        BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0), // Adjust blur here
-          child: Container(
-            color: Colors.black.withOpacity(0.15), // Tint over the blur
-          ),
-        ),
-
-        Scaffold(
-          backgroundColor: Colors.transparent,
-
-          appBar: AppBar(
-            toolbarHeight: 35,
-            backgroundColor: Colors.transparent,
-          ),
-          body: PageView(
-            controller: pageController,
-            scrollDirection: Axis.horizontal,
-            onPageChanged: (index) {
-              setState(() {
-                currentIndex = index;
-              });
-            },
-            children: screens,
-          ),
-          bottomNavigationBar: Theme(
-            data: Theme.of(context).copyWith(
-              iconTheme: IconThemeData(color: Colors.black),
-            ),
-            child: CurvedNavigationBar(
-              items: bottomNavBarItems,
-              index: currentIndex,
-              onTap: (index) {
-                setState(() {
-                  currentIndex = index;
-                });
-                pageController.jumpToPage(index);
-              },
-              color: Colors.white,
-              backgroundColor: Colors.transparent,
-              animationDuration: Duration(milliseconds: 300),
-              animationCurve: Curves.easeIn,
-            ),
-          ),
-        ),
-      ],
+        color: Colors.white,
+        backgroundColor: Colors.orange.shade100,
+        animationDuration: Duration(milliseconds: 300),
+        animationCurve: Curves.easeIn,
+      ),
     );
   }
 }

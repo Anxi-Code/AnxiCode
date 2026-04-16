@@ -1,31 +1,23 @@
 import 'package:flutter/material.dart';
-
 class Achievements extends StatelessWidget {
   const Achievements({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Achievement();
   }
 }
-
 class Achievement extends StatelessWidget {
-  const Achievement({super.key});
 
+  const Achievement({super.key});
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.orange.shade100,
       body: Column(
         children: [
-          SizedBox(height: 40),
-
           SizedBox(height: 20),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Container(
-              width: double.infinity,
+           Container(
               padding: EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: Colors.orange.shade100,
@@ -66,13 +58,9 @@ class Achievement extends StatelessWidget {
                 ],
               ),
             ),
-          ),
-
           SizedBox(height: 20),
-
-          Expanded(
-            child: Container(
-              width: double.infinity,
+           Container(
+              height: size.height * 0.53,
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -83,8 +71,8 @@ class Achievement extends StatelessWidget {
               ),
               child: GridView.count(
                 crossAxisCount: 2,
-                crossAxisSpacing: 15,
-                mainAxisSpacing: 15,
+                crossAxisSpacing: size. width * 0.02,
+                mainAxisSpacing: size.height * 0.05,
                 children: [
                   buildItem("Mein hoon don", "+1000",
                       Colors.orange.shade100, Icons.home),
@@ -97,7 +85,7 @@ class Achievement extends StatelessWidget {
                 ],
               ),
             ),
-          ),
+
         ],
       ),
     );
@@ -105,11 +93,12 @@ class Achievement extends StatelessWidget {
 
   Widget buildItem(
       String title, String points, Color color, IconData icon) {
+
     return Column(
       children: [
         Container(
-          height: 120,
-          width: 120,
+          height: 100,
+          width: 100,
           decoration: BoxDecoration(
             color: color,
             shape: BoxShape.circle,

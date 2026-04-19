@@ -34,7 +34,7 @@ class _LanguagesDesignState extends ConsumerState<LanguagesDesign> {
               width: 120,
               margin: EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: isSelected ? Colors.blue : Colors.grey[850],
+                color: isSelected ? Colors.blue : Colors.white,
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
                   color: isSelected ? Colors.yellow : Colors.white24,
@@ -48,7 +48,7 @@ class _LanguagesDesignState extends ConsumerState<LanguagesDesign> {
                   SizedBox(height: 10),
                   Text(
                     languages[index].languageName,
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.black),
                   ),
                 ],
               ),

@@ -6,31 +6,52 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Padding(
-        padding: const EdgeInsets.all(12),
-        child: StaggeredGrid.count(
-          crossAxisCount: 3,
-          mainAxisSpacing: 10,
-          crossAxisSpacing: 10,
-          children: [
-            StaggeredGridTile.count(
-              crossAxisCellCount: 2,
-              mainAxisCellCount: 1,
-              child: bentoBox(Colors.blue, "Box 1"),
-
-            ),
-            StaggeredGridTile.count(
-              crossAxisCellCount: 1,
-              mainAxisCellCount: 2,
-              child: bentoBox(Colors.green, "Box 2"),
-            ),
-            StaggeredGridTile.count(
-              crossAxisCellCount: 2,
-              mainAxisCellCount: 1,
-              child: bentoBox(Colors.orange, "Box 3"),
-            ),
-          ],
+    return Scaffold(
+      backgroundColor: Colors.orange.shade100,
+      appBar: AppBar(title: const Text("Profile"),
+      backgroundColor: Colors.orange.shade100,),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: StaggeredGrid.count(
+            crossAxisCount: 3,
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
+            children: [
+              StaggeredGridTile.count(
+                crossAxisCellCount: 2,
+                mainAxisCellCount: 1,
+                child: bentoBox(Colors.blue, "Box 1"),
+              ),
+              StaggeredGridTile.count(
+                crossAxisCellCount: 1,
+                mainAxisCellCount: 2,
+                child: bentoBox(Colors.green, "Box 2"),
+              ),
+              StaggeredGridTile.count(
+                crossAxisCellCount: 2,
+                mainAxisCellCount: 1,
+                child: bentoBox(Colors.orange, "Box 3"),
+              ),
+              StaggeredGridTile.count(
+                crossAxisCellCount: 1,
+                mainAxisCellCount: 2,
+                child: bentoBox(Colors.red, "Box 4"),
+              ),
+              StaggeredGridTile.count(
+                crossAxisCellCount: 2,
+                mainAxisCellCount: 1,
+                child: bentoBox(Colors.pink, "Box 5"),
+              ),
+              StaggeredGridTile.count(
+                crossAxisCellCount: 2,
+                mainAxisCellCount: 1,
+                child: bentoBox(Colors.purple, "Box 6"),
+              ),
+            ],
+          ),
         ),
+      ),
     );
   }
 

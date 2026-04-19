@@ -40,7 +40,7 @@ class _HomeState extends State<Home> {
 
       appBar: AppBar(
         toolbarHeight: 40,
-        backgroundColor: Colors.orange.shade100, // ✅ SAME AS BACKGROUND
+        backgroundColor: Colors.orange.shade100,
         elevation: 0,
       ),
 

@@ -22,7 +22,7 @@ class _BattleModeDesignState extends State<BattleModeDesign> {
       child: Container(
         height: 90,
         decoration: BoxDecoration(
-          color: isSelected ? Colors.blue : Colors.grey[850],
+          color: isSelected ? Colors.blue : Colors.blue.shade100,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected ? Colors.yellow : Colors.white24,

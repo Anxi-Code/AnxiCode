@@ -57,12 +57,15 @@ class Battle extends ConsumerWidget {
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size(double.infinity, 55),
-                  backgroundColor: Colors.blue,
+                  backgroundColor: Colors.blue.shade100,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
-                child: Text("Start Battle"),
+                child: Text("Start Battle",
+                style: TextStyle(
+                  color: Colors.white
+                ),),
               ),
             ),
           ],

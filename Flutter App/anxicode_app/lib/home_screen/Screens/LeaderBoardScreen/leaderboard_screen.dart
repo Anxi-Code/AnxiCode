@@ -79,12 +79,12 @@ class _LeaderboardState extends State<Leaderboard> {
 
           const SizedBox(height: 50),
 
-          /// MAIN CONTAINER (NO GLASS EFFECT)
+
           Expanded(
             child: Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Colors.black, // 🔥 fully solid
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(30),
               ),
 
@@ -128,7 +128,7 @@ class _LeaderboardState extends State<Leaderboard> {
         width: double.infinity,
         padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
-          color: Colors.grey[900], // 🔥 solid color
+          color: Colors.green.shade100,
           borderRadius: BorderRadius.circular(15),
           border: Border.all(color: Colors.black26),
         ),
@@ -191,7 +191,7 @@ class _LeaderboardState extends State<Leaderboard> {
         height: height,
         width: 120,
         decoration: BoxDecoration(
-          color: Colors.grey[850], // 🔥 solid
+          color: Colors.blue.shade100,
           borderRadius: borderRadius,
           border: Border.all(color: Colors.black26),
         ),

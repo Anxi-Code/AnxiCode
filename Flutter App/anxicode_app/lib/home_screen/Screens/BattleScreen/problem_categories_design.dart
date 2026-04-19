@@ -21,7 +21,7 @@ class _State extends ConsumerState<ProblemCategoriesDesign> {
         height: 60,
         padding: EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
-          color: Colors.grey[850],
+          color: Colors.green.shade100,
           borderRadius: BorderRadius.circular(20),
         ),
         child: DropdownButtonFormField2(

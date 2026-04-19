@@ -385,24 +385,10 @@ export const CodeEditor = ({ initialCode, className, language = 'python', onCode
     return match ? match[0] : '';
   }, []);
 
-  // INTELLISENSE - Filter suggestions based on current word
-  const filterSuggestions = useCallback((word: string) => {
-    if (word.length < 1) {
-      setShowSuggestions(false);
-      return;
-    }
-    const filtered = AUTOCOMPLETE_SUGGESTIONS[language].filter(s => 
-      s.name.toLowerCase().startsWith(word.toLowerCase())
-    ).slice(0, 8);
-    
-    if (filtered.length > 0) {
-      setSuggestions(filtered);
-      setSelectedSuggestion(0);
-      setShowSuggestions(true);
-    } else {
-      setShowSuggestions(false);
-    }
-  }, [language]);
+  // INTELLISENSE DISABLED - autocomplete turned off per user request (auto-bracket still works)
+  const filterSuggestions = useCallback((_word: string) => {
+    setShowSuggestions(false);
+  }, []);
 
   // INTELLISENSE - Calculate suggestion popup position
   const updateSuggestionPosition = useCallback(() => {

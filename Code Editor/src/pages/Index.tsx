@@ -3,6 +3,9 @@ import { Navbar } from '@/components/code-battle/Navbar';
 import { CodeEditor, SupportedLanguage } from '@/components/code-battle/CodeEditor';
 import { ProblemPanel } from '@/components/code-battle/ProblemPanel';
 import { ParticipantList } from '@/components/code-battle/ParticipantList';
+import { BattleEntry, BattleData } from '@/components/code-battle/BattleEntry';
+import { BattleVSOverlay } from '@/components/code-battle/BattleVSOverlay';
+import { Swords } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 const MOCK_PARTICIPANTS = [
@@ -31,6 +34,9 @@ const LANGUAGE_DISPLAY: Record<SupportedLanguage, string> = {
 };
 
 const Index = () => {
+  const [battleData, setBattleData] = useState<BattleData | null>(null);
+  const [pendingBattleData, setPendingBattleData] = useState<BattleData | null>(null);
+  const [showVS, setShowVS] = useState(false);
   const [isProblemOpen, setIsProblemOpen] = useState(true);
   const [battleMode] = useState<'1v1' | 'team'>('team');
   
@@ -101,6 +107,31 @@ const Index = () => {
     player1CodeRef.current = code;
   }, []);
 
+  // Show battle entry screen first
+  if (!battleData) {
+    return (
+      <>
+        <BattleEntry
+          onEnter={(data) => {
+            setPendingBattleData(data);
+            setShowVS(true);
+          }}
+        />
+        {showVS && pendingBattleData && (
+          <BattleVSOverlay
+            user1={pendingBattleData.user1}
+            user2={pendingBattleData.user2}
+            duration={7000}
+            onComplete={() => {
+              setBattleData(pendingBattleData);
+              setShowVS(false);
+            }}
+          />
+        )}
+      </>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[radial-gradient(ellipse_at_top_right,_hsl(var(--primary)/0.15)_0%,_transparent_50%),radial-gradient(ellipse_at_bottom_left,_hsl(var(--success)/0.1)_0%,_transparent_50%),hsl(var(--background))] relative overflow-hidden">
       {/* Animated mesh gradient background */}
@@ -129,15 +160,14 @@ const Index = () => {
         {/* Participant Bar */}
         {/* For 1v1 show single-user icon */}
         {/* For teams show team icon */}
-        <div className="h-12 glass-subtle flex items-center justify-center px-4 gaming-gradient">
-          <ParticipantList
-            participants={
-              battleMode === '1v1'
-                ? [MOCK_PARTICIPANTS[0], MOCK_PARTICIPANTS[3]]
-                : MOCK_PARTICIPANTS
-            }
-            mode={battleMode}
-          />
+        {/* Participant Bar with battle header */}
+        <div className="h-12 glass-subtle flex items-center justify-center px-4 gaming-gradient gap-6">
+          <div className="flex items-center gap-3 text-sm font-bold tracking-wide">
+            <Swords className="w-4 h-4 text-warning animate-pulse" />
+            <span className="text-primary">{battleData.user1}</span>
+            <span className="text-warning">vs</span>
+            <span className="text-destructive">{battleData.user2}</span>
+          </div>
         </div>
 
         {/* Editor and Problem Panel */}

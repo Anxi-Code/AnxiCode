@@ -1,5 +1,7 @@
+import 'package:anxicode_app/Services/supabase_db.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LogIn extends StatefulWidget {
   const LogIn({super.key});
@@ -9,6 +11,7 @@ class LogIn extends StatefulWidget {
 }
 
 class _LogInState extends State<LogIn> {
+  final SupabaseDb _db = SupabaseDb();
   final _fromkey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -38,8 +41,35 @@ class _LogInState extends State<LogIn> {
               const SizedBox(height: 20),
 
               ElevatedButton(
-                onPressed: () {
-                  context.go('/home');
+                onPressed: () async {
+                  if (!_fromkey.currentState!.validate()) return;
+
+                  try {
+                    await _db.loginUser(
+                      email: _emailController.text.trim(),
+                      password: _passwordController.text.trim(),
+                    );
+
+                    final session = Supabase.instance.client.auth.currentSession;
+
+                    if (session != null) {
+                      _emailController.clear();
+                      _passwordController.clear();
+                      context.go('/home');
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Login failed: no session found")),
+                      );
+                    }
+                  } on AuthException catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(e.message)),
+                    );
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Can't Log In")),
+                    );
+                  }
                 },
                 child: const Text("Login"),
               ),

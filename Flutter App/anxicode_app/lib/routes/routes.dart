@@ -1,3 +1,4 @@
+import 'package:anxicode_app/home_screen/Screens/BattleScreen/matchmaking_screen.dart';
 import 'package:anxicode_app/home_screen/home.dart';
 import 'package:go_router/go_router.dart';
 import 'package:anxicode_app/auth/login_page/login_page.dart';
@@ -17,6 +18,7 @@ class AppRouter {
         builder: (context, state) => SignUp(),
       ),
       GoRoute(path: '/home', name: 'home', builder: (context, state) => Home()),
+      GoRoute(path: '/matchmaking',name: 'matchmaking', builder: (context, state) => Matchmaking())
     ],
 
     //'errorBuilder'

@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LanguagesDesign extends ConsumerStatefulWidget {
-  const LanguagesDesign({super.key});
+  final Function(String) onLanguageSelected;
+
+  const LanguagesDesign({super.key, required this.onLanguageSelected});
 
   @override
   ConsumerState<LanguagesDesign> createState() => _LanguagesDesignState();
@@ -15,6 +17,8 @@ class _LanguagesDesignState extends ConsumerState<LanguagesDesign> {
   @override
   Widget build(BuildContext context) {
     final languages = ref.watch(languagesListProvider);
+    String selectedLanguage='';
+
 
     return SizedBox(
       height: 130,
@@ -24,11 +28,15 @@ class _LanguagesDesignState extends ConsumerState<LanguagesDesign> {
         itemBuilder: (context, index) {
           bool isSelected = selectedIndex == index;
 
+
           return GestureDetector(
             onTap: () {
               setState(() {
                 selectedIndex = index;
+                widget.onLanguageSelected(languages[index].languageName);
+
               });
+
             },
             child: Container(
               width: 120,

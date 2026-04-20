@@ -4,68 +4,119 @@ import 'package:anxicode_app/home_screen/Screens/BattleScreen/opponent_selection
 import 'package:anxicode_app/home_screen/Screens/BattleScreen/problem_categories_design.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-class Battle extends ConsumerWidget {
+import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+class Battle extends StatefulWidget {
   const Battle({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  State<Battle> createState() => _BattleState();
+}
+
+class _BattleState extends State<Battle> {
+
+  String? selectedLanguage;
+
+  @override
+  Widget build(BuildContext context) {
+    final supabase = Supabase.instance.client;
+
+
     return Padding(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ProblemCategoriesDesign(),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
 
-            Padding(
+            const Padding(
               padding: EdgeInsets.only(left: 14),
-              child: Text("Select Programming Language",
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              child: Text(
+                "Select Programming Language",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
 
-            SizedBox(height: 10),
-            LanguagesDesign(),
+            const SizedBox(height: 10),
 
-            SizedBox(height: 10),
-            Padding(
-              padding: EdgeInsets.only(left: 14),
-              child: Text("Select Battle Mode",
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+
+            LanguagesDesign(
+              onLanguageSelected: (lang) {
+                setState(() {
+                  selectedLanguage = lang;
+                });
+              },
             ),
 
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
+
+            const Padding(
+              padding: EdgeInsets.only(left: 14),
+              child: Text(
+                "Select Battle Mode",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 10),
             BattleModeDesign(),
 
-            SizedBox(height: 10),
-            Padding(
+            const SizedBox(height: 10),
+
+            const Padding(
               padding: EdgeInsets.only(left: 20),
-              child: Text("Select Opponent",
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              child: Text(
+                "Select Opponent",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
 
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             OpponentSelectionDesign(),
 
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: ()async {
+                  final result =await supabase.from('match_queue').insert({
+                    'user_id': supabase.auth.currentUser!.id,
+                    'ranking':500,
+                    'language': selectedLanguage,
+                    'status':'waiting'
+                  });
+
+                  context.push('/matchmaking');
+                  
+                },
                 style: ElevatedButton.styleFrom(
-                  minimumSize: Size(double.infinity, 55),
-                  backgroundColor: Colors.blue.shade100,
+                  minimumSize: const Size(double.infinity, 55),
+                  backgroundColor: Colors.blue,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
-                child: Text("Start Battle",
-                style: TextStyle(
-                  color: Colors.white
-                ),),
+                child: const Text(
+                  "Start Battle",
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ),
           ],

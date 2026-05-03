@@ -23,92 +23,131 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.orange.shade100,
+      backgroundColor: Colors.transparent,
 
       appBar: AppBar(
         title: const Text('Sign-Up Page'),
         centerTitle: true,
-        backgroundColor: Colors.orange.shade100, // same theme
+        backgroundColor: Colors.transparent,
         elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
         leading: IconButton(
           onPressed: () {
             context.go('/');
           },
           icon: const Icon(Icons.arrow_back),
         ),
+        titleTextStyle: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
+        ),
       ),
 
       body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFF120458),
+              Color(0xFF2B0B98),
+              Color(0xFF5F0A87),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
         padding: const EdgeInsets.all(15),
         child: Form(
           key: _fromkey,
-          child: Column(
-            children: [
-              _inputField(_nameController, type: 'Name'),
-              const SizedBox(height: 20),
-              _inputField(_userNameController, type: 'User Name'),
-              const SizedBox(height: 20),
-              _inputField(_emailController, type: 'Email'),
-              const SizedBox(height: 20),
-              _inputField(_passwordController, type: 'Password'),
-              const SizedBox(height: 20),
-              _inputField(_finalPasswordController, type: 'Confirm Password'),
-              const SizedBox(height: 20),
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.blue),
-                ),
-                child: TextButton.icon(
-                  onPressed: () async {
-                    if (!_fromkey.currentState!.validate()) return;
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                _inputField(_nameController, type: 'Name'),
+                const SizedBox(height: 20),
+                _inputField(_userNameController, type: 'User Name'),
+                const SizedBox(height: 20),
+                _inputField(_emailController, type: 'Email'),
+                const SizedBox(height: 20),
+                _inputField(_passwordController, type: 'Password'),
+                const SizedBox(height: 20),
+                _inputField(_finalPasswordController, type: 'Confirm Password'),
+                const SizedBox(height: 30),
 
-                    if (_passwordController.text !=
-                        _finalPasswordController.text) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Passwords do not match")),
-                      );
-                      return;
-                    }
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF00C9A7), Color(0xFF007CF0)],
+                    ),
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.cyanAccent.withOpacity(0.3),
+                        blurRadius: 12,
+                        spreadRadius: 1,
+                      ),
+                    ],
+                  ),
+                  child: TextButton.icon(
+                    onPressed: () async {
+                      if (!_fromkey.currentState!.validate()) return;
 
-                    try {
-                      final user = UserInfo(
-                        name: _nameController.text.trim(),
-                        userName: _userNameController.text.trim(),
-                        email: _emailController.text.trim(),
-                        password: _passwordController.text.trim(),
-                      );
+                      if (_passwordController.text !=
+                          _finalPasswordController.text) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text("Passwords do not match")),
+                        );
+                        return;
+                      }
 
-                      await _db.registerUser(userInfo: user);
+                      try {
+                        final user = UserInfo(
+                          name: _nameController.text.trim(),
+                          userName: _userNameController.text.trim(),
+                          email: _emailController.text.trim(),
+                          password: _passwordController.text.trim(),
+                        );
 
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Registration successful"),
-                        ),
-                      );
-                      //to login page
-                      context.go('/');
-                    } on AuthException catch (e) {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(e.message)));
-                    } catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Something went wrong")),
-                      );
-                    }
-                  },
-                  label: Text(
-                    'Register',
-                    style: TextStyle(
-                      fontSize: 16,
+                        await _db.registerUser(userInfo: user);
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Registration successful"),
+                          ),
+                        );
+
+                        context.go('/');
+                      } on AuthException catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(e.message)),
+                        );
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text("Something went wrong")),
+                        );
+                      }
+                    },
+                    label: const Text(
+                      'REGISTER',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1,
+                      ),
+                    ),
+                    icon: const Icon(
+                      Icons.verified_outlined,
                       color: Colors.white,
-                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  icon: Icon(Icons.verified_outlined),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -116,38 +155,47 @@ class _SignUpState extends State<SignUp> {
   }
 
   TextFormField _inputField(
-    TextEditingController controller, {
-    String type = 'Name',
-  }) {
+      TextEditingController controller, {
+        String type = 'Name',
+      }) {
     return TextFormField(
       controller: controller,
-      keyboardType:
-          type == "Email" ? TextInputType.emailAddress : TextInputType.text,
+      keyboardType: type == "Email"
+          ? TextInputType.emailAddress
+          : TextInputType.text,
+      style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
         labelText: type,
-        hintText:
-            type == "Confirm Password"
-                ? "Confirm your Password"
-                : "Enter your $type",
-        border: const OutlineInputBorder(),
-        enabledBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey),
+        labelStyle: const TextStyle(color: Colors.white70),
+        hintText: type == "Confirm Password"
+            ? "Confirm your Password"
+            : "Enter your $type",
+        hintStyle: const TextStyle(color: Colors.white54),
+        filled: true,
+        fillColor: const Color(0xFF1B1B3A),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: BorderSide.none,
         ),
-        focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.blue, width: 2),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: const BorderSide(color: Colors.white24),
         ),
-        errorBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.red),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: const BorderSide(color: Colors.cyanAccent, width: 2),
         ),
-        focusedErrorBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.red, width: 2),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: const BorderSide(color: Colors.red),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: const BorderSide(color: Colors.red, width: 2),
         ),
       ),
-      validator:
-          (value) =>
-              (value == null || value.isEmpty)
-                  ? "Please Enter the $type"
-                  : null,
+      validator: (value) =>
+      (value == null || value.isEmpty) ? "Please Enter the $type" : null,
     );
   }
 }

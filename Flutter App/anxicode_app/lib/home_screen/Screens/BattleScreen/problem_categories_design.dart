@@ -19,30 +19,43 @@ class _State extends ConsumerState<ProblemCategoriesDesign> {
       padding: const EdgeInsets.all(6.0),
       child: Container(
         height: 60,
-        padding: EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
-          color: Colors.green.shade100,
+          gradient: const LinearGradient(
+            colors: [Color(0xFF1B1B3A), Color(0xFF2D2D5A)],
+          ),
           borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.cyanAccent, width: 1.5),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.cyanAccent.withOpacity(0.25),
+              blurRadius: 12,
+              spreadRadius: 1,
+            ),
+          ],
         ),
         child: DropdownButtonFormField2(
-          hint: Text("Choose Problem Type", style: TextStyle(color: Colors.white70)),
+          hint: const Text(
+            "Choose Problem Type",
+            style: TextStyle(color: Colors.white70),
+          ),
           isExpanded: true,
-          decoration: InputDecoration(border: InputBorder.none),
+          decoration: const InputDecoration(border: InputBorder.none),
           dropdownStyleData: DropdownStyleData(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: const Color(0xFF1B1B3A),
               borderRadius: BorderRadius.circular(15),
             ),
           ),
           items: problemCategories.map((item) {
             return DropdownMenuItem(
               value: item,
-              child: Text(item, style: TextStyle(color: Colors.black)),
+              child: Text(item, style: const TextStyle(color: Colors.white)),
             );
           }).toList(),
           onChanged: (value) {},
-          iconStyleData: IconStyleData(
-            icon: Icon(Icons.keyboard_arrow_down_rounded, color: Colors.white),
+          iconStyleData: const IconStyleData(
+            icon: Icon(Icons.keyboard_arrow_down_rounded, color: Colors.amber),
           ),
         ),
       ),

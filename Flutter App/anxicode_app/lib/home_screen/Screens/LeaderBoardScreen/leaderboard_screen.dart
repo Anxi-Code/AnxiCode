@@ -25,9 +25,14 @@ class _LeaderboardState extends State<Leaderboard> {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage("assets/home_bg.jpg"),
-          fit: BoxFit.cover,
+        gradient: LinearGradient(
+          colors: [
+            Color(0xFF120458),
+            Color(0xFF2B0B98),
+            Color(0xFF5F0A87),
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
         ),
       ),
       child: Column(
@@ -79,15 +84,29 @@ class _LeaderboardState extends State<Leaderboard> {
 
           const SizedBox(height: 50),
 
-
           Expanded(
             child: Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Colors.white,
+                gradient: const LinearGradient(
+                  colors: [
+                    Color(0xFF1B1B3A),
+                    Color(0xFF2D2D5A),
+                  ],
+                ),
                 borderRadius: BorderRadius.circular(30),
+                border: Border.all(
+                  color: Colors.amberAccent,
+                  width: 2,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.35),
+                    blurRadius: 18,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
               ),
-
               child: Container(
                 padding: const EdgeInsets.fromLTRB(30, 30, 30, 15),
                 child: ListView.builder(
@@ -128,19 +147,37 @@ class _LeaderboardState extends State<Leaderboard> {
         width: double.infinity,
         padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
-          color: Colors.green.shade100,
-          borderRadius: BorderRadius.circular(15),
-          border: Border.all(color: Colors.black26),
+          gradient: const LinearGradient(
+            colors: [
+              Color(0xFF00C9A7),
+              Color(0xFF007CF0),
+            ],
+          ),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(
+            color: Colors.white24,
+            width: 1.5,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.cyanAccent.withOpacity(0.2),
+              blurRadius: 10,
+              spreadRadius: 1,
+            ),
+          ],
         ),
         child: Row(
           children: [
             const SizedBox(width: 10.0),
-            Text(rank,
-                style: const TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontStyle: FontStyle.italic)),
+            Text(
+              rank,
+              style: const TextStyle(
+                fontSize: 20,
+                color: Colors.amberAccent,
+                fontWeight: FontWeight.bold,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
             const SizedBox(width: 15.0),
             CircleAvatar(
               backgroundImage: AssetImage(image),
@@ -151,23 +188,33 @@ class _LeaderboardState extends State<Leaderboard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 6.0),
-                Text(name,
-                    style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white)),
+                Text(
+                  name,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
                 const SizedBox(height: 4),
-                Text(points,
-                    style: const TextStyle(color: Colors.white70)),
+                Text(
+                  points,
+                  style: const TextStyle(
+                    color: Colors.white70,
+                  ),
+                ),
               ],
             ),
             const Spacer(),
             Text(
               change,
-              style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: Colors.white70),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                color: change.contains('+')
+                    ? Colors.lightGreenAccent
+                    : Colors.redAccent,
+              ),
             ),
             const SizedBox(width: 10.0),
           ],
@@ -191,9 +238,26 @@ class _LeaderboardState extends State<Leaderboard> {
         height: height,
         width: 120,
         decoration: BoxDecoration(
-          color: Colors.blue.shade100,
+          gradient: const LinearGradient(
+            colors: [
+              Color(0xFFFFC75F),
+              Color(0xFFFF9671),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
           borderRadius: borderRadius,
-          border: Border.all(color: Colors.black26),
+          border: Border.all(
+            color: Colors.white24,
+            width: 2,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.orange,
+              blurRadius: 12,
+              spreadRadius: 2,
+            ),
+          ],
         ),
         child: Column(
           children: [
@@ -204,14 +268,21 @@ class _LeaderboardState extends State<Leaderboard> {
                 radius: radius,
               ),
             ),
-            Text(name,
-                style: const TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.bold)),
-            Text(score,
-                style: const TextStyle(
-                    color: Colors.white70,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14)),
+            Text(
+              name,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              score,
+              style: const TextStyle(
+                color: Colors.white70,
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
             const SizedBox(height: 10.0),
           ],
         ),

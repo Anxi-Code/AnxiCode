@@ -23,11 +23,11 @@ class _HomeState extends State<Home> {
   ];
 
   List<Widget> bottomNavBarItems = [
-    Icon(Icons.chat),
-    Icon(Icons.leaderboard),
-    Icon(Icons.bolt),
-    Icon(Icons.emoji_events),
-    Icon(Icons.person),
+    const Icon(Icons.chat, color: Colors.white),
+    const Icon(Icons.leaderboard, color: Colors.white),
+    const Icon(Icons.bolt, color: Colors.white),
+    const Icon(Icons.emoji_events, color: Colors.white),
+    const Icon(Icons.person, color: Colors.white),
   ];
 
   int currentIndex = 2;
@@ -36,16 +36,28 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.orange.shade100,
+      extendBody: true,
+      backgroundColor: const Color(0xFF120458),
 
       appBar: AppBar(
         toolbarHeight: 40,
-        backgroundColor: Colors.orange.shade100,
+        backgroundColor: const Color(0xFF120458),
         elevation: 0,
+        surfaceTintColor: Colors.transparent,
       ),
 
       body: Container(
-        color: Colors.orange.shade100,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFF120458),
+              Color(0xFF2B0B98),
+              Color(0xFF5F0A87),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
         child: PageView(
           controller: pageController,
           scrollDirection: Axis.horizontal,
@@ -58,20 +70,31 @@ class _HomeState extends State<Home> {
         ),
       ),
 
-      bottomNavigationBar: CurvedNavigationBar(
-        items: bottomNavBarItems,
-        index: currentIndex,
-        onTap: (index) {
-          setState(() {
-            currentIndex = index;
-          });
-          pageController.jumpToPage(index);
-        },
-
-        color: Colors.white,
-        backgroundColor: Colors.orange.shade100,
-        animationDuration: Duration(milliseconds: 300),
-        animationCurve: Curves.easeIn,
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.cyanAccent.withOpacity(0.25),
+              blurRadius: 20,
+              spreadRadius: 2,
+            ),
+          ],
+        ),
+        child: CurvedNavigationBar(
+          items: bottomNavBarItems,
+          index: currentIndex,
+          onTap: (index) {
+            setState(() {
+              currentIndex = index;
+            });
+            pageController.jumpToPage(index);
+          },
+          color: const Color(0xFF1B1B3A),
+          buttonBackgroundColor: const Color(0xFF00C9A7),
+          backgroundColor: Colors.transparent,
+          animationDuration: const Duration(milliseconds: 300),
+          animationCurve: Curves.easeInOut,
+        ),
       ),
     );
   }

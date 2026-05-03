@@ -31,16 +31,15 @@ class _LanguagesDesignState extends ConsumerState<LanguagesDesign> {
 
           return GestureDetector(
             onTap: () {
-<<<<<<< Updated upstream
               setState(() {
                 selectedIndex = index;
                 widget.onLanguageSelected(languages[index].languageName);
 
               });
 
-=======
+
               setState(() => selectedIndex = index);
->>>>>>> Stashed changes
+
             },
             child: Container(
               width: 120,

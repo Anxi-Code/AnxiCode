@@ -13,74 +13,83 @@ class LanguagesDesign extends ConsumerStatefulWidget {
 
 class _LanguagesDesignState extends ConsumerState<LanguagesDesign> {
   int selectedIndex = -1;
+  PageController _controller=PageController(
+    viewportFraction:1.0
+  );
 
+  void NextPage() {
+    final languages = ref.watch(languagesListProvider);
+    if (selectedIndex < languages.length - 1) {
+      selectedIndex++;
+      _controller.animateToPage(
+          selectedIndex, duration: Duration(milliseconds: 200),
+          curve: Curves.easeIn);
+    }
+    setState(() {});
+   }
+    void PreviousPage(){
+      if(selectedIndex>0){
+        selectedIndex--;
+        _controller.animateToPage(selectedIndex, duration: Duration(milliseconds: 200), curve: Curves.easeIn);
+
+      }
+      setState(() {});
+
+    }
+    
   @override
   Widget build(BuildContext context) {
+
     final languages = ref.watch(languagesListProvider);
-    String selectedLanguage='';
+    String selectedLanguage='Python';
 
 
     return SizedBox(
       height: 130,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: languages.length,
-        itemBuilder: (context, index) {
-          bool isSelected = selectedIndex == index;
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children:[
+          IconButton(
+              onPressed:PreviousPage,
+              icon: Icon(Icons.arrow_back_ios),
+            color: Colors.cyanAccent,
+          ),
+          Expanded(
+            child: PageView.builder(
+              onPageChanged: (index){
+                setState(() {
+                  selectedLanguage=languages[index].languageName;
+                  widget.onLanguageSelected(selectedLanguage);
+                  selectedIndex=index;
+                });
+              },
+                itemBuilder: (context,index){
+                  return Center(
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(height: 80,width: 80,
 
+                              child: Image.asset(languages[index].imagePath,fit: BoxFit.cover,)),
+                          Text(languages[index].languageName,style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),)
+                        ],
+                      ),
 
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                selectedIndex = index;
-                widget.onLanguageSelected(languages[index].languageName);
-
-              });
-
-
-              setState(() => selectedIndex = index);
-
-            },
-            child: Container(
-              width: 120,
-              margin: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                gradient: isSelected
-                    ? const LinearGradient(
-                  colors: [Color(0xFF00C9A7), Color(0xFF007CF0)],
-                )
-                    : const LinearGradient(
-                  colors: [Color(0xFF1B1B3A), Color(0xFF2D2D5A)],
-                ),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: isSelected ? Colors.amber : Colors.white24,
-                  width: 2,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: isSelected
-                        ? Colors.cyanAccent.withOpacity(0.3)
-                        : Colors.black.withOpacity(0.2),
-                    blurRadius: 12,
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(languages[index].imagePath, height: 50),
-                  const SizedBox(height: 10),
-                  Text(
-                    languages[index].languageName,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ],
-              ),
+                  );
+                },
+              controller: _controller,
+              scrollDirection: Axis.horizontal,
+              itemCount: languages.length,
             ),
-          );
-        },
-      ),
+          ),
+          IconButton(
+              onPressed:  NextPage,
+              icon: Icon(Icons.arrow_forward_ios,
+              color: Colors.cyanAccent,)
+          ),
+          
+      ]
+      )
     );
   }
 }

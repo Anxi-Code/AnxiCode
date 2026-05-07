@@ -19,7 +19,7 @@ class _LogInState extends State<LogIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor:  Color(0xFF120458),
       appBar: AppBar(
         title: const Text('Log-In Page'),
         centerTitle: true,

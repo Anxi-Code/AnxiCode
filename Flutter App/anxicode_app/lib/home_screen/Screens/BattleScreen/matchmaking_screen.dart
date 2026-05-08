@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 class Matchmaking extends StatefulWidget {
   const Matchmaking({super.key});
 
@@ -39,10 +41,11 @@ class _MatchmakingState extends State<Matchmaking> {
         .select("user_id").eq("battle_id",battleId);
 
     print("got opponent getting to username ");
+    print(result);
 
     final opponent_username=await supabase.from("profiles")
     .select("user_name")
-    .eq("id",result[0]["user_id"]);
+    .eq("id",result[1]["user_id"]);
     final username=await supabase.from("profiles")
         .select("user_name")
         .eq("id",supabase.auth.currentUser!.id);
@@ -65,34 +68,103 @@ class _MatchmakingState extends State<Matchmaking> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.orange.shade100,
+      backgroundColor: Color(0xFF120458),
+
       appBar: AppBar(
-        title: const Text("Matchmaking"),
+        title: const Text("Matchmaking",style: TextStyle(color: Colors.white),),
         centerTitle: true,
-        backgroundColor: Colors.orange.shade100,
+        backgroundColor: Colors.transparent,
         elevation: 0,
+        leading: BackButton(color: Colors.white,),
 
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                loading ? CircularProgressIndicator(color: Colors.white,):Text(my_username,style: TextStyle(color: Colors.white,fontSize: 20),),
-                Text("VS",style: TextStyle(color: Colors.white,fontSize: 20),),
-                loading ? CircularProgressIndicator(color: Colors.white,):Text(opp_username,style: TextStyle(color: Colors.white,fontSize: 20),),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(otp,style: TextStyle(color: Colors.white,fontSize: 20),),
-
-              ],
-            )
-          ],
+      body: Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFF120458),
+              Color(0xFF2B0B98),
+              Color(0xFF5F0A87),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
         ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          radius: 55,
+                          backgroundImage: AssetImage('assets/images/user1.png'),
+                        ),
+                        SizedBox(height: 10.0,),
+                        loading ? SpinKitThreeBounce(color: Colors.cyanAccent,size:25):Text(my_username,style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold))
+
+
+
+                      ],
+                    ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      loading ? SpinKitDoubleBounce(color: Colors.cyanAccent,size: 40,): Text("VS",style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold),),
+                      SizedBox(height: 10.0,),
+                      loading ? Text("Finding match...",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 14),):Text("")
+
+
+
+                    ],
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        radius: 55,
+                        backgroundImage: AssetImage('assets/images/user3.png'),
+                      ),
+                      SizedBox(height: 10.0,),
+                      loading ? SpinKitThreeBounce(color: Colors.cyanAccent,size: 25):Text(opp_username,style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold))
+
+
+
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 20.0,),
+              Container(
+                height: 50,
+                width: 180,
+                decoration: BoxDecoration(
+                  color: Colors.white54,
+                  borderRadius: BorderRadius.circular(50)
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("OTP: ",style: TextStyle(color: Colors.white,fontSize: 16),),
+                    SizedBox(width: 10,),
+                    Text(otp,style:  TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.bold),),
+                    IconButton(onPressed: ()async{
+                      await Clipboard.setData(ClipboardData(text: otp));
+
+                    }, icon:Icon(size: 22,Icons.copy_rounded,color: Colors.cyanAccent,))
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
 
     );
   }

@@ -165,9 +165,12 @@ class Profile extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           LinearProgressIndicator(
-            value: 1000 / 1500,
+            value: 800 / 1500,
             backgroundColor: Colors.white24,
             color: Colors.orange,
+            borderRadius: BorderRadius.circular(20),
+            minHeight: 15,
+
           ),
           const SizedBox(height: 6),
           const Text(

@@ -1,7 +1,4 @@
-
-
-
-class UserInfo{
+class UserInfo {
   String name;
   String userName;
   String email;
@@ -19,4 +16,3 @@ class UserInfo{
   String get getEmail => email;
   String get getPassword => password;
 }
-

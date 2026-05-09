@@ -1,7 +1,8 @@
 //import 'package:anxicode_app/login_page/login_page.dart';
 //import 'package:anxicode_app/home_screen/Screens/ChatScreen/chat_screen.dart';
+import 'package:anxicode_app/home_screen/home.dart';
 import 'package:flutter/material.dart';
-import 'package:anxicode_app/routes/routes.dart';
+//import 'package:anxicode_app/routes/routes.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -21,10 +22,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: AppRouter.router,
-      title: 'AnxiCode',
-      debugShowCheckedModeBanner: false,
-    );
+    // return MaterialApp.router(
+    //   routerConfig: AppRouter.router,
+    //   title: 'AnxiCode',
+    //   debugShowCheckedModeBanner: false,
+    // );
+    return MaterialApp(debugShowCheckedModeBanner: false, home: Home());
   }
 }

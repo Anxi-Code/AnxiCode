@@ -12,7 +12,7 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  final SupabaseDb _db = SupabaseDb();
+  final SupabaseAuthService _db = SupabaseAuthService();
   final _fromkey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _userNameController = TextEditingController();
@@ -23,7 +23,7 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:Color(0xFF120458),
+      backgroundColor: Color(0xFF120458),
 
       appBar: AppBar(
         title: const Text('Sign-Up Page'),
@@ -49,11 +49,7 @@ class _SignUpState extends State<SignUp> {
         height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Color(0xFF120458),
-              Color(0xFF2B0B98),
-              Color(0xFF5F0A87),
-            ],
+            colors: [Color(0xFF120458), Color(0xFF2B0B98), Color(0xFF5F0A87)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -84,7 +80,7 @@ class _SignUpState extends State<SignUp> {
                     borderRadius: BorderRadius.circular(15),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.cyanAccent.withOpacity(0.3),
+                        color: Colors.cyanAccent.withValues(alpha: 0.3),
                         blurRadius: 12,
                         spreadRadius: 1,
                       ),
@@ -98,7 +94,8 @@ class _SignUpState extends State<SignUp> {
                           _finalPasswordController.text) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                              content: Text("Passwords do not match")),
+                            content: Text("Passwords do not match"),
+                          ),
                         );
                         return;
                       }
@@ -121,13 +118,12 @@ class _SignUpState extends State<SignUp> {
 
                         context.go('/');
                       } on AuthException catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(e.message)),
-                        );
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text(e.message)));
                       } catch (e) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text("Something went wrong")),
+                          const SnackBar(content: Text("Something went wrong")),
                         );
                       }
                     },
@@ -155,21 +151,21 @@ class _SignUpState extends State<SignUp> {
   }
 
   TextFormField _inputField(
-      TextEditingController controller, {
-        String type = 'Name',
-      }) {
+    TextEditingController controller, {
+    String type = 'Name',
+  }) {
     return TextFormField(
       controller: controller,
-      keyboardType: type == "Email"
-          ? TextInputType.emailAddress
-          : TextInputType.text,
+      keyboardType:
+          type == "Email" ? TextInputType.emailAddress : TextInputType.text,
       style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
         labelText: type,
         labelStyle: const TextStyle(color: Colors.white70),
-        hintText: type == "Confirm Password"
-            ? "Confirm your Password"
-            : "Enter your $type",
+        hintText:
+            type == "Confirm Password"
+                ? "Confirm your Password"
+                : "Enter your $type",
         hintStyle: const TextStyle(color: Colors.white54),
         filled: true,
         fillColor: const Color(0xFF1B1B3A),
@@ -194,8 +190,11 @@ class _SignUpState extends State<SignUp> {
           borderSide: const BorderSide(color: Colors.red, width: 2),
         ),
       ),
-      validator: (value) =>
-      (value == null || value.isEmpty) ? "Please Enter the $type" : null,
+      validator:
+          (value) =>
+              (value == null || value.isEmpty)
+                  ? "Please Enter the $type"
+                  : null,
     );
   }
 }

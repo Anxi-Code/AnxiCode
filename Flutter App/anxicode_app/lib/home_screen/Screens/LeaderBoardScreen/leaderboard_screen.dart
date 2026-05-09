@@ -9,32 +9,82 @@ class Leaderboard extends StatefulWidget {
 
 class _LeaderboardState extends State<Leaderboard> {
   final List<Map<String, dynamic>> leaderboardData = [
-    {"rank": "1", "name": "Mike Wheeler", "image": "assets/images/user3.png", "points": "100 pts", "change": "+1"},
-    {"rank": "2", "name": "Dustin Henderson", "image": "assets/images/user3.png", "points": "98 pts", "change": "+2"},
-    {"rank": "3", "name": "Nancy Wheeler", "image": "assets/images/user3.png", "points": "94 pts", "change": "-2"},
-    {"rank": "4", "name": "Jim Hopper", "image": "assets/images/user3.png", "points": "85 pts", "change": "-1"},
-    {"rank": "5", "name": "Lucas Sinclair", "image": "assets/images/user3.png", "points": "80 pts", "change": "+1"},
-    {"rank": "6", "name": "Max Mayfield", "image": "assets/images/user3.png", "points": "75 pts", "change": "-4"},
-    {"rank": "7", "name": "Joyce Byers", "image": "assets/images/user3.png", "points": "70 pts", "change": "+3"},
-    {"rank": "8", "name": "Will Byers", "image": "assets/images/user3.png", "points": "68 pts", "change": "-1"},
-    {"rank": "9", "name": "Steve Harrington", "image": "assets/images/user3.png", "points": "65 pts", "change": "+2"},
-    {"rank": "10", "name": "Robin Buckley", "image": "assets/images/user3.png", "points": "62 pts", "change": "-3"},
+    {
+      "rank": "1",
+      "name": "Mike Wheeler",
+      "image": "assets/images/user3.png",
+      "points": "100 pts",
+      "change": "+1",
+    },
+    {
+      "rank": "2",
+      "name": "Dustin Henderson",
+      "image": "assets/images/user3.png",
+      "points": "98 pts",
+      "change": "+2",
+    },
+    {
+      "rank": "3",
+      "name": "Nancy Wheeler",
+      "image": "assets/images/user3.png",
+      "points": "94 pts",
+      "change": "-2",
+    },
+    {
+      "rank": "4",
+      "name": "Jim Hopper",
+      "image": "assets/images/user3.png",
+      "points": "85 pts",
+      "change": "-1",
+    },
+    {
+      "rank": "5",
+      "name": "Lucas Sinclair",
+      "image": "assets/images/user3.png",
+      "points": "80 pts",
+      "change": "+1",
+    },
+    {
+      "rank": "6",
+      "name": "Max Mayfield",
+      "image": "assets/images/user3.png",
+      "points": "75 pts",
+      "change": "-4",
+    },
+    {
+      "rank": "7",
+      "name": "Joyce Byers",
+      "image": "assets/images/user3.png",
+      "points": "70 pts",
+      "change": "+3",
+    },
+    {
+      "rank": "8",
+      "name": "Will Byers",
+      "image": "assets/images/user3.png",
+      "points": "68 pts",
+      "change": "-1",
+    },
+    {
+      "rank": "9",
+      "name": "Steve Harrington",
+      "image": "assets/images/user3.png",
+      "points": "65 pts",
+      "change": "+2",
+    },
+    {
+      "rank": "10",
+      "name": "Robin Buckley",
+      "image": "assets/images/user3.png",
+      "points": "62 pts",
+      "change": "-3",
+    },
   ];
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Color(0xFF120458),
-            Color(0xFF2B0B98),
-            Color(0xFF5F0A87),
-          ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
-      ),
+      padding: EdgeInsets.symmetric(horizontal: 10),
       child: Column(
         children: [
           Padding(
@@ -89,16 +139,10 @@ class _LeaderboardState extends State<Leaderboard> {
               width: double.infinity,
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [
-                    Color(0xFF1B1B3A),
-                    Color(0xFF2D2D5A),
-                  ],
+                  colors: [Color(0xFF1B1B3A), Color(0xFF2D2D5A)],
                 ),
                 borderRadius: BorderRadius.circular(30),
-                border: Border.all(
-                  color: Colors.amberAccent,
-                  width: 2,
-                ),
+                border: Border.all(color: Colors.amberAccent, width: 2),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.35),
@@ -148,16 +192,10 @@ class _LeaderboardState extends State<Leaderboard> {
         padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
           gradient: const LinearGradient(
-            colors: [
-              Color(0xFF00C9A7),
-              Color(0xFF007CF0),
-            ],
+            colors: [Color(0xFF00C9A7), Color(0xFF007CF0)],
           ),
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(
-            color: Colors.white24,
-            width: 1.5,
-          ),
+          border: Border.all(color: Colors.white24, width: 1.5),
           boxShadow: [
             BoxShadow(
               color: Colors.cyanAccent.withOpacity(0.2),
@@ -179,10 +217,7 @@ class _LeaderboardState extends State<Leaderboard> {
               ),
             ),
             const SizedBox(width: 15.0),
-            CircleAvatar(
-              backgroundImage: AssetImage(image),
-              radius: 25,
-            ),
+            CircleAvatar(backgroundImage: AssetImage(image), radius: 25),
             const SizedBox(width: 15),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -197,12 +232,7 @@ class _LeaderboardState extends State<Leaderboard> {
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  points,
-                  style: const TextStyle(
-                    color: Colors.white70,
-                  ),
-                ),
+                Text(points, style: const TextStyle(color: Colors.white70)),
               ],
             ),
             const Spacer(),
@@ -211,9 +241,10 @@ class _LeaderboardState extends State<Leaderboard> {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
-                color: change.contains('+')
-                    ? Colors.lightGreenAccent
-                    : Colors.redAccent,
+                color:
+                    change.contains('+')
+                        ? Colors.lightGreenAccent
+                        : Colors.redAccent,
               ),
             ),
             const SizedBox(width: 10.0),
@@ -239,24 +270,14 @@ class _LeaderboardState extends State<Leaderboard> {
         width: 120,
         decoration: BoxDecoration(
           gradient: const LinearGradient(
-            colors: [
-              Color(0xFFFFC75F),
-              Color(0xFFFF9671),
-            ],
+            colors: [Color(0xFFFFC75F), Color(0xFFFF9671)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           borderRadius: borderRadius,
-          border: Border.all(
-            color: Colors.white24,
-            width: 2,
-          ),
+          border: Border.all(color: Colors.white24, width: 2),
           boxShadow: [
-            BoxShadow(
-              color: Colors.orange,
-              blurRadius: 12,
-              spreadRadius: 2,
-            ),
+            BoxShadow(color: Colors.orange, blurRadius: 12, spreadRadius: 2),
           ],
         ),
         child: Column(

@@ -1,7 +1,7 @@
 import 'package:anxicode_app/Models/user_info.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class SupabaseDb {
+class SupabaseAuthService {
   final _supabase = Supabase.instance.client;
 
   Future<void> registerUser({required UserInfo userInfo}) async {

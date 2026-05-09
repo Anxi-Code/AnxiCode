@@ -11,7 +11,7 @@ class LogIn extends StatefulWidget {
 }
 
 class _LogInState extends State<LogIn> {
-  final SupabaseDb _db = SupabaseDb();
+  final SupabaseAuthService _db = SupabaseAuthService();
   final _fromkey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -19,7 +19,7 @@ class _LogInState extends State<LogIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:  Color(0xFF120458),
+      backgroundColor: Color(0xFF120458),
       appBar: AppBar(
         title: const Text('Log-In Page'),
         centerTitle: true,
@@ -37,11 +37,7 @@ class _LogInState extends State<LogIn> {
         height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Color(0xFF120458),
-              Color(0xFF2B0B98),
-              Color(0xFF5F0A87),
-            ],
+            colors: [Color(0xFF120458), Color(0xFF2B0B98), Color(0xFF5F0A87)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -91,13 +87,14 @@ class _LogInState extends State<LogIn> {
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                              content: Text("Login failed: no session found")),
+                            content: Text("Login failed: no session found"),
+                          ),
                         );
                       }
                     } on AuthException catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(e.message)),
-                      );
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text(e.message)));
                     } catch (e) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text("Can't Log In")),
@@ -153,14 +150,13 @@ class _LogInState extends State<LogIn> {
   }
 
   TextFormField _inputField(
-      TextEditingController controller, {
-        String type = 'text',
-      }) {
+    TextEditingController controller, {
+    String type = 'text',
+  }) {
     return TextFormField(
       controller: controller,
-      keyboardType: type == "Email"
-          ? TextInputType.emailAddress
-          : TextInputType.text,
+      keyboardType:
+          type == "Email" ? TextInputType.emailAddress : TextInputType.text,
       style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
         hintText: "Enter your $type",
@@ -188,8 +184,11 @@ class _LogInState extends State<LogIn> {
           borderSide: const BorderSide(color: Colors.red, width: 2),
         ),
       ),
-      validator: (value) =>
-      (value == null || value.isEmpty) ? "Please Enter the $type" : null,
+      validator:
+          (value) =>
+              (value == null || value.isEmpty)
+                  ? "Please Enter the $type"
+                  : null,
     );
   }
 }

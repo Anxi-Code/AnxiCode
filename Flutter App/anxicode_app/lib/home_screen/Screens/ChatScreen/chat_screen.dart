@@ -1,123 +1,109 @@
 import 'package:flutter/material.dart';
+import 'chat_detail_screen.dart';
 
-class Chat extends StatefulWidget {
+class Chat extends StatelessWidget {
   const Chat({super.key});
 
   @override
-  State<Chat> createState() => _ChatState();
-}
-
-class _ChatState extends State<Chat> {
-  final List<Map<String, String>> messages = [
-    {"type": "other", "text": "Hey, ready for battle?"},
-    {"type": "me", "text": "Yes! let's go 🔥"},
-    {"type": "other", "text": "Pick your language first."},
-  ];
-
-  final TextEditingController controller = TextEditingController();
-
-  void sendMessage() {
-    if (controller.text.trim().isEmpty) return;
-
-    setState(() {
-      messages.add({"type": "me", "text": controller.text.trim()});
-      controller.clear();
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: ListView.builder(
-            padding: const EdgeInsets.all(12),
-            itemCount: messages.length,
-            itemBuilder: (context, index) {
-              final msg = messages[index];
-              final isMe = msg["type"] == "me";
+    final List<Map<String, String>> chats = [
+      {"name": "Ali", "message": "Ready for coding battle?", "time": "2:30 PM"},
+      {"name": "Ahmad", "message": "Let's play tonight", "time": "1:15 PM"},
+      {"name": "Hassan", "message": "Bro send the challenge link", "time": "Yesterday"},
+      {"name": "Usman", "message": "I won the last match", "time": "Monday"},
+      {"name": "Zain", "message": "Which language are you choosing?", "time": "Sunday"},
+    ];
 
-              return Align(
-                alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-                child: Container(
-                  margin: const EdgeInsets.only(bottom: 10),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 10,
-                  ),
-                  constraints: const BoxConstraints(maxWidth: 250),
-                  decoration: BoxDecoration(
-                    gradient:
-                        isMe
-                            ? const LinearGradient(
-                              colors: [Color(0xFF00C9A7), Color(0xFF007CF0)],
-                            )
-                            : const LinearGradient(
-                              colors: [Color(0xFF1B1B3A), Color(0xFF2D2D5A)],
-                            ),
-                    borderRadius: BorderRadius.circular(18),
-                    border: Border.all(color: Colors.white24),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.cyanAccent.withValues(alpha: 0.2),
-                        blurRadius: 10,
-                      ),
-                    ],
-                  ),
-                  child: Text(
-                    msg["text"] ?? "",
-                    style: const TextStyle(color: Colors.white),
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+        title: const Text(
+          "Chats",
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+
+      body: ListView.builder(
+        itemCount: chats.length,
+        padding: const EdgeInsets.all(10),
+
+        itemBuilder: (context, index) {
+          final chat = chats[index];
+
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => ChatDetailScreen(
+                    userName: chat["name"]!,
                   ),
                 ),
               );
             },
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10, bottom: 80),
-          child: Container(
-            padding: const EdgeInsets.all(10),
-            decoration: const BoxDecoration(
-              color: Color(0xFF1B1B3A),
-              borderRadius: BorderRadius.all(Radius.circular(25)),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: controller,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      hintText: "Type message...",
-                      hintStyle: const TextStyle(color: Colors.white54),
-                      filled: true,
-                      fillColor: const Color(0xFF2D2D5A),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide.none,
-                      ),
+
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.all(15),
+
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(20),
+              ),
+
+              child: Row(
+                children: [
+                  const CircleAvatar(
+                    radius: 28,
+                    backgroundColor: Colors.cyanAccent,
+                  ),
+
+                  const SizedBox(width: 15),
+
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          chat["name"]!,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
+                        const SizedBox(height: 5),
+
+                        Text(
+                          chat["message"]!,
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 14,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
                     ),
                   ),
-                ),
-                const SizedBox(width: 10),
-                GestureDetector(
-                  onTap: sendMessage,
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Color(0xFF00C9A7), Color(0xFF007CF0)],
-                      ),
-                      shape: BoxShape.circle,
+
+                  Text(
+                    chat["time"]!,
+                    style: const TextStyle(
+                      color: Colors.white54,
+                      fontSize: 12,
                     ),
-                    child: const Icon(Icons.send, color: Colors.white),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ),
-      ],
+          );
+        },
+      ),
     );
   }
 }

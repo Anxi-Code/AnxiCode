@@ -16,3 +16,9 @@ class UserInfo {
   String get getEmail => email;
   String get getPassword => password;
 }
+
+class AppUser {
+  final String userId;
+
+  AppUser({required this.userId});
+}

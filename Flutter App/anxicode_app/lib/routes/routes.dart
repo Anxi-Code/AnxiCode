@@ -1,3 +1,4 @@
+// import 'package:anxicode_app/design/wrapper.dart';
 import 'package:anxicode_app/home_screen/Screens/BattleScreen/match_making/matchmaking_screen.dart';
 import 'package:anxicode_app/home_screen/home.dart';
 import 'package:go_router/go_router.dart';
@@ -8,7 +9,12 @@ import 'package:flutter/material.dart';
 class AppRouter {
   static final GoRouter router = GoRouter(
     routes: [
-      // GoRoute(path: '/', name: 'wrapper'),
+      //wrapper
+      // GoRoute(
+      //   path: '/',
+      //   name: 'wrapper',
+      //   builder: (context, state) => Wrapper(),
+      // ),
       // Login Page
       GoRoute(path: '/', name: 'login', builder: (context, state) => LogIn()),
 

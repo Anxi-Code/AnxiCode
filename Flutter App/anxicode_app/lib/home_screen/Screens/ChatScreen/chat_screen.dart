@@ -57,9 +57,22 @@ class Chat extends StatelessWidget {
 
               child: Row(
                 children: [
-                  const CircleAvatar(
-                    radius: 28,
-                    backgroundColor: Colors.cyanAccent,
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.blueAccent.withOpacity(0.5),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                        ),
+                      ],
+                    ),
+
+                    child: CircleAvatar(
+                      radius: 28,
+                      backgroundColor: Colors.cyanAccent,
+                    ),
                   ),
 
                   const SizedBox(width: 15),

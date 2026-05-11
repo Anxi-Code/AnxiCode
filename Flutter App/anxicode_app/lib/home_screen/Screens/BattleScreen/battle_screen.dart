@@ -81,18 +81,37 @@ class _BattleState extends State<Battle> {
 
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Container(
+            child:Container(
+              width: double.infinity,
+              height: 58,
               decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(18),
+
+
                 gradient: const LinearGradient(
                   colors: [Color(0xFF00C9A7), Color(0xFF007CF0)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-                borderRadius: BorderRadius.circular(20),
+
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(0xFF00C2FF).withOpacity(0.7),
+                    blurRadius: 18,
+                    spreadRadius: 2,
+                  ),
+                ],
+
+
               ),
+
               child: ElevatedButton(
                 onPressed: () async {
                   if (selectedLanguage == null) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Please select a language")),
+                      const SnackBar(
+                        content: Text("Please select a language"),
+                      ),
                     );
                     return;
                   }
@@ -106,25 +125,29 @@ class _BattleState extends State<Battle> {
 
                   context.push('/matchmaking');
                 },
+
                 style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 55),
                   backgroundColor: Colors.transparent,
                   shadowColor: Colors.transparent,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(18),
                   ),
                 ),
+
                 child: const Text(
                   "Start Battle",
                   style: TextStyle(
                     color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 18,
+                    letterSpacing: 0.5,
                   ),
                 ),
               ),
-            ),
+            )
+
           ),
+
         ],
       ),
     );

@@ -35,15 +35,18 @@ class _BgGradientState extends State<BgGradient>
               end: Alignment.bottomRight,
               transform: GradientRotation(_controller.value * 2 * pi),
               colors: [
-                Color.fromARGB(255, 19, 19, 52),
-                Color.fromARGB(255, 20, 20, 74),
-                Color(0xFF2E1A5E),
-                Color(0xFF6B2C6E),
+                Color(0xFF050816), // deep space
+                Color(0xFF140B2D), // dark galaxy purple
+                Color(0xFF2E1A5E), // indigo nebula
+                Color(0xFF6B2C6E), // cosmic purple
+                Color(0xFFB5179E), // pink nebula glow
               ],
+
               stops: [
-                0.1 + (_controller.value * 0.2),
-                0.3 + (_controller.value * 0.2),
-                0.6 + (_controller.value * 0.2),
+                0.05 + (_controller.value * 0.15),
+                0.25 + (_controller.value * 0.15),
+                0.50 + (_controller.value * 0.15),
+                0.75 + (_controller.value * 0.15),
                 1.0,
               ],
             ),

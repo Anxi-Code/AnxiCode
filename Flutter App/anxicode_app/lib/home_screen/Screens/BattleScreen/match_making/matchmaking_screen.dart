@@ -63,7 +63,7 @@ class _MatchmakingState extends State<Matchmaking> {
         .eq("id", battleId);
 
     setState(() {
-      opp_username = opponent_username[0]?["user_name"] ?? "";
+      opp_username = opponent_username[0]["user_name"] ?? "";
       my_username = username[0]["user_name"] ?? "";
       otp = code[0]["join_code"] ?? "";
       loading = false;

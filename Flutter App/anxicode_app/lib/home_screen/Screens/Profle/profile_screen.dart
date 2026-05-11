@@ -1,206 +1,352 @@
+import 'package:anxicode_app/home_screen/Screens/Profle/achievements.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
   const Profile({super.key});
 
   @override
+  State<Profile> createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
+  late AnimationController _controller;
+  late Animation<int>   _percentageAnimation;
+  late Animation<double> _progressAnimation;
+  List<IconData> badges=[
+    Icons.military_tech,
+    Icons.whatshot,
+    Icons.code,
+    Icons.psychology,
+  ];
+@override
+  void initState() {
+    // TODO: implement initState
+  _controller=AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 1)
+  );
+  _percentageAnimation=IntTween(begin: 0,end: 81).animate(_controller);
+  _progressAnimation=Tween<double>(begin: 1,end: 0.81).animate(_controller);
+  _controller.forward();
+
+
+    super.initState();
+  }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBody: true,
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        title: const Text("Profile"),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.white),
-        titleTextStyle: const TextStyle(
-          color: Colors.white,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFF120458),
-              Color(0xFF2B0B98),
-              Color(0xFF5F0A87),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: StaggeredGrid.count(
-              crossAxisCount: 3,
-              mainAxisSpacing: 10,
-              crossAxisSpacing: 10,
-              children: [
-                StaggeredGridTile.count(
-                  crossAxisCellCount: 2,
-                  mainAxisCellCount: 1,
-                  child: profileCard(),
-                ),
-                StaggeredGridTile.count(
-                  crossAxisCellCount: 1,
-                  mainAxisCellCount: 1,
-                  child: avatarCard(),
-                ),
-                StaggeredGridTile.count(
-                  crossAxisCellCount: 3,
-                  mainAxisCellCount: 1,
-                  child: rankCard(),
-                ),
-                StaggeredGridTile.count(
-                  crossAxisCellCount: 1,
-                  mainAxisCellCount: 2,
-                  child: simpleBox(Colors.red, "Box 4"),
-                ),
-                StaggeredGridTile.count(
-                  crossAxisCellCount: 2,
-                  mainAxisCellCount: 1,
-                  child: simpleBox(Colors.purple, "Box 5"),
-                ),
-                StaggeredGridTile.count(
-                  crossAxisCellCount: 2,
-                  mainAxisCellCount: 1,
-                  child: simpleBox(Colors.cyan, "Box 6"),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget profileCard() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFF00C9A7), Color(0xFF009F9D)],
-        ),
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-      ),
-      child: const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            "Mike Sins",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 6),
-          Text(
-            "mikesins69@gmail.com",
-            style: TextStyle(color: Colors.white70),
-          ),
-          SizedBox(height: 10),
-          Text(
-            "Age: 24",
-            style: TextStyle(color: Colors.white),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget avatarCard() {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFF007CF0), Color(0xFF00DFD8)],
-        ),
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-      ),
+    return SingleChildScrollView(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          CircleAvatar(
-            radius: 40,
-            backgroundImage: AssetImage('assets/images/user1.png'),
-          ),
-          SizedBox(height: 10),
-          Text(
-            "Lv. 12",
-            style: TextStyle(color: Colors.white),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget rankCard() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xFFFFC75F), Color(0xFFFF9671)],
-        ),
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          const Text(
-            "Gold II",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+          Container(
+            height: 120,
+            width: 120,
+            padding: EdgeInsetsGeometry.all(5.0),
+            decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.blueAccent.withOpacity(0.5),
+                    spreadRadius: 5,
+                    blurRadius: 7,
+
+                  )
+                ],
+                shape: BoxShape.circle,
+                border: Border.all(
+                    color: Colors.cyanAccent,
+                    width: 2.5
+                )
+            ),
+            child: CircleAvatar(
+              backgroundImage: AssetImage('assets/images/user1.png'),
+
             ),
           ),
-          const SizedBox(height: 10),
-          LinearProgressIndicator(
-            value: 800 / 1500,
-            backgroundColor: Colors.white24,
-            color: Colors.orange,
-            borderRadius: BorderRadius.circular(20),
-            minHeight: 15,
+          SizedBox(height: 12,),
+          Text("Meesum Afzaal",style: GoogleFonts.orbitron(color: Colors.white,fontWeight:FontWeight.bold,fontSize: 18),),
 
+          SizedBox(height: 6,),
+          Text("Shadow Coder",style: GoogleFonts.orbitron(color: Colors.grey.shade400,fontWeight: FontWeight.bold,fontSize: 12),),
+          SizedBox(height: 20,),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(14.0, 14.0, 14.0, 0),
+            child: SizedBox(
+              height: 230,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: double.infinity,
+                      width: double.infinity,
+
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        gradient: RadialGradient(
+                          radius: 4,
+                          colors: [
+                            Colors.cyanAccent.withValues(alpha: 0.1),
+                            Colors.white.withValues(alpha: 0.2),
+                          ],
+                        ),
+                      ),
+                      child: AnimatedBuilder(animation: _controller, builder: (context,child){
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Container(
+                                    height: 110,
+                                    width: 110,
+                                    padding: EdgeInsetsGeometry.all(8),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.cyanAccent.withOpacity(0.5),
+                                            spreadRadius: 3,
+                                            blurRadius: 20,
+
+                                          ),
+                                        ],
+                                        border: Border.all(
+                                            color: Colors.cyanAccent,
+                                            width: 2
+
+                                        )
+                                    ),
+                                    child:  CircularProgressIndicator(
+                                      value:_progressAnimation.value,
+                                      valueColor: AlwaysStoppedAnimation(Colors.cyanAccent),
+                                      strokeWidth: 6,
+                                    ),
+                                  ),
+                                  Text("${_percentageAnimation.value}%",style: GoogleFonts.orbitron(color: Colors.white,fontWeight:FontWeight.bold,fontSize: 20),)
+                                ]
+                            ),
+                            SizedBox(height: 15,),
+                            Text("Win Rate",style: TextStyle(
+                              color: Colors.grey.shade400,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                            ),)
+
+                          ],
+                        );
+                      })
+
+                    ),
+                  ),
+                 SizedBox(width: 8,),
+                 Expanded(
+                   child: Column(
+                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                     children: [
+                       Expanded(
+                         child: Container(
+                           height: double.infinity,
+                           width: double.infinity,
+                           decoration: BoxDecoration(
+                             borderRadius: BorderRadius.circular(15),
+                             gradient: RadialGradient(
+                               radius: 4,
+                               colors: [
+                                 Colors.cyanAccent.withValues(alpha: 0.1),
+                                 Colors.white.withValues(alpha: 0.2),
+                               ],
+                             ),
+
+                           ),
+                           child: Column(
+                             mainAxisAlignment: MainAxisAlignment.center,
+                             children: [
+                               Text("Total Battles Played",
+                                 style: TextStyle(
+                                   color: Colors.grey.shade400,
+                                   fontSize: 16,
+                                   fontWeight: FontWeight.bold,
+                                 ),
+                               ),
+                               SizedBox(height: 8,),
+                               TweenAnimationBuilder(
+                                   tween: IntTween(begin: 0,end: 100),
+                                   duration: Duration(seconds: 1),
+                                   builder:(context,value,child){
+                                     return Text("$value",
+                                       style: GoogleFonts.orbitron(color: Colors.white,fontWeight:FontWeight.bold,fontSize: 20),);
+                                   }),
+
+
+                             ],
+                           ),
+                         ),
+                       ),
+                       SizedBox(height: 8,),
+
+                       Expanded(
+                         child: Container(
+                           height: double.infinity,
+                           width: double.infinity,
+
+                           decoration: BoxDecoration(
+                             borderRadius: BorderRadius.circular(15),
+                             gradient: RadialGradient(
+                               radius: 4,
+                               colors: [
+                                 Colors.cyanAccent.withValues(alpha: 0.1),
+                                 Colors.white.withValues(alpha: 0.2),
+                               ],
+                             ),
+
+                           ),
+                           child: Row(
+                             mainAxisAlignment: MainAxisAlignment.center,
+                             children: [
+                               Column(
+                                 mainAxisAlignment: MainAxisAlignment.center,
+                                 children: [
+                                   Text("Won",style: TextStyle(color: Colors.grey.shade400,fontSize: 20,fontWeight: FontWeight.bold),),
+                                   SizedBox(height: 8,),
+                                   TweenAnimationBuilder(
+                                       tween: IntTween(begin: 0,end: 81),
+                                       duration: Duration(seconds: 1),
+                                       builder:(context,value,child){
+                                         return Text("$value",
+                                           style: GoogleFonts.orbitron(color: Colors.lightGreenAccent,fontWeight:FontWeight.bold,fontSize: 22),);
+                                       }),
+                                 ],
+                               ),
+                               SizedBox(width: 30,),
+                               Column(
+                                 mainAxisAlignment: MainAxisAlignment.center,
+                                 children: [
+                                   Text("Lost",style: TextStyle(color: Colors.grey.shade400,fontSize: 20,fontWeight: FontWeight.bold),),
+                                   SizedBox(height: 8,),
+                                   TweenAnimationBuilder(
+                                       tween: IntTween(begin: 0,end: 19),
+                                       duration: Duration(seconds: 1),
+                                       builder:(context,value,child){
+                                         return Text("$value",
+                                           style: GoogleFonts.orbitron(color: Colors.red,fontWeight:FontWeight.bold,fontSize: 22),);
+                                       }),
+
+                                 ],
+                               ),
+                             ],
+                           ),
+                         ),
+                       ),
+
+                     ],
+                   ),
+                 ),
+                ],
+              ),
+            ),
           ),
-          const SizedBox(height: 6),
-          const Text(
-            "1000 / 1500",
-            style: TextStyle(color: Colors.white),
-          ),
+         Padding(
+           padding: const EdgeInsets.all(14.0),
+           child: GestureDetector(
+               onTap: (){
+                 Navigator.push(context, MaterialPageRoute(builder: (context)=>Achievements()));
+               },
+               child: Container(
+                   height: 150,
+                   width: double.infinity,
+                   decoration: BoxDecoration(
+                     borderRadius: BorderRadius.circular(15),
+                     gradient: RadialGradient(
+                       radius: 4,
+                       colors: [
+                         Colors.cyanAccent.withValues(alpha: 0.1),
+                         Colors.white.withValues(alpha: 0.2),
+                       ],
+                     ),
+                   ),
+                 child: Padding(
+                   padding: const EdgeInsets.all(14.0),
+                   child: Column(
+                     children: [
+                       Row(
+                         mainAxisAlignment: MainAxisAlignment.start,
+                         children: [
+                           Container(
+                             height: 35,
+                             width: 35,
+                             decoration: BoxDecoration(
+                               shape: BoxShape.circle,
+                               boxShadow: [
+
+                                 BoxShadow(
+                                   color: Colors.yellow.withOpacity(0.5),
+                                   spreadRadius: 1,
+                                   blurRadius: 7,
+
+                                 ),
+                               ]
+                             ),
+                             child: Icon(Icons.emoji_events,color: Colors.yellow),
+                           ),
+                           SizedBox(width: 10,),
+                           Text("Achievements",style: GoogleFonts.orbitron(color: Colors.white,fontWeight:FontWeight.bold,fontSize: 14),),
+                           SizedBox(width: 10,),
+                           Icon(Icons.arrow_forward_ios,color: Colors.grey.shade400,size: 16)
+                         ],
+                       ),
+                       SizedBox(height: 14,),
+                       SizedBox(
+                         height: 70,
+                         child: ListView.builder(
+                             scrollDirection: Axis.horizontal,
+                             itemCount: 4,
+                             itemBuilder: (context,index){
+                               return Padding(
+                                 padding: const EdgeInsets.fromLTRB(0, 0,0 , 0),
+                                 child: Container(
+                                   height: 76,
+                                   width: 76,
+                                   decoration: BoxDecoration(
+                                       shape: BoxShape.circle,
+                                       gradient: RadialGradient(
+                                         radius: 4,
+                                         colors: [
+                                           Colors.cyanAccent.withValues(alpha: 0.1),
+                                           Colors.white.withValues(alpha: 0.5),
+                                         ],
+
+                                       )
+                                   ),
+                                   child: Icon(
+                                     badges[index],
+                                     color: Colors.yellow,
+                                     size: 30,
+
+                                   ),
+                                 ),
+                               );
+                             }
+                         ),
+                       )
+
+                     ],
+                   ),
+                 ),
+               ),
+             ),
+
+         ),
+
         ],
-      ),
-    );
-  }
-
-  Widget simpleBox(Color color, String text) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            color.withOpacity(0.9),
-            color.withOpacity(0.4),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      alignment: Alignment.center,
-      child: Text(
-        text,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-        ),
       ),
     );
   }

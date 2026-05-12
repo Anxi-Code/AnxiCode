@@ -14,232 +14,159 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   final SupabaseAuthService _db = SupabaseAuthService();
-  final _fromkey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
+
   final _nameController = TextEditingController();
   final _userNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _finalPasswordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Stack(
-      children:[
+      children: [
         BgGradient(),
         Scaffold(
-        backgroundColor: Colors.transparent,
-
-        appBar: AppBar(
-
           backgroundColor: Colors.transparent,
-          elevation: 0,
-          iconTheme: const IconThemeData(color: Colors.white),
-          leading: IconButton(
-            onPressed: () {
-              context.go('/');
-            },
-            icon: const Icon(Icons.arrow_back),
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            iconTheme: const IconThemeData(color: Colors.white),
           ),
-          titleTextStyle: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
-        ),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(15),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20),
 
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          decoration: const BoxDecoration(
-            color: Colors.transparent
-          ),
-          padding: const EdgeInsets.all(15),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                    height: 200,
-                    width: 500,
-                    child:Image.asset(
-                      "assets/images/anxicode.png",
-                      fit: BoxFit.fitWidth,
-                    )
-            
-                ),
-                Form(
-                  key: _fromkey,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        _inputField(_nameController, type: 'Name'),
-                        const SizedBox(height: 20),
-                        _inputField(_userNameController, type: 'User Name'),
-                        const SizedBox(height: 20),
-                        _inputField(_emailController, type: 'Email'),
-                        const SizedBox(height: 20),
-                        _inputField(_passwordController, type: 'Password'),
-                        const SizedBox(height: 20),
-                        _inputField(_finalPasswordController, type: 'Confirm Password'),
-                        const SizedBox(height: 30),
-            
-                        Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFF00C9A7), Color(0xFF007CF0)],
-                            ),
-                            borderRadius: BorderRadius.circular(15),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.cyanAccent.withValues(alpha: 0.3),
-                                blurRadius: 12,
-                                spreadRadius: 1,
-                              ),
-                            ],
-                          ),
-                          child: TextButton.icon(
-                            onPressed: () async {
-                              if (!_fromkey.currentState!.validate()) return;
-            
-                              if (_passwordController.text !=
-                                  _finalPasswordController.text) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text("Passwords do not match"),
-                                  ),
-                                );
-                                return;
-                              }
-            
-                              try {
-                                final user = UserInfo(
-                                  name: _nameController.text.trim(),
-                                  userName: _userNameController.text.trim(),
-                                  email: _emailController.text.trim(),
-                                  password: _passwordController.text.trim(),
-                                );
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text("Registration successful"),
-                                  ),
-                                );
-            
-                                await _db.registerUser(userInfo: user);
-            
-
-            
-                                context.go('/');
-                              } on AuthException catch (e) {
-                                ScaffoldMessenger.of(
-                                  context,
-                                ).showSnackBar(SnackBar(content: Text(e.message)));
-                              } catch (e) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text("Something went wrong")),
-                                );
-                              }
-                            },
-                            label: const Text(
-                              'REGISTER',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 1,
-                              ),
-                            ),
-                            icon: const Icon(
-                              Icons.verified_outlined,
-                              color: Colors.white,
-                            ),
-                          ),
-<<<<<<< HEAD
-                        ),
-                      ],
-=======
-                        );
-
-                        context.go('/login');
-                      } on AuthException catch (e) {
-                        ScaffoldMessenger.of(
-                          context,
-                        ).showSnackBar(SnackBar(content: Text(e.message)));
-                      } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Something went wrong")),
-                        );
-                      }
-                    },
-                    label: const Text(
-                      'REGISTER',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1,
+                    SizedBox(
+                      height: 200,
+                      child: Image.asset(
+                        "assets/images/anxicode.png",
+                        fit: BoxFit.contain,
                       ),
                     ),
-                    icon: const Icon(
-                      Icons.verified_outlined,
-                      color: Colors.white,
->>>>>>> 558fbe7d (Improved Wrapper)
+
+                    const SizedBox(height: 20),
+
+                    _inputField(_nameController, type: 'Name'),
+                    const SizedBox(height: 15),
+
+                    _inputField(_userNameController, type: 'User Name'),
+                    const SizedBox(height: 15),
+
+                    _inputField(_emailController, type: 'Email'),
+                    const SizedBox(height: 15),
+
+                    _inputField(_passwordController, type: 'Password'),
+                    const SizedBox(height: 15),
+
+                    _inputField(_confirmPasswordController, type: 'Confirm Password'),
+
+                    const SizedBox(height: 30),
+
+                    Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF00C9A7), Color(0xFF007CF0)],
+                        ),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (!_formKey.currentState!.validate()) return;
+
+                          if (_passwordController.text !=
+                              _confirmPasswordController.text) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Passwords do not match"),
+                              ),
+                            );
+                            return;
+                          }
+
+                          try {
+                            final user = UserInfo(
+                              name: _nameController.text.trim(),
+                              userName: _userNameController.text.trim(),
+                              email: _emailController.text.trim(),
+                              password: _passwordController.text.trim(),
+                            );
+
+                            await _db.registerUser(userInfo: user);
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Registration successful"),
+                              ),
+                            );
+
+                            context.go('/');
+                          } on AuthException catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(e.message)),
+                            );
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Something went wrong"),
+                              ),
+                            );
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          padding: const EdgeInsets.symmetric(vertical: 15),
+                        ),
+                        child: const Text(
+                          "REGISTER",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+
+                    const SizedBox(height: 20),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
-      ),
-    ]
+      ],
     );
   }
 
   TextFormField _inputField(
-    TextEditingController controller, {
-    String type = 'Name',
-  }) {
+      TextEditingController controller, {
+        String type = 'text',
+      }) {
     return TextFormField(
       controller: controller,
+      obscureText: type.toLowerCase().contains("password"),
       keyboardType:
-          type == "Email" ? TextInputType.emailAddress : TextInputType.text,
+      type == "Email" ? TextInputType.emailAddress : TextInputType.text,
       style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
-        labelText: type,
-        labelStyle: const TextStyle(color: Colors.white70),
-        hintText:
-            type == "Confirm Password"
-                ? "Confirm your Password"
-                : "Enter your $type",
-        hintStyle: const TextStyle(color: Colors.white54),
+        hintText: "Enter your $type",
         filled: true,
         fillColor: const Color(0xFF1B1B3A),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
           borderSide: BorderSide.none,
         ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: const BorderSide(color: Colors.white24),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: const BorderSide(color: Colors.cyanAccent, width: 2),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: const BorderSide(color: Colors.red),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: const BorderSide(color: Colors.red, width: 2),
-        ),
       ),
-      validator:
-          (value) =>
-              (value == null || value.isEmpty)
-                  ? "Please Enter the $type"
-                  : null,
+      validator: (value) =>
+      value == null || value.isEmpty ? "Please Enter $type" : null,
     );
   }
 }

@@ -27,6 +27,6 @@ class MyApp extends StatelessWidget {
       title: 'AnxiCode',
       debugShowCheckedModeBanner: false,
     );
-    // return MaterialApp(debugShowCheckedModeBanner: false, home: Home());
+    //return MaterialApp(debugShowCheckedModeBanner: false, home: Home());
   }
 }

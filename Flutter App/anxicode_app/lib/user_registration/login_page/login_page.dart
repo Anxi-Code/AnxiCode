@@ -47,8 +47,50 @@ class _LogInState extends State<LogIn> {
             key: _fromkey,
             child: SingleChildScrollView(
 
+<<<<<<< HEAD
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
+=======
+                    try {
+                      await _db.loginUser(
+                        email: _emailController.text.trim(),
+                        password: _passwordController.text.trim(),
+                      );
+
+                      _emailController.clear();
+                      _passwordController.clear();
+                    } on AuthException catch (e) {
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text(e.message)));
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Can't Log In")),
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                  ),
+                  child: const Text(
+                    "LOGIN",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+>>>>>>> 558fbe7d (Improved Wrapper)
                 children: [
                   Container(
                     height: 200,

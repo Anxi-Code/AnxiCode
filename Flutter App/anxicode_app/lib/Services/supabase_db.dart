@@ -9,14 +9,11 @@ class SupabaseAuthService {
     return user == null ? null : AppUser(userId: user.id);
   }
 
-  Stream<AppUser?> get user async* {
-    // First check existing session
-    yield _userFromSupabase(_supabase.auth.currentUser);
-    print(_supabase.auth.currentUser);
-    // Then listen for auth changes
-    await for (final data in _supabase.auth.onAuthStateChange) {
-      yield _userFromSupabase(data.session?.user);
-    }
+  // (getter) checks the user auth from supabase
+  Stream<AppUser?> get user {
+    return _supabase.auth.onAuthStateChange.map(
+      (data) => _userFromSupabase(data.session?.user),
+    );
   }
 
   Future<void> registerUser({required UserInfo userInfo}) async {

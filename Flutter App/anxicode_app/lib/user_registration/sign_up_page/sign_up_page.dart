@@ -153,8 +153,36 @@ class _SignUpState extends State<SignUp> {
                               color: Colors.white,
                             ),
                           ),
+<<<<<<< HEAD
                         ),
                       ],
+=======
+                        );
+
+                        context.go('/login');
+                      } on AuthException catch (e) {
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text(e.message)));
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Something went wrong")),
+                        );
+                      }
+                    },
+                    label: const Text(
+                      'REGISTER',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1,
+                      ),
+                    ),
+                    icon: const Icon(
+                      Icons.verified_outlined,
+                      color: Colors.white,
+>>>>>>> 558fbe7d (Improved Wrapper)
                     ),
                   ),
                 ),

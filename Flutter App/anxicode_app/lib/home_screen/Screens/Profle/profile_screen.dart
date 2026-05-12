@@ -13,11 +13,17 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
   late AnimationController _controller;
   late Animation<int>   _percentageAnimation;
   late Animation<double> _progressAnimation;
-  List<IconData> badges=[
+  List<IconData> badges = [
     Icons.military_tech,
     Icons.whatshot,
     Icons.code,
     Icons.psychology,
+    Icons.workspace_premium,
+    Icons.emoji_events,
+    Icons.flash_on,
+    Icons.auto_awesome,
+    Icons.shield,
+    Icons.bolt,
   ];
 @override
   void initState() {
@@ -308,7 +314,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
                          height: 70,
                          child: ListView.builder(
                              scrollDirection: Axis.horizontal,
-                             itemCount: 4,
+                             itemCount: badges.length,
                              itemBuilder: (context,index){
                                return Padding(
                                  padding: const EdgeInsets.fromLTRB(0, 0,0 , 0),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class OpponentSelectionDesign extends StatefulWidget {
   const OpponentSelectionDesign({super.key});
@@ -18,33 +19,35 @@ class _OpponentSelectionDesignState extends State<OpponentSelectionDesign> {
       child: Container(
         height: 90,
         decoration: BoxDecoration(
-          gradient: isSelected
-              ? const LinearGradient(
-            colors: [Color(0xFF00C9A7), Color(0xFF007CF0)],
-          )
-              : const LinearGradient(
-            colors: [Color(0xFF1B1B3A), Color(0xFF2D2D5A)],
+          gradient:RadialGradient(
+            radius: 4,
+            colors: [
+              Colors.cyanAccent.withValues(alpha: 0.2),
+              Colors.white.withValues(alpha: 0.1),
+            ],
           ),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isSelected ? Colors.amber : Colors.white24,
+            color: isSelected ? Colors.cyanAccent : Colors.transparent,
             width: 2,
           ),
+
           boxShadow: [
             BoxShadow(
-              color: isSelected
-                  ? Colors.cyanAccent.withOpacity(0.3)
-                  : Colors.black.withOpacity(0.2),
-              blurRadius: 12,
+                color: isSelected
+                    ? Colors.cyanAccent.withOpacity(0.2)
+                    : Colors.black.withOpacity(0.0),
+                blurRadius: isSelected ? 20:0,
+                spreadRadius: isSelected ? 5:0
             ),
           ],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: Colors.white),
+            Icon(icon, color: isSelected ? Colors.cyanAccent:Colors.white),
             const SizedBox(height: 10),
-            Text(text, style: const TextStyle(color: Colors.white)),
+            Text(text, style:GoogleFonts.orbitron(color: isSelected ? Colors.cyanAccent:Colors.white,fontWeight: FontWeight.bold)),
           ],
         ),
       ),

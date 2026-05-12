@@ -1,5 +1,6 @@
 import 'package:anxicode_app/Models/user_info.dart';
 import 'package:anxicode_app/Services/supabase_db.dart';
+import 'package:anxicode_app/design/bg_gradient/bg_gradient.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -22,123 +23,138 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFF120458),
-
-      appBar: AppBar(
-        title: const Text('Sign-Up Page'),
-        centerTitle: true,
+    return Stack(
+      children:[
+        BgGradient(),
+        Scaffold(
         backgroundColor: Colors.transparent,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.white),
-        leading: IconButton(
-          onPressed: () {
-            context.go('/');
-          },
-          icon: const Icon(Icons.arrow_back),
-        ),
-        titleTextStyle: const TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-          fontSize: 20,
-        ),
-      ),
 
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFF120458), Color(0xFF2B0B98), Color(0xFF5F0A87)],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+        appBar: AppBar(
+
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          iconTheme: const IconThemeData(color: Colors.white),
+          leading: IconButton(
+            onPressed: () {
+              context.go('/');
+            },
+            icon: const Icon(Icons.arrow_back),
+          ),
+          titleTextStyle: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
           ),
         ),
-        padding: const EdgeInsets.all(15),
-        child: Form(
-          key: _fromkey,
+
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: const BoxDecoration(
+            color: Colors.transparent
+          ),
+          padding: const EdgeInsets.all(15),
           child: SingleChildScrollView(
             child: Column(
               children: [
-                _inputField(_nameController, type: 'Name'),
-                const SizedBox(height: 20),
-                _inputField(_userNameController, type: 'User Name'),
-                const SizedBox(height: 20),
-                _inputField(_emailController, type: 'Email'),
-                const SizedBox(height: 20),
-                _inputField(_passwordController, type: 'Password'),
-                const SizedBox(height: 20),
-                _inputField(_finalPasswordController, type: 'Confirm Password'),
-                const SizedBox(height: 30),
-
                 Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF00C9A7), Color(0xFF007CF0)],
-                    ),
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.cyanAccent.withValues(alpha: 0.3),
-                        blurRadius: 12,
-                        spreadRadius: 1,
-                      ),
-                    ],
-                  ),
-                  child: TextButton.icon(
-                    onPressed: () async {
-                      if (!_fromkey.currentState!.validate()) return;
-
-                      if (_passwordController.text !=
-                          _finalPasswordController.text) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Passwords do not match"),
+                    height: 200,
+                    width: 500,
+                    child:Image.asset(
+                      "assets/images/anxicode.png",
+                      fit: BoxFit.fitWidth,
+                    )
+            
+                ),
+                Form(
+                  key: _fromkey,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        _inputField(_nameController, type: 'Name'),
+                        const SizedBox(height: 20),
+                        _inputField(_userNameController, type: 'User Name'),
+                        const SizedBox(height: 20),
+                        _inputField(_emailController, type: 'Email'),
+                        const SizedBox(height: 20),
+                        _inputField(_passwordController, type: 'Password'),
+                        const SizedBox(height: 20),
+                        _inputField(_finalPasswordController, type: 'Confirm Password'),
+                        const SizedBox(height: 30),
+            
+                        Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFF00C9A7), Color(0xFF007CF0)],
+                            ),
+                            borderRadius: BorderRadius.circular(15),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.cyanAccent.withValues(alpha: 0.3),
+                                blurRadius: 12,
+                                spreadRadius: 1,
+                              ),
+                            ],
                           ),
-                        );
-                        return;
-                      }
+                          child: TextButton.icon(
+                            onPressed: () async {
+                              if (!_fromkey.currentState!.validate()) return;
+            
+                              if (_passwordController.text !=
+                                  _finalPasswordController.text) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("Passwords do not match"),
+                                  ),
+                                );
+                                return;
+                              }
+            
+                              try {
+                                final user = UserInfo(
+                                  name: _nameController.text.trim(),
+                                  userName: _userNameController.text.trim(),
+                                  email: _emailController.text.trim(),
+                                  password: _passwordController.text.trim(),
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("Registration successful"),
+                                  ),
+                                );
+            
+                                await _db.registerUser(userInfo: user);
+            
 
-                      try {
-                        final user = UserInfo(
-                          name: _nameController.text.trim(),
-                          userName: _userNameController.text.trim(),
-                          email: _emailController.text.trim(),
-                          password: _passwordController.text.trim(),
-                        );
-
-                        await _db.registerUser(userInfo: user);
-
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Registration successful"),
+            
+                                context.go('/');
+                              } on AuthException catch (e) {
+                                ScaffoldMessenger.of(
+                                  context,
+                                ).showSnackBar(SnackBar(content: Text(e.message)));
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text("Something went wrong")),
+                                );
+                              }
+                            },
+                            label: const Text(
+                              'REGISTER',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1,
+                              ),
+                            ),
+                            icon: const Icon(
+                              Icons.verified_outlined,
+                              color: Colors.white,
+                            ),
                           ),
-                        );
-
-                        context.go('/');
-                      } on AuthException catch (e) {
-                        ScaffoldMessenger.of(
-                          context,
-                        ).showSnackBar(SnackBar(content: Text(e.message)));
-                      } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Something went wrong")),
-                        );
-                      }
-                    },
-                    label: const Text(
-                      'REGISTER',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1,
-                      ),
-                    ),
-                    icon: const Icon(
-                      Icons.verified_outlined,
-                      color: Colors.white,
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -147,6 +163,7 @@ class _SignUpState extends State<SignUp> {
           ),
         ),
       ),
+    ]
     );
   }
 

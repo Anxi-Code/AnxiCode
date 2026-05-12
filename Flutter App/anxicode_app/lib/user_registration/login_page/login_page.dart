@@ -1,4 +1,5 @@
 import 'package:anxicode_app/Services/supabase_db.dart';
+import 'package:anxicode_app/design/bg_gradient/bg_gradient.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -18,134 +19,147 @@ class _LogInState extends State<LogIn> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFF120458),
-      appBar: AppBar(
-        title: const Text('Log-In Page'),
-        centerTitle: true,
+    return Stack(
+      children:[
+        BgGradient(),
+        Scaffold(
         backgroundColor: Colors.transparent,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.white),
-        titleTextStyle: const TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-          fontSize: 20,
-        ),
-      ),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFF120458), Color(0xFF2B0B98), Color(0xFF5F0A87)],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+        appBar: AppBar(
+
+
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          iconTheme: const IconThemeData(color: Colors.white),
+          titleTextStyle: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
           ),
         ),
-        padding: const EdgeInsets.all(15),
-        child: Form(
-          key: _fromkey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _inputField(_emailController, type: 'Email'),
-              const SizedBox(height: 20),
-              _inputField(_passwordController, type: 'Password'),
-              const SizedBox(height: 20),
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF00C9A7), Color(0xFF007CF0)],
-                  ),
-                  borderRadius: BorderRadius.circular(15),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.cyanAccent.withOpacity(0.3),
-                      blurRadius: 12,
-                      spreadRadius: 1,
-                    ),
-                  ],
-                ),
-                child: ElevatedButton(
-                  onPressed: () async {
-                    if (!_fromkey.currentState!.validate()) return;
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: const BoxDecoration(
+            color: Colors.transparent
+          ),
+          padding: const EdgeInsets.all(15),
+          child: Form(
+            key: _fromkey,
+            child: SingleChildScrollView(
 
-                    try {
-                      await _db.loginUser(
-                        email: _emailController.text.trim(),
-                        password: _passwordController.text.trim(),
-                      );
-
-                      final session =
-                          Supabase.instance.client.auth.currentSession;
-
-                      if (session != null) {
-                        _emailController.clear();
-                        _passwordController.clear();
-                        context.go('/home');
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Login failed: no session found"),
-                          ),
-                        );
-                      }
-                    } on AuthException catch (e) {
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(e.message)));
-                    } catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Can't Log In")),
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    shadowColor: Colors.transparent,
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                  ),
-                  child: const Text(
-                    "LOGIN",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const Text(
-                    "Not registered? ",
-                    style: TextStyle(color: Colors.white70),
+                  Container(
+                    height: 200,
+                    width: 500,
+                    child:Image.asset(
+                      "assets/images/anxicode.png",
+                      fit: BoxFit.fitWidth,
+                    )
+              
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      context.go('/signup');
-                    },
-                    child: const Text(
-                      "Sign Up",
-                      style: TextStyle(
-                        color: Colors.amberAccent,
-                        fontWeight: FontWeight.bold,
-                        decoration: TextDecoration.underline,
+                  _inputField(_emailController, type: 'Email'),
+                  const SizedBox(height: 20),
+                  _inputField(_passwordController, type: 'Password'),
+                  const SizedBox(height: 20),
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF00C9A7), Color(0xFF007CF0)],
+                      ),
+                      borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.cyanAccent.withOpacity(0.3),
+                          blurRadius: 12,
+                          spreadRadius: 1,
+                        ),
+                      ],
+                    ),
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        if (!_fromkey.currentState!.validate()) return;
+              
+                        try {
+                          await _db.loginUser(
+                            email: _emailController.text.trim(),
+                            password: _passwordController.text.trim(),
+                          );
+              
+                          final session =
+                              Supabase.instance.client.auth.currentSession;
+              
+                          if (session != null) {
+                            _emailController.clear();
+                            _passwordController.clear();
+                            context.go('/home');
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Login failed: no session found"),
+                              ),
+                            );
+                          }
+                        } on AuthException catch (e) {
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(SnackBar(content: Text(e.message)));
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Can't Log In")),
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                      child: const Text(
+                        "LOGIN",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1,
+                        ),
                       ),
                     ),
                   ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "Not registered? ",
+                        style: TextStyle(color: Colors.white70),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          context.go('/signup');
+                        },
+                        child: const Text(
+                          "Sign Up",
+                          style: TextStyle(
+                            color: Colors.cyanAccent,
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
-            ],
+            ),
           ),
         ),
       ),
+    ]
     );
   }
 
@@ -155,6 +169,7 @@ class _LogInState extends State<LogIn> {
   }) {
     return TextFormField(
       controller: controller,
+      obscureText: type == "Password" ? true : false,
       keyboardType:
           type == "Email" ? TextInputType.emailAddress : TextInputType.text,
       style: const TextStyle(color: Colors.white),

@@ -88,7 +88,7 @@ class _LeaderboardState extends State<Leaderboard> {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 40),
+            padding: const EdgeInsets.only(top: 40,),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

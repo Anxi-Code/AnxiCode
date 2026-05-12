@@ -54,7 +54,7 @@ class _HomeState extends State<Home> {
             centerTitle: true,
           ),
           drawer: Drawer(
-            backgroundColor: Colors.black54,
+            backgroundColor: Colors.black87,
             child: ListView(
               children: [
                 UserAccountsDrawerHeader(

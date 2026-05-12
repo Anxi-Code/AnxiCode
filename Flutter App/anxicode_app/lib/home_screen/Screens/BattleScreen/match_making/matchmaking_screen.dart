@@ -102,7 +102,7 @@ class _MatchmakingState extends State<Matchmaking> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Row(
+                Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Container(
@@ -142,6 +142,7 @@ class _MatchmakingState extends State<Matchmaking> {
                         ],
                       ),
                     ),
+                    SizedBox(height: 10,),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -171,6 +172,7 @@ class _MatchmakingState extends State<Matchmaking> {
                             : Text(""),
                       ],
                     ),
+                    SizedBox(height: 20,),
                     Container(
                       height: 150,
                       width: 150,

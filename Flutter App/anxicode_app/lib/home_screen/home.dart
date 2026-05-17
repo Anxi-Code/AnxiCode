@@ -1,6 +1,7 @@
 import 'package:anxicode_app/Services/supabase_db.dart';
 import 'package:anxicode_app/design/bg_gradient/bg_gradient.dart';
 import 'package:anxicode_app/design/custom_nav_bar/custom_nav_bar.dart';
+import 'package:anxicode_app/home_screen/Screens/test.dart';
 import 'package:flutter/material.dart';
 import 'package:anxicode_app/home_screen/Screens/BattleScreen/battle_screen.dart';
 import 'package:anxicode_app/home_screen/Screens/ChatScreen/chat_screen.dart';
@@ -25,7 +26,7 @@ class _HomeState extends State<Home> {
   List<Widget> screens = [
     Chat(),
     Leaderboard(),
-    Battle(),
+    Test(),
     WeeklyChallengeScreen(),
     Profile(),
   ];

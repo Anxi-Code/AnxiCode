@@ -1,3 +1,4 @@
+import 'package:anxicode_app/design/Explaination/exp.dart';
 import 'package:anxicode_app/design/Quiz/mcqs_design.dart';
 import 'package:flutter/material.dart';
 class Test extends StatelessWidget {
@@ -10,7 +11,11 @@ class Test extends StatelessWidget {
         ElevatedButton(onPressed: (){
           Navigator.push(context,MaterialPageRoute(builder: (context)=>Mcqs()));
         }
-            , child: Text("Mcqs"))
+            , child: Text("Mcqs")),
+        ElevatedButton(onPressed: (){
+          Navigator.push(context,MaterialPageRoute(builder: (context)=>Topic()));
+        }
+            , child: Text("Topic"))
       ],
     );
   }

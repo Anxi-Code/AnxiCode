@@ -9,6 +9,9 @@ import 'package:anxicode_app/home_screen/Screens/LeaderBoardScreen/leaderboard_s
 import 'package:anxicode_app/home_screen/Screens/Profle/profile_screen.dart';
 import 'package:anxicode_app/home_screen/Screens/weekly_challenge_screen/weekly_challenge_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:anxicode_app/home_screen/Screens/DrawerScreens/account_info.dart';
+import 'package:anxicode_app/home_screen/Screens/DrawerScreens/helpcenter_screen.dart';
+import 'package:anxicode_app/home_screen/Screens/DrawerScreens/aboutus_screen.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -90,19 +93,47 @@ class _HomeState extends State<Home> {
                   ),
                 ),
                 ListTile(
-                  leading: Icon(Icons.person_2_outlined,color: Colors.white,),
+                  leading: Icon(Icons.person_2_outlined,color: Colors.white),
                   title: Text("Account Information",style: GoogleFonts.orbitron(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 14),),
 
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AccountInfo(),
+                      ),
+                    );
+                  },
                 ),
                 ListTile(
-                  leading: Icon(Icons.help_outline,color: Colors.white,),
-                  title: Text("Help Center",style: GoogleFonts.orbitron(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 14),),
+                  leading: const Icon(Icons.help_outline, color: Colors.white,),
 
+                  title: Text("Help Center", style: GoogleFonts.orbitron(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14,
+                    ),
+                  ),
+
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HelpCenterScreen(),
+                      ),
+                    );
+                  },
                 ),
-                ListTile(
-                  leading: Icon(Icons.info_outline,color: Colors.white,),
-                  title: Text("About Us",style: GoogleFonts.orbitron(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 14),),
+                ListTile(leading: const Icon(Icons.info_outline, color: Colors.white,
+                  ),
 
+                  title: Text("About Us", style: GoogleFonts.orbitron(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14,),),
+
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AboutUsScreen(),
+                      ),
+                    );
+                  },
                 ),
                 GestureDetector(
                   onTap: (){

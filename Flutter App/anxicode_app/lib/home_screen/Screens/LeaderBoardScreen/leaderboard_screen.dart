@@ -85,6 +85,7 @@ class _LeaderboardState extends State<Leaderboard> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10),
+
       child: Column(
         children: [
           Padding(
@@ -138,18 +139,8 @@ class _LeaderboardState extends State<Leaderboard> {
             child: Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF1B1B3A), Color(0xFF2D2D5A)],
-                ),
+                color: Colors.white.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(30),
-                border: Border.all(color: Colors.amberAccent, width: 2),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.35),
-                    blurRadius: 18,
-                    offset: const Offset(0, 8),
-                  ),
-                ],
               ),
               child: Container(
                 padding: const EdgeInsets.fromLTRB(30, 30, 30, 15),
@@ -191,18 +182,8 @@ class _LeaderboardState extends State<Leaderboard> {
         width: double.infinity,
         padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFF00C9A7), Color(0xFF007CF0)],
-          ),
+          color: Colors.white.withValues(alpha: 0.08),
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: Colors.white24, width: 1.5),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.cyanAccent.withOpacity(0.2),
-              blurRadius: 10,
-              spreadRadius: 1,
-            ),
-          ],
         ),
         child: Row(
           children: [
@@ -269,16 +250,8 @@ class _LeaderboardState extends State<Leaderboard> {
         height: height,
         width: 120,
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFFFFC75F), Color(0xFFFF9671)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          color: Colors.white.withValues(alpha: 0.08),
           borderRadius: borderRadius,
-          border: Border.all(color: Colors.white24, width: 2),
-          boxShadow: [
-            BoxShadow(color: Colors.orange, blurRadius: 12, spreadRadius: 2),
-          ],
         ),
         child: Column(
           children: [

@@ -1,6 +1,6 @@
+import 'package:anxicode_app/design/wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:anxicode_app/home_screen/home.dart';
 import 'package:anxicode_app/home_screen/Screens/BattleScreen/match_making/matchmaking_screen.dart';
@@ -9,27 +9,15 @@ import 'package:anxicode_app/user_registration/sign_up_page/sign_up_page.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
-    initialLocation: '/',
-
-    redirect: (context, state) {
-      final session = Supabase.instance.client.auth.currentSession;
-      final loggedIn = (session != null);
-
-      final isLoginRoute = (state.matchedLocation == '/login');
-      final isSignupRoute = (state.matchedLocation == '/signup');
-
-      if (!loggedIn && !isLoginRoute && !isSignupRoute) {
-        return '/login';
-      }
-
-      if (loggedIn && (isLoginRoute || isSignupRoute)) {
-        return '/';
-      }
-
-      return null;
-    },
+    initialLocation: '/splash',
 
     routes: [
+      GoRoute(
+        path: '/splash',
+        name: 'splash',
+        builder: (context, state) => const Wrapper(),
+      ),
+
       GoRoute(
         path: '/login',
         name: 'login',

@@ -13,6 +13,17 @@ void main() async {
     url: "https://knzvyzczilxhwssxaptn.supabase.co",
     anonKey: "sb_publishable_uwfy-Ctq4kcVpnBg8zFA1w_sgb7s0Rt",
   );
+  Supabase.instance.client.auth.onAuthStateChange.listen((data) {
+    final event = data.event;
+
+    if (event == AuthChangeEvent.signedOut) {
+      print('User signed out');
+    }
+
+    if (event == AuthChangeEvent.tokenRefreshed) {
+      print('Token refreshed');
+    }
+  });
   runApp(ProviderScope(child: const MyApp()));
 }
 

@@ -1,6 +1,7 @@
 import 'package:anxicode_app/Models/user_info.dart';
 import 'package:anxicode_app/Services/supabase_db.dart';
 import 'package:anxicode_app/design/bg_gradient/bg_gradient.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -23,6 +24,16 @@ class _SignUpState extends State<SignUp> {
   final _confirmPasswordController = TextEditingController();
 
   @override
+  void dispose() {
+    _nameController.dispose();
+    _userNameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
@@ -33,6 +44,15 @@ class _SignUpState extends State<SignUp> {
             backgroundColor: Colors.transparent,
             elevation: 0,
             iconTheme: const IconThemeData(color: Colors.white),
+            leading: IconButton(
+              onPressed: () {
+                context.go('/login');
+              },
+              icon: Icon(
+                Icons.arrow_back,
+                color: Colors.white.withValues(alpha: 0.4),
+              ),
+            ),
           ),
           body: SingleChildScrollView(
             child: Padding(
@@ -65,7 +85,10 @@ class _SignUpState extends State<SignUp> {
                     _inputField(_passwordController, type: 'Password'),
                     const SizedBox(height: 15),
 
-                    _inputField(_confirmPasswordController, type: 'Confirm Password'),
+                    _inputField(
+                      _confirmPasswordController,
+                      type: 'Confirm Password',
+                    ),
 
                     const SizedBox(height: 30),
 
@@ -78,48 +101,7 @@ class _SignUpState extends State<SignUp> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: ElevatedButton(
-                        onPressed: () async {
-                          if (!_formKey.currentState!.validate()) return;
-
-                          if (_passwordController.text !=
-                              _confirmPasswordController.text) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Passwords do not match"),
-                              ),
-                            );
-                            return;
-                          }
-
-                          try {
-                            final user = UserInfo(
-                              name: _nameController.text.trim(),
-                              userName: _userNameController.text.trim(),
-                              email: _emailController.text.trim(),
-                              password: _passwordController.text.trim(),
-                            );
-
-                            await _db.registerUser(userInfo: user);
-
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Registration successful"),
-                              ),
-                            );
-
-                            context.go('/');
-                          } on AuthException catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(e.message)),
-                            );
-                          } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Something went wrong"),
-                              ),
-                            );
-                          }
-                        },
+                        onPressed: _registerUser,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.transparent,
                           shadowColor: Colors.transparent,
@@ -146,15 +128,88 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
+  Future<void> _registerUser() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    if (_passwordController.text != _confirmPasswordController.text) {
+      _showSnackBar(
+        title: 'Error',
+        message: 'Passwords do not match',
+        contentType: ContentType.failure,
+      );
+      return;
+    }
+
+    try {
+      final user = UserInfo(
+        name: _nameController.text.trim(),
+        userName: _userNameController.text.trim(),
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      await _db.registerUser(userInfo: user);
+
+      if (!mounted) return;
+
+      _showSnackBar(
+        title: 'Success',
+        message: 'Registration successful',
+        contentType: ContentType.success,
+      );
+
+      context.go('/');
+    } on AuthException catch (e) {
+      if (!mounted) return;
+
+      _showSnackBar(
+        title: 'Auth Error',
+        message: e.message,
+        contentType: ContentType.failure,
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      _showSnackBar(
+        title: 'Error',
+        message: 'Something went wrong',
+        contentType: ContentType.failure,
+      );
+    }
+  }
+
+  void _showSnackBar({
+    required String title,
+    required String message,
+    required ContentType contentType,
+  }) {
+    final snackBar = SnackBar(
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.transparent,
+      duration: const Duration(seconds: 3),
+      content: AwesomeSnackbarContent(
+        title: title,
+        message: message,
+        contentType: contentType,
+        color: Colors.cyan,
+      ),
+    );
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(snackBar);
+  }
+
   TextFormField _inputField(
-      TextEditingController controller, {
-        String type = 'text',
-      }) {
+    TextEditingController controller, {
+    String type = 'text',
+  }) {
     return TextFormField(
       controller: controller,
       obscureText: type.toLowerCase().contains("password"),
       keyboardType:
-      type == "Email" ? TextInputType.emailAddress : TextInputType.text,
+          type == "Email" ? TextInputType.emailAddress : TextInputType.text,
       style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
         hintText: "Enter your $type",
@@ -165,8 +220,47 @@ class _SignUpState extends State<SignUp> {
           borderSide: BorderSide.none,
         ),
       ),
-      validator: (value) =>
-      value == null || value.isEmpty ? "Please Enter $type" : null,
+      validator: (value) => validate(value: value ?? '', type: type),
     );
+  }
+
+  String? validate({required String value, required String type}) {
+    final v = value.trim();
+
+    // NAME
+    if (type == 'Name') {
+      if (v.isEmpty) return "Name is required";
+      if (v.length < 3) return "Name must be at least 3 characters";
+    }
+
+    // USERNAME
+    if (type == 'User Name') {
+      if (v.isEmpty) return 'Username is required';
+      if (v.length < 3) return 'Username must be at least 3 characters';
+      if (v.contains(' ')) return 'Username cannot contain spaces';
+
+      if (!RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(v)) {
+        return 'Only letters, numbers and underscore allowed';
+      }
+    }
+
+    // EMAIL
+    if (type == 'Email') {
+      if (v.isEmpty) return 'Email is required';
+
+      if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(v)) {
+        return 'Enter a valid email';
+      }
+    }
+
+    // PASSWORD
+    if (type == 'Password') {
+      if (v.isEmpty) return 'Password is required';
+      if (v.length < 6) {
+        return 'Password must be at least 6 characters';
+      }
+    }
+
+    return null;
   }
 }

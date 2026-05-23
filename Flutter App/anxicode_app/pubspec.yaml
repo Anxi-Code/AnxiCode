@@ -49,6 +49,7 @@ dependencies:
   rxdart: ^0.28.0
   google_fonts: ^6.2.1
   flutter_markdown_plus: ^1.0.7
+  awesome_snackbar_content: ^0.1.8
   
 
 

@@ -1,18 +1,49 @@
 import 'package:anxicode_app/Constants/constants.dart';
+import 'package:anxicode_app/Learning/pro/learning_provider.dart';
 import 'package:anxicode_app/design/bg_gradient/bg_gradient.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:markdown/markdown.dart' as md;
 
-class Topic extends StatelessWidget {
-  const Topic({super.key});
+class Topic extends ConsumerStatefulWidget {
+  final String path;
+  const Topic({super.key,required this.path});
+
+  @override
+  ConsumerState<Topic> createState() => _TopicState();
+}
+
+class _TopicState extends ConsumerState<Topic> {
 
   @override
   Widget build(BuildContext context) {
+    final learningService=ref.watch(learningServiceProvider);
+    bool loading=true;
+    String data="";
+
+    Future<void> getData() async {
+      String markdown = await learningService.getMarkdown(widget.path);
+      setState(() {
+        loading=false;
+        data=markdown;
+      });
+    }
+    @override
+    void initState() {
+      // TODO: implement initState
+      super.initState();
+      getData();
+    }
+
+
     return Stack(
       children: [
         BgGradient(),
+        loading?
+        const Center(child: CircularProgressIndicator(color: Colors.cyanAccent,),)
+            :
         Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(

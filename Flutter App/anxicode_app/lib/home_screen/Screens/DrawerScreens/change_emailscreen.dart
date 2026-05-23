@@ -18,6 +18,7 @@ class ChangeEmailScreen extends StatelessWidget {
             backgroundColor: Colors.transparent,
             elevation: 0,
             centerTitle: true,
+            leading: BackButton(color: Colors.white,),
 
             title: const Text(
               "Change Email",

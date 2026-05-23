@@ -18,6 +18,7 @@ class HelpCenterScreen extends StatelessWidget {
             backgroundColor: Colors.transparent,
             elevation: 0,
             centerTitle: true,
+            leading: BackButton(color: Colors.white,),
 
             title: Text(
               "Help Center",

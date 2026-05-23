@@ -22,6 +22,7 @@ class AccountInfo extends StatelessWidget {
             backgroundColor: Colors.transparent,
             centerTitle: true,
             elevation: 0,
+            leading: BackButton(color: Colors.white,),
             title: const Text(
               "Account Information",
               style: TextStyle(color: Colors.white),

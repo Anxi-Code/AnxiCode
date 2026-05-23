@@ -16,17 +16,15 @@ class CustomBottomBar extends StatefulWidget {
 
 class _CustomBottomBarState extends State<CustomBottomBar> {
   final List<String> icons = [
-    "assets/svg/message-dots.svg",
     "assets/svg/trophy.svg",
     "assets/svg/swords.svg",
-    "assets/svg/brain-circuit.svg",
     "assets/svg/user.svg",
   ];
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12.5, horizontal: 20),
+      padding: const EdgeInsets.symmetric(vertical: 12.5, horizontal: 35),
       margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),

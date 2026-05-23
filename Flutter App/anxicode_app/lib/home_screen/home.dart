@@ -1,14 +1,10 @@
 import 'package:anxicode_app/Services/supabase_db.dart';
 import 'package:anxicode_app/design/bg_gradient/bg_gradient.dart';
 import 'package:anxicode_app/design/custom_nav_bar/custom_nav_bar.dart';
-import 'package:anxicode_app/home_screen/Screens/test.dart';
+import 'package:anxicode_app/home_screen/Screens/learn/languages_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:anxicode_app/home_screen/Screens/BattleScreen/battle_screen.dart';
-import 'package:anxicode_app/home_screen/Screens/ChatScreen/chat_screen.dart';
 import 'package:anxicode_app/home_screen/Screens/LeaderBoardScreen/leaderboard_screen.dart';
-import 'package:anxicode_app/home_screen/Screens/Profle/profile_screen.dart';
 import 'package:anxicode_app/home_screen/Screens/weekly_challenge_screen/weekly_challenge_screen.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:anxicode_app/home_screen/Screens/DrawerScreens/account_info.dart';
 import 'package:anxicode_app/home_screen/Screens/DrawerScreens/helpcenter_screen.dart';
@@ -23,15 +19,13 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int currentIndex = 2;
-  PageController pageController = PageController(initialPage: 2);
+  PageController pageController = PageController(initialPage: 1);
   SupabaseAuthService _auth = SupabaseAuthService();
 
   List<Widget> screens = [
-    Chat(),
     Leaderboard(),
-    Test(),
+    LanguagesScreen(),
     WeeklyChallengeScreen(),
-    Profile(),
   ];
 
   void onTabChanged(int index) {

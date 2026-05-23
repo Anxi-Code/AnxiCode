@@ -18,6 +18,7 @@ class AboutUsScreen extends StatelessWidget {
             backgroundColor: Colors.transparent,
             elevation: 0,
             centerTitle: true,
+            leading: BackButton(color: Colors.white,),
 
             title: Text(
               "About Us",
@@ -36,26 +37,8 @@ class AboutUsScreen extends StatelessWidget {
               children: [
 
                 Center(
-                  child: Icon(
-                    Icons.code,
-                    size: 80,
-                    color: Colors.cyanAccent,
-                  ),
+                  child:Image.asset("assets/images/anxicode.png",fit: BoxFit.fitWidth,)
                 ),
-
-                const SizedBox(height: 20),
-
-                Center(
-                  child: Text(
-                    "AnxiCode",
-                    style: GoogleFonts.orbitron(
-                      color: Colors.white,
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-
                 const SizedBox(height: 10),
 
                 Center(

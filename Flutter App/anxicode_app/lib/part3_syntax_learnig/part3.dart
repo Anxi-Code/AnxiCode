@@ -6,8 +6,13 @@ import 'package:google_fonts/google_fonts.dart';
 
 class SyntaxForge extends StatefulWidget {
   final SyntaxChallenge challenge;
+  final VoidCallback onNext; // ADDED: Triggered when user clicks the Next button
 
-  const SyntaxForge({super.key, required this.challenge});
+  const SyntaxForge({
+    super.key,
+    required this.challenge,
+    required this.onNext, // Make sure to pass this from your parent screen!
+  });
 
   @override
   State<SyntaxForge> createState() => _SyntaxForgeState();
@@ -17,9 +22,12 @@ class _SyntaxForgeState extends State<SyntaxForge> {
   final LinearGradient buttonGradient = const LinearGradient(
     colors: [Color(0xFF00C9A7), Color(0xFF007CF0)],
   );
-  late List<TextEditingController> _blankControllers;
 
-  bool _isMissionExpanded = false;
+  late List<TextEditingController> _blankControllers;
+  // Tracks validation state of each box: null = unchecked, true = correct, false = wrong
+  late List<bool?> _fieldValidations;
+
+  bool _isEditorExpanded = false;
   bool _showResult = false;
   bool _isCorrect = false;
   String _resultMessage = '';
@@ -27,11 +35,23 @@ class _SyntaxForgeState extends State<SyntaxForge> {
   @override
   void initState() {
     super.initState();
-    // Initialize one controller per blank (templateParts length - 1)
-    _blankControllers = List.generate(
-      widget.challenge.templateParts.length - 1,
-      (_) => TextEditingController(),
-    );
+    final blankCount = widget.challenge.templateParts.length - 1;
+
+    _blankControllers = List.generate(blankCount, (_) => TextEditingController());
+    _fieldValidations = List.generate(blankCount, (_) => null);
+
+    // Listeners: If user starts typing in a red/green box, reset its validation state
+    for (int i = 0; i < _blankControllers.length; i++) {
+      _blankControllers[i].addListener(() {
+        if (_fieldValidations[i] != null) {
+          setState(() {
+            _fieldValidations[i] = null;
+            _showResult = false;
+            _isCorrect = false; // Reset to false so the "Verify" button comes back!
+          });
+        }
+      });
+    }
   }
 
   @override
@@ -43,134 +63,130 @@ class _SyntaxForgeState extends State<SyntaxForge> {
   }
 
   void _verifySyntax() {
+    FocusScope.of(context).unfocus();
+
     bool allCorrect = true;
     final correctList = widget.challenge.correctAnswers;
 
-    for (int i = 0; i < _blankControllers.length; i++) {
-      final userInput = _blankControllers[i].text.trim();
-      final expected = correctList[i].trim();
-      if (userInput != expected) {
-        allCorrect = false;
-        break;
-      }
-    }
-
     setState(() {
+      for (int i = 0; i < _blankControllers.length; i++) {
+        final userInput = _blankControllers[i].text.trim();
+        final expected = correctList[i].trim();
+
+        bool isMatch = (userInput == expected);
+        _fieldValidations[i] = isMatch;
+
+        if (!isMatch) {
+          allCorrect = false;
+        }
+      }
+
       _showResult = true;
       _isCorrect = allCorrect;
-      _resultMessage =
-          allCorrect
-              ? '✓ Syntax verified! Well done, Agent.'
-              : '✗ Incorrect syntax. Check the hint and try again.';
+      _resultMessage = allCorrect
+          ? '✓ Syntax verified! Well done.'
+          : '✗ Some syntax is incorrect. Check the red boxes.';
     });
 
-    // Auto-hide result after 2 seconds
-    Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        setState(() => _showResult = false);
-      }
-    });
+    // We removed the 3-second auto-hide for correct answers so the Next button
+    // and the green banner stay on the screen until the user taps Next.
+    if (!allCorrect) {
+      Future.delayed(const Duration(seconds: 3), () {
+        if (mounted && !_isCorrect) setState(() => _showResult = false);
+      });
+    }
   }
 
-  void _openMission() => setState(() => _isMissionExpanded = true);
-  void _closeMission() => setState(() => _isMissionExpanded = false);
+  void _toggleEditorExpanded() {
+    FocusScope.of(context).unfocus();
+    setState(() => _isEditorExpanded = !_isEditorExpanded);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-
-    return AnimatedPadding(
-      duration: const Duration(milliseconds: 150),
-      padding: EdgeInsets.only(bottom: keyboardHeight),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Stack(
         children: [
-          BgGradient(),
-          // ----- MAIN CONTENT -----
-          SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+          const BgGradient(),
+
+          Scaffold(
+            backgroundColor: Colors.transparent,
+            resizeToAvoidBottomInset: true,
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              centerTitle: true,
+              title: Text(
+                "Syntax Forge",
+                style: GoogleFonts.orbitron(
+                  color: Colors.cyanAccent,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.5,
+                ),
+              ),
+              leading: const BackButton(color: Colors.white),
+            ),
+            body: SafeArea(
+              child: Stack(
                 children: [
-                  _buildHeader(),
-                  const SizedBox(height: 15),
-                  _buildTopicCard(),
-                  const SizedBox(height: 15),
-                  _buildHintCard(),
-                  const SizedBox(height: 15),
-                  _buildBlanksEditor(),
-                  const SizedBox(height: 10),
-                  _buildVerifyButton(),
-                  if (_showResult) _buildResultBanner(),
+                  // ----- MAIN CONTENT -----
+                  SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 80),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        _buildHeader(),
+                        const SizedBox(height: 20),
+                        _buildTopicCard(),
+                        const SizedBox(height: 20),
+                        _buildHintCard(),
+                        const SizedBox(height: 20),
+                        _buildBlanksEditorCard(isExpanded: false),
+                        const SizedBox(height: 30),
+
+                        // Condition: Show Next if completely correct, otherwise Verify
+                        _isCorrect ? _buildNextButton() : _buildVerifyButton(),
+
+                        if (_showResult) _buildResultBanner(),
+                      ],
+                    ),
+                  ),
+
+                  // ----- BLUR BACKDROP (for expanded editor) -----
+                  if (_isEditorExpanded)
+                    Positioned.fill(
+                      child: GestureDetector(
+                        onTap: _toggleEditorExpanded,
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                          child: Container(
+                            color: Colors.black.withValues(alpha: 0.4),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                  // ----- EDITOR MODAL -----
+                  if (_isEditorExpanded)
+                    Positioned.fill(
+                      child: Center(
+                        child: SingleChildScrollView(
+                          padding: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).viewInsets.bottom + 20),
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 20),
+                            child: _buildBlanksEditorCard(isExpanded: true),
+                          ),
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),
           ),
-
-          // ----- BLUR BACKDROP (for expanded mission) -----
-          if (_isMissionExpanded)
-            Positioned.fill(
-              child: GestureDetector(
-                onTap: _closeMission,
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-                  child: Container(color: Colors.black.withValues(alpha: 0.35)),
-                ),
-              ),
-            ),
-
-          // ----- MISSION MODAL -----
-          if (_isMissionExpanded)
-            Positioned.fill(
-              child: Center(
-                child: Container(
-                  margin: const EdgeInsets.all(20),
-                  padding: const EdgeInsets.all(18),
-                  decoration: _glassCard(),
-                  constraints: BoxConstraints(
-                    maxHeight: MediaQuery.of(context).size.height * 0.70,
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          const Icon(Icons.flag, color: Colors.amber),
-                          const SizedBox(width: 8),
-                          const Text(
-                            "MISSION OBJECTIVE",
-                            style: TextStyle(
-                              color: Colors.amber,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                            ),
-                          ),
-                          const Spacer(),
-                          InkWell(
-                            onTap: _closeMission,
-                            child: const Icon(
-                              Icons.close,
-                              color: Colors.cyanAccent,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      Expanded(
-                        child: SingleChildScrollView(
-                          child: Text(
-                            widget.challenge.taskDescription,
-                            style: TextStyle(
-                              color: Colors.grey.shade300,
-                              height: 1.7,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
         ],
       ),
     );
@@ -179,18 +195,20 @@ class _SyntaxForgeState extends State<SyntaxForge> {
   // ----- HEADER -----
   Widget _buildHeader() {
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: _glassCard(),
       child: Row(
         children: [
           Container(
-            height: 50,
-            width: 50,
+            height: 55,
+            width: 55,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
+              color: Colors.black.withValues(alpha: 0.2),
+              border: Border.all(color: Colors.cyanAccent.withValues(alpha: 0.3)),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.cyanAccent.withValues(alpha: 0.4),
+                  color: Colors.cyanAccent.withValues(alpha: 0.2),
                   blurRadius: 15,
                 ),
               ],
@@ -207,19 +225,23 @@ class _SyntaxForgeState extends State<SyntaxForge> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "ANXICODE: SYNTAX FORGE",
+                  widget.challenge.topic.toUpperCase(),
                   style: GoogleFonts.orbitron(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 15,
+                    fontSize: 16,
+                    letterSpacing: 1.2,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 6),
                 Text(
                   "Rookie Rank",
                   style: GoogleFonts.orbitron(
-                    color: Colors.grey.shade400,
+                    color: Colors.cyanAccent.withValues(alpha: 0.8),
                     fontSize: 12,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ],
@@ -230,74 +252,31 @@ class _SyntaxForgeState extends State<SyntaxForge> {
     );
   }
 
-  // ----- TOPIC + TASK -----
+  // ----- TASK CARD -----
   Widget _buildTopicCard() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(18),
       decoration: _glassCard(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              const Icon(Icons.topic, color: Colors.cyanAccent),
-              const SizedBox(width: 8),
-              Text(
-                "TOPIC",
-                style: GoogleFonts.orbitron(
-                  color: Colors.cyanAccent,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 11,
-                ),
-              ),
-              const Spacer(),
-              Text(
-                widget.challenge.topic,
-                style: GoogleFonts.orbitron(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
           Text(
             "TASK",
             style: GoogleFonts.orbitron(
               color: Colors.amber,
               fontWeight: FontWeight.bold,
-              fontSize: 11,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            widget.challenge.taskDescription,
-            style: TextStyle(
-              color: Colors.grey.shade300,
-              height: 1.5,
-              fontSize: 14,
+              fontSize: 12,
+              letterSpacing: 1.2,
             ),
           ),
           const SizedBox(height: 10),
-          InkWell(
-            onTap: _openMission,
-            borderRadius: BorderRadius.circular(6),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.open_in_full,
-                  size: 16,
-                  color: Colors.amber.shade200,
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  "Expand mission",
-                  style: TextStyle(color: Colors.amber.shade200, fontSize: 12),
-                ),
-              ],
+          Text(
+            widget.challenge.taskDescription,
+            style: TextStyle(
+              color: Colors.grey.shade200,
+              height: 1.6,
+              fontSize: 15,
             ),
           ),
         ],
@@ -308,209 +287,305 @@ class _SyntaxForgeState extends State<SyntaxForge> {
   // ----- HINT -----
   Widget _buildHintCard() {
     return Container(
-      padding: const EdgeInsets.all(14),
       decoration: _glassCard(),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Icon(Icons.lightbulb_outline, color: Colors.yellowAccent),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              "HINT: ${widget.challenge.hint}",
-              style: TextStyle(
-                color: Colors.yellowAccent.withValues(alpha: 0.9),
-                fontSize: 13,
-                height: 1.4,
+      child: Theme(
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          iconColor: Colors.yellowAccent,
+          collapsedIconColor: Colors.yellowAccent.withValues(alpha: 0.7),
+          title: Row(
+            children: [
+              const Icon(Icons.lightbulb_outline, color: Colors.yellowAccent, size: 22),
+              const SizedBox(width: 12),
+              Text(
+                "Need a Hint?",
+                style: GoogleFonts.orbitron(
+                  color: Colors.yellowAccent,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                ),
+              ),
+            ],
+          ),
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  widget.challenge.hint,
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.85),
+                    fontSize: 14,
+                    height: 1.5,
+                  ),
+                ),
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ----- EDITOR CARD -----
+  Widget _buildBlanksEditorCard({required bool isExpanded}) {
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: _glassCard().copyWith(
+        border: Border.all(color: Colors.cyanAccent.withValues(alpha: 0.3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "SYNTAX EDITOR",
+                style: GoogleFonts.orbitron(
+                  color: Colors.cyanAccent,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                  letterSpacing: 1.2,
+                ),
+              ),
+              InkWell(
+                onTap: _toggleEditorExpanded,
+                child: Icon(
+                  isExpanded ? Icons.close_fullscreen : Icons.open_in_full,
+                  color: Colors.cyanAccent,
+                  size: 20,
+                ),
+              )
+            ],
           ),
+          const SizedBox(height: 16),
+          _buildRichTextCode(isExpanded: isExpanded),
         ],
       ),
     );
   }
 
-  // ----- EDITOR: Partial Fill In The Blanks -----
-  Widget _buildBlanksEditor() {
+  // ----- THE RICH TEXT CODE RENDERER -----
+  Widget _buildRichTextCode({required bool isExpanded}) {
     final parts = widget.challenge.templateParts;
-    final controllers = _blankControllers;
 
     return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: _glassCard().copyWith(
-        border: Border.all(color: Colors.cyanAccent.withValues(alpha: 0.2)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "SYNTAX EDITOR",
-            style: GoogleFonts.orbitron(
-              color: Colors.cyanAccent,
-              fontWeight: FontWeight.bold,
-              fontSize: 11,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.4),
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(
-                color: Colors.cyanAccent.withValues(alpha: 0.15),
-              ),
-            ),
-            // Using RichText with WidgetSpan perfectly aligns the inputs inline with the code
-            child: RichText(
-              text: TextSpan(
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'Courier',
-                  fontSize: 16,
-                  height: 1.8, // Gives the text fields breathing room
-                ),
-                children: List.generate(parts.length * 2 - 1, (index) {
-                  if (index.isEven) {
-                    // Text part
-                    return TextSpan(text: parts[index ~/ 2]);
-                  } else {
-                    // Blank field locked inline
-                    final blankIndex = index ~/ 2;
-                    return WidgetSpan(
-                      alignment: PlaceholderAlignment.middle,
-                      child: Container(
-                        width: 90, // Set standard blank size
-                        height:
-                            32, // Lock height so it doesn't break syntax alignment
-                        margin: const EdgeInsets.symmetric(horizontal: 4),
-                        child: TextField(
-                          controller: controllers[blankIndex],
-                          style: const TextStyle(
-                            color: Colors.amber,
-                            fontFamily: 'Courier',
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                          decoration: const InputDecoration(
-                            isDense: true,
-                            contentPadding: EdgeInsets.symmetric(
-                              vertical: 4,
-                              horizontal: 4,
-                            ),
-                            filled: true,
-                            fillColor: Color(0xFF1E1E2E),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.cyanAccent),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(6),
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.cyanAccent),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(6),
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.amberAccent,
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(6),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  }
-                }),
-              ),
-            ),
-          ),
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: const Color(0xFF12121A),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Colors.cyanAccent.withValues(alpha: 0.2),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.5),
+            blurRadius: 10,
+          )
         ],
+      ),
+      child: RichText(
+        text: TextSpan(
+          style: const TextStyle(
+            color: Colors.white,
+            fontFamily: 'Courier',
+            fontSize: 18,
+            height: 2.0,
+          ),
+          children: List.generate(parts.length * 2 - 1, (index) {
+            if (index.isEven) {
+              return TextSpan(text: parts[index ~/ 2]);
+            } else {
+              final blankIndex = index ~/ 2;
+
+              final isValid = _fieldValidations[blankIndex];
+              Color fieldBorderColor = Colors.cyanAccent;
+              Color fieldTextColor = Colors.amberAccent;
+              Color fieldBgColor = const Color(0xFF1E1E2E);
+
+              if (isValid == true) {
+                fieldBorderColor = Colors.greenAccent;
+                fieldTextColor = Colors.greenAccent;
+                fieldBgColor = Colors.greenAccent.withValues(alpha: 0.1);
+              } else if (isValid == false) {
+                fieldBorderColor = Colors.redAccent;
+                fieldTextColor = Colors.redAccent;
+                fieldBgColor = Colors.redAccent.withValues(alpha: 0.1);
+              }
+
+              return WidgetSpan(
+                alignment: PlaceholderAlignment.middle,
+                child: Container(
+                  width: isExpanded ? 130 : 110,
+                  height: 42,
+                  margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                  child: TextField(
+                    controller: _blankControllers[blankIndex],
+                    style: TextStyle(
+                      color: fieldTextColor,
+                      fontFamily: 'Courier',
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 8,
+                        horizontal: 8,
+                      ),
+                      filled: true,
+                      fillColor: fieldBgColor,
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: fieldBorderColor),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: fieldBorderColor.withValues(alpha: 0.6),
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: fieldBorderColor,
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }
+          }),
+        ),
       ),
     );
   }
 
   // ----- VERIFY BUTTON -----
   Widget _buildVerifyButton() {
-    // Upgraded gradient: Electric Blue to Cyan
-    const gradient = LinearGradient(
-      colors: [Color(0xFF00C9A7), Color(0xFF007CF0)],
-    );
-
     return SizedBox(
-      height: 48,
+      height: 56,
       width: double.infinity,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          gradient: gradient,
-          borderRadius: BorderRadius.circular(15),
+          gradient: buttonGradient,
+          borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF00E5FF).withValues(alpha: 0.3),
-              blurRadius: 8,
+              color: const Color(0xFF00C9A7).withValues(alpha: 0.4),
+              blurRadius: 12,
               offset: const Offset(0, 4),
             ),
           ],
         ),
-        child: ElevatedButton.icon(
+        child: ElevatedButton(
           onPressed: _verifySyntax,
-          icon: const Icon(Icons.check_circle_outline, color: Colors.white),
-          label: Text(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+          ),
+          child: Text(
             "VERIFY SYNTAX",
             style: GoogleFonts.orbitron(
               color: Colors.white,
               fontWeight: FontWeight.bold,
+              fontSize: 16,
+              letterSpacing: 1.2,
             ),
-          ),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.transparent,
-            shadowColor: Colors.transparent,
           ),
         ),
       ),
     );
   }
 
-  // ----- RESULT BANNER (animated) -----
+  // ----- NEW: NEXT BUTTON -----
+  Widget _buildNextButton() {
+    return SizedBox(
+      height: 56,
+      width: double.infinity,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          // Distinct green gradient to signify completion
+          gradient: const LinearGradient(
+            colors: [Color(0xFF00E676), Color(0xFF1DE9B6)],
+          ),
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.greenAccent.withValues(alpha: 0.4),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: ElevatedButton.icon(
+          onPressed: widget.onNext, // Calls the function passed from the parent
+          icon: const Icon(Icons.arrow_forward_rounded, color: Colors.black, size: 24),
+          label: Text(
+            "NEXT CHALLENGE",
+            style: GoogleFonts.orbitron(
+              color: Colors.black, // High contrast text
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              letterSpacing: 1.2,
+            ),
+          ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ----- RESULT BANNER -----
   Widget _buildResultBanner() {
     return AnimatedOpacity(
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 400),
       opacity: _showResult ? 1.0 : 0.0,
-      child: Container(
-        margin: const EdgeInsets.only(top: 10),
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 400),
+        margin: const EdgeInsets.only(top: 20),
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
         decoration: BoxDecoration(
-          color:
-              _isCorrect
-                  ? Colors.greenAccent.withValues(alpha: 0.15)
-                  : Colors.redAccent.withValues(alpha: 0.15),
-          borderRadius: BorderRadius.circular(10),
+          color: _isCorrect
+              ? Colors.greenAccent.withValues(alpha: 0.15)
+              : Colors.redAccent.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(14),
           border: Border.all(
             color: _isCorrect ? Colors.greenAccent : Colors.redAccent,
-            width: 1.5,
+            width: 2,
           ),
         ),
         child: Row(
           children: [
             Icon(
-              _isCorrect ? Icons.check_circle : Icons.cancel,
+              _isCorrect ? Icons.check_circle : Icons.error_outline,
               color: _isCorrect ? Colors.greenAccent : Colors.redAccent,
+              size: 28,
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: 14),
             Expanded(
               child: Text(
                 _resultMessage,
                 style: GoogleFonts.orbitron(
                   color: _isCorrect ? Colors.greenAccent : Colors.redAccent,
                   fontWeight: FontWeight.bold,
-                  fontSize: 12,
+                  fontSize: 14,
+                  height: 1.4,
                 ),
               ),
             ),
@@ -523,15 +598,22 @@ class _SyntaxForgeState extends State<SyntaxForge> {
   // ----- HELPER: glass card decoration -----
   BoxDecoration _glassCard() {
     return BoxDecoration(
-      borderRadius: BorderRadius.circular(15),
-      gradient: RadialGradient(
-        radius: 4,
-        colors: [
-          Colors.cyanAccent.withValues(alpha: 0.10),
-          Colors.white.withValues(alpha: 0.15),
-        ],
-      ),
-      border: Border.all(color: Colors.cyanAccent.withValues(alpha: 0.15)),
+        borderRadius: BorderRadius.circular(20),
+        gradient: RadialGradient(
+          radius: 4,
+          colors: [
+            Colors.cyanAccent.withValues(alpha: 0.05),
+            Colors.white.withValues(alpha: 0.08),
+          ],
+        ),
+        border: Border.all(color: Colors.cyanAccent.withValues(alpha: 0.15)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.2),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          )
+        ]
     );
   }
 }

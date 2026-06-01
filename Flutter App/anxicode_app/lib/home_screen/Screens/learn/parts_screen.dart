@@ -6,10 +6,13 @@ import 'package:anxicode_app/Learning/pro/learning_provider.dart';
 import 'package:anxicode_app/design/Quiz/mcqs_design.dart';
 import 'package:anxicode_app/design/Quiz/topic_screen.dart';
 import 'package:anxicode_app/design/bg_gradient/bg_gradient.dart';
+import 'package:anxicode_app/home_screen/Screens/learn/Part5/part5_battle.dart';
 import 'package:anxicode_app/home_screen/Screens/learn/Part5/part5_screen.dart';
 import 'package:anxicode_app/home_screen/Screens/learn/flow_screen.dart';
 import 'package:anxicode_app/home_screen/Screens/learn/flow_screen2.dart';
 import 'package:anxicode_app/home_screen/Screens/learn/part1_screen.dart';
+import 'package:anxicode_app/part3_syntax_learnig/flow_part3.dart';
+import 'package:anxicode_app/part4_debug/flow_part4.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,11 +27,14 @@ class RankPartsScreen extends ConsumerStatefulWidget {
 }
 
 class _RankPartsScreenState extends ConsumerState<RankPartsScreen> {
+
+
   @override
   Widget build(BuildContext context) {
     final manifestAsync = ref.watch(
       ranksManifestProvider(widget.rank.languageId,widget.rank.rankName.toLowerCase()),
     );
+    Widget? part5;
 
     late final PartsModel partModel;
     List partsList;
@@ -40,6 +46,17 @@ class _RankPartsScreenState extends ConsumerState<RankPartsScreen> {
         manifestAsync.when(
           data: (manfest) {
             partModel = manfest.parts;
+            if (widget.rank.rankName.toLowerCase() == "rookie" || widget.rank.rankName.toLowerCase() == "shadow")  {
+              setState(() {
+                part5 = Part5Screen(slug: manfest.slug,part5: partModel.part5ConfidenceTest,nextTopic: "End of Rank",nextPage: (){});
+
+              });
+            }
+            else {
+              setState(() {
+                part5 = Part5Battle(rankName: widget.rank.rankName, language: manfest.language.toUpperCase());
+              });
+            }
             final parts = [
               {
                 "object": partModel.part1Learning,
@@ -67,6 +84,7 @@ class _RankPartsScreenState extends ConsumerState<RankPartsScreen> {
                 "title": "Syntax Dominion",
                 "subtitle": "Master syntax precision and improve coding accuracy.",
                 "badge": "assets/ranks/${widget.rank.rankName.toLowerCase()}3.png",
+                "screen":Part3Flow(path: partModel.part3SyntaxLearning.filePath,slug: manfest.slug,)
               },
 
               {
@@ -75,6 +93,7 @@ class _RankPartsScreenState extends ConsumerState<RankPartsScreen> {
                 "title": "Error Tracking Arena",
                 "subtitle": "Track, analyze, and eliminate hidden coding mistakes.",
                 "badge": "assets/ranks/${widget.rank.rankName.toLowerCase()}4.png",
+                "screen":Part4Flow(path: partModel.part4Debugging.filePath,slug: manfest.slug,)
               },
 
               {
@@ -83,7 +102,7 @@ class _RankPartsScreenState extends ConsumerState<RankPartsScreen> {
                 "title": "Confidence Test",
                 "subtitle": "Conquer the final confidence and mastery evaluation.",
                 "badge": "assets/ranks/${widget.rank.rankName.toLowerCase()}5.png",
-                "screen":Part5Screen(slug: manfest.slug,part5: partModel.part5ConfidenceTest,nextTopic: "End of Rank",nextPage: (){})
+                "screen":part5
               },
             ];
             partsList = [

@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:anxicode_app/Learning/mod/mcqs_main.dart';
 import 'package:anxicode_app/Learning/mod/rank_manifest.dart';
+import 'package:anxicode_app/part3_syntax_learnig/part3_model.dart';
+import 'package:anxicode_app/part4_debug/part4_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../mod/language_model.dart';
@@ -77,6 +79,28 @@ class LearningService {
     final jsonMap = jsonDecode(content) as Map<String, dynamic>;
     print("inside mcqs");
     return McqQuiz.fromJson(jsonMap);
+  }
+  Future<List<SyntaxChallenge>> getSyntax(String bucket,String path) async {
+    print(bucket);
+    print(path);
+    final bytes = await supabase.storage
+        .from(bucket)
+        .download(path);
+    final content = utf8.decode(bytes);
+    final jsonMap = jsonDecode(content);
+    print(jsonMap);
+    print("inside get syntax");
+    return jsonMap.map<SyntaxChallenge>((e)=>SyntaxChallenge.fromJson(e as Map<String, dynamic>)).toList();
+  }
+  Future<DebuggingData> getDebuggingTasks(String bucket, String path) async {
+    final bytes = await supabase.storage.from(bucket).download(path);
+    final content = utf8.decode(bytes);
+
+    // Decode as a Map since the JSON starts with {
+    final Map<String, dynamic> jsonMap = jsonDecode(content);
+
+    // Let the factory do all the heavy lifting!
+    return DebuggingData.fromJson(jsonMap);
   }
 
 }

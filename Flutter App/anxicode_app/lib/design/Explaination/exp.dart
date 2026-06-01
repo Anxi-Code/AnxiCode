@@ -4,12 +4,16 @@ import 'package:anxicode_app/design/bg_gradient/bg_gradient.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:markdown/markdown.dart' as md;
 
 class Topic extends ConsumerStatefulWidget {
+  final String slug;
   final String path;
-  const Topic({super.key,required this.path});
+  const Topic({super.key,
+    required this.slug,
+    required this.path});
 
   @override
   ConsumerState<Topic> createState() => _TopicState();
@@ -17,42 +21,31 @@ class Topic extends ConsumerStatefulWidget {
 
 class _TopicState extends ConsumerState<Topic> {
 
+  bool loading = true;
+  String data = "";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getData();
+  }
+  Future<void> getData() async {
+    final learningService = ref.read(learningServiceProvider);
+    String markdown = await learningService.getMarkdown(
+        widget.slug, widget.path);
+    setState(() {
+      loading = false;
+      data = markdown;
+    });
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
-    final learningService=ref.watch(learningServiceProvider);
-    bool loading=true;
-    String data="";
 
-    Future<void> getData() async {
-      String markdown = await learningService.getMarkdown(widget.path);
-      setState(() {
-        loading=false;
-        data=markdown;
-      });
-    }
-    @override
-    void initState() {
-      // TODO: implement initState
-      super.initState();
-      getData();
-    }
-
-
-    return Stack(
-      children: [
-        BgGradient(),
-        loading?
-        const Center(child: CircularProgressIndicator(color: Colors.cyanAccent,),)
-            :
-        Scaffold(
-          backgroundColor: Colors.transparent,
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            title: Text("Topics", style: TextStyle(color: Colors.white)),
-            leading: BackButton(color: Colors.white),
-            centerTitle: true,
-          ),
-          body: Padding(
+    return loading ? const Center(child: SpinKitWanderingCubes(color: Colors.cyanAccent,size: 50,),):Padding(
             padding: const EdgeInsets.all(8.0),
             child: Markdown(
               data: data,
@@ -141,9 +134,7 @@ class _TopicState extends ConsumerState<Topic> {
                 ),
               ),
             ),
-          ),
-        ),
-      ],
+
     );
   }
 }

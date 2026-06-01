@@ -180,7 +180,7 @@ final class RanksManifestProvider
     with $FutureModifier<RankManifest>, $FutureProvider<RankManifest> {
   const RanksManifestProvider._({
     required RanksManifestFamily super.from,
-    required String super.argument,
+    required (String, String) super.argument,
   }) : super(
          retry: null,
          name: r'ranksManifestProvider',
@@ -196,7 +196,7 @@ final class RanksManifestProvider
   String toString() {
     return r'ranksManifestProvider'
         ''
-        '($argument)';
+        '$argument';
   }
 
   @$internal
@@ -207,8 +207,8 @@ final class RanksManifestProvider
 
   @override
   FutureOr<RankManifest> create(Ref ref) {
-    final argument = this.argument as String;
-    return ranksManifest(ref, argument);
+    final argument = this.argument as (String, String);
+    return ranksManifest(ref, argument.$1, argument.$2);
   }
 
   @override
@@ -222,10 +222,10 @@ final class RanksManifestProvider
   }
 }
 
-String _$ranksManifestHash() => r'50e08367729d9fd993a9a9d0a97d4ee96638c9a4';
+String _$ranksManifestHash() => r'b5ef9ad95d907798171fd76aec6d0f7a68ac9578';
 
 final class RanksManifestFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<RankManifest>, String> {
+    with $FunctionalFamilyOverride<FutureOr<RankManifest>, (String, String)> {
   const RanksManifestFamily._()
     : super(
         retry: null,
@@ -235,8 +235,8 @@ final class RanksManifestFamily extends $Family
         isAutoDispose: true,
       );
 
-  RanksManifestProvider call(String languageId) =>
-      RanksManifestProvider._(argument: languageId, from: this);
+  RanksManifestProvider call(String languageId, String rank) =>
+      RanksManifestProvider._(argument: (languageId, rank), from: this);
 
   @override
   String toString() => r'ranksManifestProvider';

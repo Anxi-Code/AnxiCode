@@ -1,10 +1,7 @@
 import 'dart:convert';
 
 import 'package:anxicode_app/Learning/mod/mcqs_main.dart';
-import 'package:anxicode_app/Learning/mod/parts_model.dart';
 import 'package:anxicode_app/Learning/mod/rank_manifest.dart';
-import 'package:anxicode_app/Learning/mod/rank_metadata.dart';
-import 'package:anxicode_app/Learning/pro/learning_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../mod/language_model.dart';
@@ -45,41 +42,40 @@ class LearningService {
   }
   Future<String> getManifestPath(
       String languageId,
+      String rank
       )async{
     final response = await supabase
-        .from('rank_metadata')
+        .from('rank_manifests')
         .select('manifest_path')
-        .eq('language_id', languageId);
+        .eq('language_id', languageId)
+    .eq('rank_name', rank);
     return response.first['manifest_path'];
   }
-  Future<RankManifest> getRanksManifest(String languageID)async {
-    final _path=await getManifestPath(languageID);
-    final splittedPath = _path.split('/');
-    final bucket=splittedPath.first;
-    final path=splittedPath.sublist(1).join('/');
-    final bytes=await supabase.storage.from(bucket).download(path);
+  Future<RankManifest> getRanksManifest(String languageID,String rank)async {
+    final path=await getManifestPath(languageID,rank);
+    print(path);
+    final bytes=await supabase.storage.from('rank_manifests').download(path);
     final response=utf8.decode(bytes);
     final manifest=jsonDecode(response);
     final rankMainfest=RankManifest.fromJson(manifest);
     return rankMainfest;
   }
-  Future<String> getMarkdown(String path)async{
-    final splittedPath = path.split('/');
-    final bucket=splittedPath.first;
-    final path1=splittedPath.sublist(1).join('/');
-    final bytes=await supabase.storage.from(bucket).download(path1);
+  Future<String> getMarkdown(String bucket,String path)async{
+    print("inside");
+    final bytes=await supabase.storage.from(bucket).download(path);
     final content=utf8.decode(bytes);
+    print(content);
     return content;
   }
-  Future<McqQuiz> getQuiz(String path) async {
-    final splittedPath = path.split('/');
-    final bucket = splittedPath.first;
-    final filePath = splittedPath.sublist(1).join('/');
+  Future<McqQuiz> getQuiz(String bucket,String path) async {
+    print(bucket);
+    print(path);
     final bytes = await supabase.storage
         .from(bucket)
-        .download(filePath);
+        .download(path);
     final content = utf8.decode(bytes);
     final jsonMap = jsonDecode(content) as Map<String, dynamic>;
+    print("inside mcqs");
     return McqQuiz.fromJson(jsonMap);
   }
 

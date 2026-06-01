@@ -39,7 +39,7 @@ Future<List<RankModel>> ranks(
   return service.getRanks(languageId);
 }
 @riverpod
-Future<RankManifest> ranksManifest(Ref ref, String languageId) async {
+Future<RankManifest> ranksManifest(Ref ref, String languageId,String rank) async {
   final service = ref.watch(learningServiceProvider);
-  return service.getRanksManifest(languageId);
+  return service.getRanksManifest(languageId,rank);
 }

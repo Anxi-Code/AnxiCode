@@ -1,5 +1,6 @@
 import 'package:anxicode_app/Learning/pro/learning_provider.dart';
 import 'package:anxicode_app/design/bg_gradient/bg_gradient.dart';
+import 'package:anxicode_app/home_screen/Screens/learn/parts_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -72,7 +73,9 @@ class RanksScreen extends ConsumerWidget {
 
                     child: GestureDetector(
                       onTap: (){
-                        print('RANK TOUCHED');
+
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>RankPartsScreen(rank: rank)));
+
                       },
                       child: Container(
                         margin: const EdgeInsets.only(bottom: 16),

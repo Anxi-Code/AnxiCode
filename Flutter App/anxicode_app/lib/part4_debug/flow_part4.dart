@@ -32,7 +32,7 @@ class _Part4FlowState extends ConsumerState<Part4Flow> {
   }
 
   Mode _getLanguageMode(String lang) {
-    s switch (lang.toLowerCase()) {
+     switch (lang.toLowerCase()) {
       case 'cpp':
       case 'c++':
       case 'c':

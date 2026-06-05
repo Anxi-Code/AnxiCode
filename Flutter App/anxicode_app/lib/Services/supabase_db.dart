@@ -20,7 +20,11 @@ class SupabaseAuthService {
     await _supabase.auth.signUp(
       email: userInfo.getEmail,
       password: userInfo.getPassword,
-      data: {'user_name': userInfo.getUserName},
+      data: {
+        'user_name': userInfo.getUserName,
+        'name': userInfo.getName,
+        'display_name': userInfo.getName,
+      },
     );
   }
 

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Leaderboard extends StatefulWidget {
   const Leaderboard({super.key});
@@ -8,278 +10,364 @@ class Leaderboard extends StatefulWidget {
 }
 
 class _LeaderboardState extends State<Leaderboard> {
-  final List<Map<String, dynamic>> leaderboardData = [
+  final supabase = Supabase.instance.client;
+  final PageController pageController = PageController();
+
+  final List<Map<String, String>> languages = [
     {
-      "rank": "1",
-      "name": "Mike Wheeler",
-      "image": "assets/images/user3.png",
-      "points": "100 pts",
-      "change": "+1",
+      "name": "Java",
+      "id": "450e3120-3ab5-4f78-820f-9b65f03ad45c",
     },
     {
-      "rank": "2",
-      "name": "Dustin Henderson",
-      "image": "assets/images/user3.png",
-      "points": "98 pts",
-      "change": "+2",
+      "name": "Python",
+      "id": "b27dace4-b672-437b-bc07-d753c891b177",
     },
     {
-      "rank": "3",
-      "name": "Nancy Wheeler",
-      "image": "assets/images/user3.png",
-      "points": "94 pts",
-      "change": "-2",
+      "name": "C++",
+      "id": "e5c10fef-4d23-4eb7-b502-f961186b5c4e",
     },
     {
-      "rank": "4",
-      "name": "Jim Hopper",
-      "image": "assets/images/user3.png",
-      "points": "85 pts",
-      "change": "-1",
-    },
-    {
-      "rank": "5",
-      "name": "Lucas Sinclair",
-      "image": "assets/images/user3.png",
-      "points": "80 pts",
-      "change": "+1",
-    },
-    {
-      "rank": "6",
-      "name": "Max Mayfield",
-      "image": "assets/images/user3.png",
-      "points": "75 pts",
-      "change": "-4",
-    },
-    {
-      "rank": "7",
-      "name": "Joyce Byers",
-      "image": "assets/images/user3.png",
-      "points": "70 pts",
-      "change": "+3",
-    },
-    {
-      "rank": "8",
-      "name": "Will Byers",
-      "image": "assets/images/user3.png",
-      "points": "68 pts",
-      "change": "-1",
-    },
-    {
-      "rank": "9",
-      "name": "Steve Harrington",
-      "image": "assets/images/user3.png",
-      "points": "65 pts",
-      "change": "+2",
-    },
-    {
-      "rank": "10",
-      "name": "Robin Buckley",
-      "image": "assets/images/user3.png",
-      "points": "62 pts",
-      "change": "-3",
+      "name": "JavaScript",
+      "id": "841ad68d-6805-4a5f-9723-81ea27133275",
     },
   ];
 
+  Future<List<Map<String, dynamic>>> fetchLeaderboard(String languageId) async {
+    final progressData = await supabase
+        .from('user_language_progress')
+        .select()
+        .eq('language_id', languageId)
+        .order('total_points', ascending: false)
+        .order('current_rank_order', ascending: false)
+        .order('current_rank_part', ascending: false)
+        .order('updated_at', ascending: true)
+        .limit(50);
+
+    final progressList = List<Map<String, dynamic>>.from(progressData);
+
+    if (progressList.isEmpty) {
+      return [];
+    }
+
+    final userIds = progressList.map((user) => user['user_id']).toList();
+
+    final profileData = await supabase
+        .from('profiles')
+        .select('id, user_name')
+        .inFilter('id', userIds);
+
+    final profileList = List<Map<String, dynamic>>.from(profileData);
+
+    final profileMap = {
+      for (final profile in profileList) profile['id']: profile,
+    };
+
+    return progressList.asMap().entries.map((entry) {
+      final index = entry.key;
+      final progress = entry.value;
+      final profile = profileMap[progress['user_id']];
+
+      return {
+        "rank": index + 1,
+        "name": profile?['user_name'] ?? "Unknown User",
+        "xp": progress["total_points"] ?? 0,
+        "level": progress["current_rank_name"] ?? "Rookie",
+      };
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
+    return PageView.builder(
+      controller: pageController,
+      itemCount: languages.length,
+      itemBuilder: (context, index) {
+        final language = languages[index];
+
+        return FutureBuilder<List<Map<String, dynamic>>>(
+          future: fetchLeaderboard(language["id"]!),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(color: Colors.cyanAccent),
+              );
+            }
+
+            if (snapshot.hasError) {
+              return Center(
+                child: Text(
+                  "Error: ${snapshot.error}",
+                  style: const TextStyle(color: Colors.redAccent),
+                  textAlign: TextAlign.center,
+                ),
+              );
+            }
+
+            final users = snapshot.data ?? [];
+
+            return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14),
+              child: Column(
+                children: [
+                  const SizedBox(height: 25),
+
+                  Text(
+                    "${language["name"]} Leaderboard",
+                    style: GoogleFonts.orbitron(
+                      color: Colors.cyanAccent,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        child: _topPlayer(
+                          user: users.length > 1 ? users[1] : null,
+                          color: Colors.blueAccent,
+                          height: 165,
+                        ),
+                      ),
+
+                      const SizedBox(width: 10),
+
+                      Expanded(
+                        child: _topPlayer(
+                          user: users.isNotEmpty ? users[0] : null,
+                          color: Colors.amberAccent,
+                          height: 205,
+                          crown: true,
+                        ),
+                      ),
+
+                      const SizedBox(width: 10),
+
+                      Expanded(
+                        child: _topPlayer(
+                          user: users.length > 2 ? users[2] : null,
+                          color: Colors.purpleAccent,
+                          height: 165,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 25),
+
+                  Expanded(
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.07),
+                        borderRadius: BorderRadius.circular(28),
+                        border: Border.all(
+                          color: Colors.cyanAccent.withValues(alpha: 0.5),
+                        ),
+                      ),
+                      child: users.length <= 3
+                          ? const Center(
+                        child: Text(
+                          "Only top 3 users found",
+                          style: TextStyle(color: Colors.white70),
+                        ),
+                      )
+                          : ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: users.length - 3,
+                        itemBuilder: (context, index) {
+                          return _leaderboardCard(
+                            user: users[index + 3],
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _topPlayer({
+    required Map<String, dynamic>? user,
+    required Color color,
+    required double height,
+    bool crown = false,
+  }) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10),
-
-      child: Column(
+      height: height,
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(26),
+        border: Border.all(
+          color: color.withValues(alpha: 0.8),
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.35),
+            blurRadius: 18,
+            spreadRadius: 1,
+          ),
+        ],
+      ),
+      child: user == null
+          ? const Center(
+        child: Text(
+          "Empty",
+          style: TextStyle(color: Colors.white70),
+        ),
+      )
+          : Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 40,),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _topUser(
-                  image: 'assets/images/user1.png',
-                  name: 'Derek',
-                  score: '869',
-                  height: 170,
-                  radius: 40,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(60),
-                    topRight: Radius.circular(60),
-                    bottomLeft: Radius.circular(10),
-                  ),
-                ),
-                _topUser(
-                  image: 'assets/images/user3.png',
-                  name: 'Kevin',
-                  score: '1000',
-                  height: 200,
-                  radius: 50,
-                  color: Colors.blue,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(60),
-                    topRight: Radius.circular(60),
-                  ),
-                ),
-                _topUser(
-                  image: 'assets/images/user1.png',
-                  name: 'Araujo',
-                  score: '711',
-                  height: 170,
-                  radius: 40,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(60),
-                    topRight: Radius.circular(60),
-                    bottomRight: Radius.circular(10),
-                  ),
-                ),
-              ],
+          if (crown)
+            const Icon(
+              Icons.emoji_events,
+              color: Colors.amberAccent,
+              size: 28,
+            ),
+
+          CircleAvatar(
+            radius: crown ? 38 : 30,
+            backgroundColor: color,
+            child: CircleAvatar(
+              radius: crown ? 34 : 27,
+              backgroundImage:
+              const AssetImage("assets/images/user3.png"),
             ),
           ),
 
-          const SizedBox(height: 50),
+          const SizedBox(height: 10),
 
-          Expanded(
-            child: Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(30),
-              ),
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(30, 30, 30, 15),
-                child: ListView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: leaderboardData.length,
-                  itemBuilder: (context, index) {
-                    final user = leaderboardData[index];
-                    return leaderboardItem(
-                      rank: user["rank"],
-                      name: user["name"],
-                      image: user["image"],
-                      points: user["points"],
-                      change: user["change"],
-                    );
-                  },
-                ),
-              ),
+          Text(
+            "#${user["rank"]}",
+            style: GoogleFonts.orbitron(
+              color: color,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
             ),
           ),
 
-          const SizedBox(height: 10.0),
+          Text(
+            user["name"],
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.orbitron(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 13,
+            ),
+          ),
+
+          const SizedBox(height: 4),
+
+          Text(
+            "${user["xp"]} XP",
+            style: const TextStyle(
+              color: Colors.white70,
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget leaderboardItem({
-    required String rank,
-    required String name,
-    required String image,
-    required String points,
-    required String change,
+  Widget _leaderboardCard({
+    required Map<String, dynamic> user,
   }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 20.0),
-      child: Container(
-        height: 70,
-        width: double.infinity,
-        padding: const EdgeInsets.all(5),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(18),
-        ),
-        child: Row(
-          children: [
-            const SizedBox(width: 10.0),
-            Text(
-              rank,
-              style: const TextStyle(
-                fontSize: 20,
-                color: Colors.amberAccent,
-                fontWeight: FontWeight.bold,
-                fontStyle: FontStyle.italic,
-              ),
-            ),
-            const SizedBox(width: 15.0),
-            CircleAvatar(backgroundImage: AssetImage(image), radius: 25),
-            const SizedBox(width: 15),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 6.0),
-                Text(
-                  name,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(points, style: const TextStyle(color: Colors.white70)),
-              ],
-            ),
-            const Spacer(),
-            Text(
-              change,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-                color:
-                    change.contains('+')
-                        ? Colors.lightGreenAccent
-                        : Colors.redAccent,
-              ),
-            ),
-            const SizedBox(width: 10.0),
-          ],
+    return Container(
+      margin: const EdgeInsets.only(bottom: 14),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.black.withValues(alpha: 0.25),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Colors.cyanAccent.withValues(alpha: 0.25),
         ),
       ),
-    );
-  }
+      child: Row(
+        children: [
+          Container(
+            height: 38,
+            width: 38,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.cyanAccent.withValues(alpha: 0.15),
+              border: Border.all(color: Colors.cyanAccent),
+            ),
+            child: Text(
+              "${user["rank"]}",
+              style: GoogleFonts.orbitron(
+                color: Colors.cyanAccent,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
 
-  Widget _topUser({
-    required String image,
-    required String name,
-    required String score,
-    required double height,
-    required double radius,
-    Color color = const Color(0xFF0D47A1),
-    required BorderRadius borderRadius,
-  }) {
-    return Padding(
-      padding: EdgeInsets.only(top: height == 170 ? 30 : 0),
-      child: Container(
-        height: height,
-        width: 120,
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.08),
-          borderRadius: borderRadius,
-        ),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: CircleAvatar(
-                backgroundImage: AssetImage(image),
-                radius: radius,
-              ),
+          const SizedBox(width: 12),
+
+          const CircleAvatar(
+            radius: 24,
+            backgroundImage: AssetImage("assets/images/user3.png"),
+          ),
+
+          const SizedBox(width: 12),
+
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  user["name"],
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.orbitron(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                  ),
+                ),
+
+                const SizedBox(height: 4),
+
+                Text(
+                  "${user["level"]}  •  ${user["xp"]} XP",
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 12,
+                  ),
+                ),
+
+                const SizedBox(height: 7),
+
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: const LinearProgressIndicator(
+                    value: 0.75,
+                    minHeight: 5,
+                    backgroundColor: Colors.white12,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      Colors.cyanAccent,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            Text(
-              name,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              score,
-              style: const TextStyle(
-                color: Colors.white70,
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
-            ),
-            const SizedBox(height: 10.0),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

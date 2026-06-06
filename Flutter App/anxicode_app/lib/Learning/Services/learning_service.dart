@@ -12,7 +12,7 @@ import '../mod/rank_model.dart';
 class LearningService {
   final supabase = Supabase.instance.client;
 
-  // FETCH LANGUAGES
+
   Future<List<LanguageModel>> getLanguages() async {
     final response = await supabase
         .from('languages')
@@ -26,7 +26,7 @@ class LearningService {
         .toList();
   }
 
-  // FETCH RANKS OF SPECIFIC LANGUAGE
+
   Future<List<RankModel>> getRanks(
       String languageId,
       ) async {
@@ -95,11 +95,7 @@ class LearningService {
   Future<DebuggingData> getDebuggingTasks(String bucket, String path) async {
     final bytes = await supabase.storage.from(bucket).download(path);
     final content = utf8.decode(bytes);
-
-    // Decode as a Map since the JSON starts with {
     final Map<String, dynamic> jsonMap = jsonDecode(content);
-
-    // Let the factory do all the heavy lifting!
     return DebuggingData.fromJson(jsonMap);
   }
 

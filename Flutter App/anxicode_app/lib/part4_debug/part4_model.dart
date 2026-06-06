@@ -1,3 +1,5 @@
+import 'package:anxicode_app/part4_debug/test_case.dart';
+
 class DebuggingData {
   final String topic;
   final String language;
@@ -16,7 +18,6 @@ class DebuggingData {
       topic: json['topic'] ?? '',
       language: json['language'] ?? '',
       part: json['part'] ?? '',
-      // Safely map the tasks list
       tasks: (json['tasks'] as List<dynamic>?)
           ?.map((e) => DebuggingTask.fromJson(e as Map<String, dynamic>))
           .toList() ??
@@ -33,13 +34,14 @@ class DebuggingData {
     };
   }
 }
-
 class DebuggingTask {
   final int id;
   final String title;
   final String description;
   final String code;
   final String expectedFix;
+  final int timeout;
+  final List<TestCase> testCases;
 
   DebuggingTask({
     required this.id,
@@ -47,6 +49,8 @@ class DebuggingTask {
     required this.description,
     required this.code,
     required this.expectedFix,
+    required this.timeout,
+    required this.testCases,
   });
 
   factory DebuggingTask.fromJson(Map<String, dynamic> json) {
@@ -55,8 +59,12 @@ class DebuggingTask {
       title: json['title'] ?? '',
       description: json['description'] ?? '',
       code: json['code'] ?? '',
-      // Note: mapping 'expected_fix' from JSON to camelCase 'expectedFix'
       expectedFix: json['expected_fix'] ?? '',
+      timeout: json['timeout'] ?? 0,
+      testCases: (json['test_cases'] as List<dynamic>?)
+          ?.map((e) => TestCase.fromJson(e))
+          .toList() ??
+          [],
     );
   }
 
@@ -67,6 +75,8 @@ class DebuggingTask {
       'description': description,
       'code': code,
       'expected_fix': expectedFix,
+      'timeout': timeout,
+      'test_cases': testCases.map((e) => e.toJson()).toList(),
     };
   }
 }

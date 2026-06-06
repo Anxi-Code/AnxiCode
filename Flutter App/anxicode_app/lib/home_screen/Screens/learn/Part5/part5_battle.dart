@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-// Adjust the import path for your BgGradient if needed
 import 'package:anxicode_app/design/bg_gradient/bg_gradient.dart';
 
 class Part5Battle extends StatelessWidget {
@@ -18,7 +17,6 @@ class Part5Battle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // Background Gradient
         const BgGradient(),
 
         Scaffold(
@@ -49,7 +47,6 @@ class Part5Battle extends StatelessWidget {
                   children: [
                     _buildBattleCard(),
                     const SizedBox(height: 30),
-                    // Passed context here so the button can close the screen
                     _buildWebsiteButton(context),
                   ],
                 ),
@@ -61,14 +58,12 @@ class Part5Battle extends StatelessWidget {
     );
   }
 
-  // ----- MAIN BATTLE INFO CARD -----
   Widget _buildBattleCard() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
       decoration: _glassCard(),
       child: Column(
         children: [
-          // Glowing Trophy/Battle Icon
           Container(
             height: 80,
             width: 80,
@@ -92,7 +87,6 @@ class Part5Battle extends StatelessWidget {
           ),
           const SizedBox(height: 24),
 
-          // Title
           Text(
             "RANK PROMOTION",
             style: GoogleFonts.orbitron(
@@ -116,7 +110,6 @@ class Part5Battle extends StatelessWidget {
 
           const SizedBox(height: 12),
 
-          // Language Badge
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
             decoration: BoxDecoration(
@@ -140,7 +133,6 @@ class Part5Battle extends StatelessWidget {
             child: Divider(color: Colors.white24, thickness: 1),
           ),
 
-          // Description
           Text(
             "To prove your mastery and officially secure this rank, you must deploy to the main terminal.",
             style: TextStyle(
@@ -164,7 +156,6 @@ class Part5Battle extends StatelessWidget {
 
           const SizedBox(height: 30),
 
-          // The Rule Box (Highlighted)
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -206,7 +197,6 @@ class Part5Battle extends StatelessWidget {
 
           const SizedBox(height: 30),
 
-          // Closing text
           Text(
             "Best of luck, Agent.",
             style: GoogleFonts.orbitron(
@@ -222,9 +212,7 @@ class Part5Battle extends StatelessWidget {
     );
   }
 
-  // ----- ACKNOWLEDGE BUTTON -----
-  // Now requires BuildContext to pop the screen
-  Widget _buildWebsiteButton(BuildContext context) {
+ Widget _buildWebsiteButton(BuildContext context) {
     return SizedBox(
       height: 56,
       width: double.infinity,
@@ -244,10 +232,8 @@ class Part5Battle extends StatelessWidget {
         ),
         child: ElevatedButton.icon(
           onPressed: () {
-            // Closes the screen and returns to the previous one
             Navigator.pop(context);
           },
-          // Changed to a tick mark!
           icon: const Icon(Icons.check_circle_outline, color: Colors.white, size: 24),
           label: Text(
             "UNDERSTOOD",
@@ -270,7 +256,6 @@ class Part5Battle extends StatelessWidget {
     );
   }
 
-  // ----- HELPER: glass card decoration -----
   BoxDecoration _glassCard() {
     return BoxDecoration(
       borderRadius: BorderRadius.circular(20),

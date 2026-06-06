@@ -5,87 +5,108 @@ import 'package:anxicode_app/design/Quiz/topic_screen.dart';
 import 'package:anxicode_app/design/bg_gradient/bg_gradient.dart';
 import 'package:anxicode_app/home_screen/Screens/learn/result_screen.dart';
 import 'package:flutter/material.dart';
+
 class Part1Screen extends StatefulWidget {
   final Part1Topic part1topic;
   final String slug;
   final String nextTopic;
+  final String languageId;
   final VoidCallback nextPage;
+  final int totalTopicsCount;
 
-  const Part1Screen({super.key, required this.slug,required this.part1topic,required this.nextTopic,required this.nextPage});
+  const Part1Screen({
+    super.key,
+    required this.slug,
+    required this.languageId,
+    required this.part1topic,
+    required this.nextTopic,
+    required this.nextPage,
+    required this.totalTopicsCount,
+  });
 
   @override
-  State<Part1Screen> createState() => _Part1FlowState();
+  State<Part1Screen> createState() => _Part1ScreenState();
 }
 
-class _Part1FlowState extends State<Part1Screen> {
-  final PageController _controller=PageController(
-    viewportFraction: 1.0
-  );
-  QuizResult result=QuizResult.empty();
+class _Part1ScreenState extends State<Part1Screen> {
+  final PageController _controller = PageController(viewportFraction: 1.0);
+  QuizResult result = QuizResult.empty();
+  bool failedOnce = false;
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-  @override
   void dispose() {
-    // TODO: implement dispose
-    super.dispose();
     _controller.dispose();
+    super.dispose();
   }
-  void goToQuiz(){
+
+  void goToQuiz() {
     _controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
   }
-  void goToResult(QuizResult quizResult)async{
-     setState(() {
-      result=quizResult;
+
+  void goToResult(QuizResult quizResult) {
+    setState(() {
+      result = quizResult;
     });
     _controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
   }
+
+  void resetChallenge() {
+    setState(() {
+      failedOnce = true;
+    });
+    _controller.animateToPage(
+      0,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeInOut,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-
-
     return PageView.builder(
       controller: _controller,
       itemCount: 3,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        switch (index) {
+          case 0:
+            return TopicScreen(
+              goToQuiz: goToQuiz,
+              topicName: widget.part1topic.topicName,
+              slug: widget.slug,
+              path: failedOnce
+                  ? widget.part1topic.easyExplainFile
+                  : widget.part1topic.simpleExplainFile,
+            );
 
-     physics: const NeverScrollableScrollPhysics(),
-        itemBuilder: (context,index){
-          switch (index) {
-            case 0:
-              return TopicScreen(
-                goToQuiz: goToQuiz,
-                topicName: widget.part1topic.topicName,
-                slug: widget.slug,
-                path: widget.part1topic.simpleExplainFile,
-              );
+          case 1:
+            return Mcqs(
+              goToResult: goToResult,
+              slug: widget.slug,
+              path: failedOnce
+                  ? widget.part1topic.easyQuizFile
+                  : widget.part1topic.simpleQuizFile,
+              nextTopic: widget.nextTopic,
+            );
 
-            case 1:
-              return Mcqs(
-                goToResult: goToResult,
-                slug: widget.slug,
-                path: widget.part1topic.simpleQuizFile,
-                nextTopic: widget.nextTopic,
-              );
+          case 2:
+            return ResultScreen(
+              result: result,
+              languageId: widget.languageId,
+              nextPage: widget.nextPage,
+              onResetChallenge: resetChallenge,
+              totalTopicsCount: widget.totalTopicsCount,
+            );
 
-            case 2:
-                 return ResultScreen(
-                result: result,
-                   nextPage: widget.nextPage,
-              );
-
-            default:
-              return Stack(
-                children: [
-                  BgGradient(),
-                  Center(child: CircularProgressIndicator())
-                ],
-              );
-          }
+          default:
+            return const Stack(
+              children: [
+                BgGradient(),
+                Center(child: CircularProgressIndicator(color: Colors.cyanAccent))
+              ],
+            );
         }
+      },
     );
-
   }
 }

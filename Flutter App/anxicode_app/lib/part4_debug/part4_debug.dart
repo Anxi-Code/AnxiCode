@@ -1,22 +1,32 @@
 import 'dart:ui';
+import 'package:anxicode_app/Network/dio_client.dart';
 import 'package:anxicode_app/design/bg_gradient/bg_gradient.dart';
 import 'package:anxicode_app/part4_debug/description.dart';
 import 'package:anxicode_app/part4_debug/editor.dart';
 import 'package:anxicode_app/part4_debug/helper_functions.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:highlight/highlight_core.dart';
-import 'package:highlight/languages/cpp.dart';
 
 class DebugCode extends StatefulWidget {
   final Mode language;
   final String buggyCode;
   final String taskDescription;
+  final String taskId;
+  final String slug;
+  final int pointsPreview;
+  final VoidCallback onSuccessCleared;
 
   const DebugCode({
     super.key,
     required this.language,
     required this.buggyCode,
     required this.taskDescription,
+    required this.taskId,
+    required this.slug,
+    required this.pointsPreview,
+    required this.onSuccessCleared,
   });
 
   @override
@@ -26,42 +36,93 @@ class DebugCode extends StatefulWidget {
 class _DebugCodeState extends State<DebugCode> {
   bool isMissionExpanded = false;
   bool isEditorExpanded = false;
+  bool isCompiling = false;
+
+  bool? evaluationPassed;
+  late String workingCodeBuffer;
+
+  @override
+  void initState() {
+    super.initState();
+    workingCodeBuffer = widget.buggyCode;
+  }
 
   void openMission() {
-    FocusScope.of(context).unfocus(); // Close keyboard if open
+    FocusScope.of(context).unfocus();
     setState(() => isMissionExpanded = true);
   }
 
   void closeMission() => setState(() => isMissionExpanded = false);
 
   void openEditor() {
-    FocusScope.of(context).unfocus(); // Close keyboard if open
+    FocusScope.of(context).unfocus();
     setState(() => isEditorExpanded = true);
   }
 
   void closeEditor() => setState(() => isEditorExpanded = false);
 
-  void _runCode() {
-    FocusScope.of(context).unfocus(); // Close keyboard on run
-    // TODO: Implement code running logic
+  void _updateCodeBuffer(String code) {
+    workingCodeBuffer = code;
+  }
+
+  Future<void> _runAndVerifyCode() async {
+    FocusScope.of(context).unfocus();
+    setState(() {
+      isCompiling = true;
+      evaluationPassed = null;
+    });
+
+    try {
+      final int numericId = int.tryParse(widget.taskId.replaceAll(RegExp(r'[^0-9]'), '')) ?? 1;
+
+      final Map<String, dynamic> payload = {
+        "slug": widget.slug,
+        "task_id": numericId,
+        "rank": "rookie",
+        "description": widget.taskDescription,
+        "language": _getLanguageString(widget.language),
+        "code_user_debuged": workingCodeBuffer,
+      };
+
+      final response = await DioClient().dio.post("/api/part4/verify", data: payload);
+      final bool backendSuccess = response.data['status'] == 'success' && response.data['all_passed'] == true;
+
+      setState(() {
+        isCompiling = false;
+        evaluationPassed = backendSuccess;
+      });
+    } on DioException catch (dioErr) {
+      final String diagnosticLog = dioErr.message ?? dioErr.type.toString();
+      debugPrint("Dio Error Network Catch Exception Logs: $diagnosticLog");
+      setState(() {
+        isCompiling = false;
+        evaluationPassed = false;
+      });
+    } catch (e) {
+      debugPrint("Generic Framework Code Execution Error: $e");
+      setState(() {
+        isCompiling = false;
+        evaluationPassed = false;
+      });
+    }
+  }
+
+  String _getLanguageString(dynamic languageMode) {
+    final String modeStr = languageMode.toString().toLowerCase();
+    if (modeStr.contains("python")) return "python";
+    if (modeStr.contains("cpp") || modeStr.contains("c++")) return "cpp";
+    if (modeStr.contains("java")) return "java";
+    if (modeStr.contains("javascript")) return "javascript";
+    return "python";
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      // Tapping anywhere outside the editor hides the keyboard
       onTap: () => FocusScope.of(context).unfocus(),
       child: Stack(
         children: [
-          //--------------------------------------------------
-          // BACKGROUND GRADIENT (Base Layer)
-          //--------------------------------------------------
           const BgGradient(),
-
-          //--------------------------------------------------
-          // SCAFFOLD (Transparent to show gradient)
-          // Automatically handles keyboard resizing!
-          //--------------------------------------------------
           Scaffold(
             backgroundColor: Colors.transparent,
             resizeToAvoidBottomInset: true,
@@ -69,117 +130,102 @@ class _DebugCodeState extends State<DebugCode> {
               backgroundColor: Colors.transparent,
               elevation: 0,
               centerTitle: true,
-              title: Text("Debug Challenge",style: TextStyle(color: Colors.white),),
+              leading: const BackButton(color: Colors.white),
+              title: Text(
+                "Error Tracking Arena",
+                style: GoogleFonts.orbitron(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.2,
+                ),
+              ),
             ),
             body: SafeArea(
               child: Stack(
                 children: [
-                  //--------------------------------------------------
-                  // MAIN CONTENT
-                  //--------------------------------------------------
                   SingleChildScrollView(
                     physics: const BouncingScrollPhysics(),
-                    // Generous bottom padding so you can scroll above the keyboard
-                    padding: const EdgeInsets.fromLTRB(16, 10, 16, 80),
+                    padding: const EdgeInsets.fromLTRB(16, 10, 16, 120),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        headerCard(),
-                        const SizedBox(height: 15),
-
+                        _buildHeaderCard(),
+                        const SizedBox(height: 18),
                         DescriptionTile(
                           description: widget.taskDescription,
                           onExpand: openMission,
                         ),
+                        const SizedBox(height: 18),
 
-                        const SizedBox(height: 15),
-
-                        //--------------------------------------------------
-                        // FIXED EDITOR HEIGHT
-                        // Changed from a percentage to a fixed height (400)
-                        // so it doesn't glitch when the keyboard resizes the screen
-                        //--------------------------------------------------
                         SizedBox(
-                          height: 400,
+                          height: 420,
                           child: DebugCodeEditor(
-                            buggyCode: widget.buggyCode,
-                            language: cpp,
-                            onRun: _runCode,
+                            buggyCode: workingCodeBuffer,
+                            language: widget.language,
+                            onRun: _runAndVerifyCode,
                             onExpand: openEditor,
+                            onCodeChanged: _updateCodeBuffer,
+                            isCompiling: isCompiling,
+                            evaluationPassed: evaluationPassed,
+                            onNextProblem: widget.onSuccessCleared,
+                            isFullscreen: false,
                           ),
                         ),
-
-                        const SizedBox(height: 10),
                       ],
                     ),
                   ),
 
-                  //--------------------------------------------------
-                  // BLUR BACKDROP
-                  //--------------------------------------------------
-                  if (isMissionExpanded || isEditorExpanded)
+                  if (isMissionExpanded)
                     Positioned.fill(
                       child: GestureDetector(
-                        onTap: () {
-                          closeMission();
-                          closeEditor();
-                        },
+                        onTap: closeMission,
                         child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-                          child: Container(color: Colors.black.withValues(alpha: 0.35)),
+                          filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+                          child: Container(color: Colors.black.withValues(alpha: 0.5)),
                         ),
                       ),
                     ),
 
-                  //--------------------------------------------------
-                  // MISSION MODAL
-                  //--------------------------------------------------
                   if (isMissionExpanded)
                     Positioned.fill(
                       child: Center(
                         child: Container(
                           margin: const EdgeInsets.all(20),
-                          padding: const EdgeInsets.all(18),
-                          decoration: glassCard(),
-                          constraints: BoxConstraints(
-                            maxHeight: MediaQuery.of(context).size.height * 0.70,
-                          ),
+                          padding: const EdgeInsets.all(20),
+                          decoration: _glassCardDecoration(),
+                          constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.75),
                           child: Column(
                             children: [
                               Row(
                                 children: [
                                   const Icon(Icons.flag, color: Colors.amber),
-                                  const SizedBox(width: 8),
-                                  const Text(
+                                  const SizedBox(width: 10),
+                                  Text(
                                     "MISSION OBJECTIVE",
-                                    style: TextStyle(
-                                      color: Colors.amber,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                    ),
+                                    style: GoogleFonts.orbitron(color: Colors.amber, fontWeight: FontWeight.bold, fontSize: 15),
                                   ),
                                   const Spacer(),
                                   InkWell(
                                     onTap: closeMission,
-                                    child: const Icon(
-                                      Icons.close,
-                                      color: Colors.cyanAccent,
+                                    child: Container(
+                                      padding: const EdgeInsets.all(6),
+                                      decoration: BoxDecoration(
+                                        color: Colors.cyanAccent.withValues(alpha: 0.1),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: const Icon(Icons.close, color: Colors.cyanAccent, size: 20),
                                     ),
                                   ),
                                 ],
                               ),
-
                               const SizedBox(height: 20),
-
                               Expanded(
                                 child: SingleChildScrollView(
                                   physics: const BouncingScrollPhysics(),
                                   child: Text(
                                     widget.taskDescription,
-                                    style: TextStyle(
-                                      color: Colors.grey.shade300,
-                                      height: 1.7,
-                                    ),
+                                    style: TextStyle(color: Colors.grey.shade300, height: 1.8, fontSize: 15),
                                   ),
                                 ),
                               ),
@@ -189,71 +235,30 @@ class _DebugCodeState extends State<DebugCode> {
                       ),
                     ),
 
-                  //--------------------------------------------------
-                  // EDITOR MODAL
-                  //--------------------------------------------------
-                  if (isEditorExpanded)
-                    Positioned(
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      child: Material(
-                        color: Colors.transparent,
-                        child: SafeArea(
-                          child: Center(
-                            child: Container(
-                              margin: const EdgeInsets.all(20),
-                              decoration: glassCard(),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(14),
-                                    child: Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.code,
-                                          color: Colors.cyanAccent,
-                                        ),
-
-                                        const SizedBox(width: 10),
-
-                                        const Text(
-                                          "CODE EDITOR",
-                                          style: TextStyle(
-                                            color: Colors.cyanAccent,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-
-                                        const Spacer(),
-
-                                        IconButton(
-                                          onPressed: closeEditor,
-                                          icon: const Icon(
-                                            Icons.close,
-                                            color: Colors.cyanAccent,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(12),
-                                      child: DebugCodeEditor(
-                                        buggyCode: widget.buggyCode,
-                                        language: cpp,
-                                        onRun: _runCode,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                 if (isEditorExpanded)
+                    Positioned.fill(
+                      child: Stack(
+                        children: [
+                          const BgGradient(),
+                          SafeArea(
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+                              child: DebugCodeEditor(
+                                buggyCode: workingCodeBuffer,
+                                language: widget.language,
+                                onRun: _runAndVerifyCode,
+                                onCodeChanged: _updateCodeBuffer,
+                                isCompiling: isCompiling,
+                                evaluationPassed: evaluationPassed,
+                                onNextProblem: () {
+                                  closeEditor();
+                                  widget.onSuccessCleared();
+                                },
+                                isFullscreen: true,
+                                onCloseFullscreen: closeEditor, ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
                     ),
                 ],
@@ -262,6 +267,69 @@ class _DebugCodeState extends State<DebugCode> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildHeaderCard() {
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: _glassCardDecoration(),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.cyanAccent.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.cyanAccent.withValues(alpha: 0.2)),
+            ),
+            child: const Icon(Icons.bug_report_rounded, color: Colors.cyanAccent, size: 28),
+          ),
+          const SizedBox(width: 16),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "DE-BUG FORGE",
+                style: GoogleFonts.orbitron(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16, letterSpacing: 1.2),
+              ),
+              const SizedBox(height: 6),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.cyanAccent.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  "+${widget.pointsPreview} POINTS ON VERIFY",
+                  style: GoogleFonts.orbitron(color: Colors.cyanAccent, fontSize: 10, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  BoxDecoration _glassCardDecoration() {
+    return BoxDecoration(
+      borderRadius: BorderRadius.circular(20),
+      gradient: RadialGradient(
+        radius: 3,
+        colors: [
+          Colors.cyanAccent.withValues(alpha: 0.08),
+          Colors.white.withValues(alpha: 0.03),
+        ],
+      ),
+      border: Border.all(color: Colors.cyanAccent.withValues(alpha: 0.2)),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.3),
+          blurRadius: 15,
+          offset: const Offset(0, 5),
+        ),
+      ],
     );
   }
 }

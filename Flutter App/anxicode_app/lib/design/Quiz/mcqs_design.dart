@@ -226,6 +226,7 @@ class _McqsState extends ConsumerState<Mcqs> with SingleTickerProviderStateMixin
               "Quiz",
               style: GoogleFonts.orbitron(color: Colors.white, fontSize: 16),
             ),
+            leading: BackButton(color: Colors.white,),
           ),
           body: SafeArea(
             bottom: false,

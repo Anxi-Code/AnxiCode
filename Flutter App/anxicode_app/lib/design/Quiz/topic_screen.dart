@@ -46,13 +46,14 @@ class _TopicScreenState extends State<TopicScreen> {
                 letterSpacing: 2,
               ),
             ),
+
           ),
 
           body: Column(
             children: [
               const SizedBox(height: 10),
 
-              // INFO BOX
+
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Container(
@@ -120,7 +121,7 @@ class _TopicScreenState extends State<TopicScreen> {
 
               const SizedBox(height: 20),
 
-              // MD PANEL (NO TAP — ONLY BUTTON)
+
               Expanded(
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 14),
@@ -136,7 +137,7 @@ class _TopicScreenState extends State<TopicScreen> {
                   ),
                   child: Stack(
                     children: [
-                      // MD CONTENT
+
                       ClipRRect(
                         borderRadius: BorderRadius.circular(24),
                         child: Topic(
@@ -145,7 +146,7 @@ class _TopicScreenState extends State<TopicScreen> {
                         ),
                       ),
 
-                      // FULL SCREEN BUTTON (TOP RIGHT)
+
                       Positioned(
                         top: 10,
                         right: 10,
@@ -188,7 +189,7 @@ class _TopicScreenState extends State<TopicScreen> {
 
               const SizedBox(height: 20),
 
-              // QUIZ BUTTON
+
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                 child: GestureDetector(

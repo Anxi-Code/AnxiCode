@@ -3,9 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:anxicode_app/Rank_System/user_language_progress.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-
 part 'rank_progress_provider.g.dart';
-
 
 @riverpod
 RankProgressService rankProgress(Ref ref) {
@@ -13,23 +11,18 @@ RankProgressService rankProgress(Ref ref) {
 }
 
 @riverpod
-class UserLanguageProgressNotifier
-    extends _$UserLanguageProgressNotifier {
+class UserLanguageProgressNotifier extends _$UserLanguageProgressNotifier {
 
   @override
-  Future<UserLanguageProgress?> build(
-      String languageId,
-      ) async {
-    final userId =
-        Supabase.instance.client.auth.currentUser!.id;
+  Future<UserLanguageProgress?> build(String languageId) async {
+    final userId = Supabase.instance.client.auth.currentUser!.id;
 
-    return ref
-        .read(rankProgressProvider)
-        .getProgress(
+    return ref.read(rankProgressProvider).getProgress(
       userId: userId,
       languageId: languageId,
     );
   }
+
   Future<void> updateXp(int earnedXp) async {
     final progress = state.value;
 
@@ -41,7 +34,6 @@ class UserLanguageProgressNotifier
 
     state = AsyncData(updated);
   }
-
 
   Future<void> updateRankName(
       String rankName,
@@ -55,21 +47,21 @@ class UserLanguageProgressNotifier
       currentRankName: rankName,
       currentRankOrder: rankOrder,
       currentRankPart: 1,
+      currentTopicIndex: 0,
+      ranksCompleted: progress.ranksCompleted + 1,
     );
 
     state = AsyncData(updated);
   }
 
-
-  Future<void> updateRankPart(
-      int rankPart,
-      ) async {
+  Future<void> updateRankPart(int rankPart) async {
     final progress = state.value;
 
     if (progress == null) return;
 
     final updated = progress.copyWith(
       currentRankPart: rankPart,
+      currentTopicIndex: 0,
     );
 
     state = AsyncData(updated);
@@ -86,11 +78,13 @@ class UserLanguageProgressNotifier
       'current_rank_name': progress.currentRankName,
       'current_rank_order': progress.currentRankOrder,
       'current_rank_part': progress.currentRankPart,
+      'current_topic_index': progress.currentTopicIndex,
       'total_points': progress.totalPoints,
       'ranks_completed': progress.ranksCompleted,
     })
         .eq('id', progress.id);
   }
+
   Future<void> updateTopicIndex() async {
     final progress = state.value;
 
@@ -100,9 +94,7 @@ class UserLanguageProgressNotifier
       currentTopicIndex: progress.currentTopicIndex + 1,
     );
 
-
     state = AsyncData(updated);
-
 
     await Supabase.instance.client
         .from('user_language_progress')

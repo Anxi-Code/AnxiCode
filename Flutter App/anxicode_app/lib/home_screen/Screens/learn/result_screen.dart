@@ -1,18 +1,59 @@
 import 'package:anxicode_app/Learning/mod/quiz_result.dart';
+import 'package:anxicode_app/Rank_System/rank_progress_provider.dart';
 import 'package:anxicode_app/design/bg_gradient/bg_gradient.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ResultScreen extends StatefulWidget {
+class ResultScreen extends ConsumerStatefulWidget {
   final QuizResult result;
+  final String languageId;
   final VoidCallback nextPage;
-  const ResultScreen({super.key, required this.result, required this.nextPage});
+  final VoidCallback onResetChallenge;
+  final int totalTopicsCount; // Holds the total number of topics in this part
+
+  const ResultScreen({
+    super.key,
+    required this.result,
+    required this.languageId,
+    required this.nextPage,
+    required this.onResetChallenge,
+    required this.totalTopicsCount,
+  });
 
   @override
-  State<ResultScreen> createState() => _ResultScreenState();
+  ConsumerState<ResultScreen> createState() => _ResultScreenState();
 }
 
-class _ResultScreenState extends State<ResultScreen> {
+class _ResultScreenState extends ConsumerState<ResultScreen> {
+  bool isPassed = false;
+  int calculatedPointsEarned = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _processQuizResult();
+  }
+
+  void _processQuizResult() {
+    if (widget.result.percentage >= 65.0) {
+      isPassed = true;
+      final int topicsCount = widget.totalTopicsCount > 0 ? widget.totalTopicsCount : 1;
+      calculatedPointsEarned = (60.0 / topicsCount).round();
+
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        try {
+          final notifier = ref.read(userLanguageProgressProvider(widget.languageId).notifier);
+          await notifier.updateXp(calculatedPointsEarned);
+          await notifier.updateTopicIndex();
+        } catch (_) {}
+      });
+    } else {
+      isPassed = false;
+      calculatedPointsEarned = 0;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -78,14 +119,11 @@ class _ResultScreenState extends State<ResultScreen> {
                           ),
                           const SizedBox(height: 18),
 
-                          /// SCORE SECTION
                           Row(
                             children: [
                               SizedBox(
                                 width: 92,
                                 height: 92,
-                                // ONE TWEEN TO RULE THEM ALL
-                                // Animates from 0 up to the correct answers
                                 child: TweenAnimationBuilder<double>(
                                   tween: Tween<double>(
                                     begin: 0.0,
@@ -142,7 +180,7 @@ class _ResultScreenState extends State<ResultScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Excellent Work 🚀",
+                                      isPassed ? "Excellent Work 🚀" : "Review Required 🔴",
                                       style: GoogleFonts.orbitron(
                                         color: Colors.white,
                                         fontSize: 16,
@@ -158,17 +196,15 @@ class _ResultScreenState extends State<ResultScreen> {
                                           height: 1.5,
                                         ),
                                         children: [
-                                          const TextSpan(
-                                              text: "You passed this quiz with "),
+                                          TextSpan(text: isPassed ? "You passed this quiz with " : "You scored "),
                                           TextSpan(
-                                            text:
-                                            "${widget.result.percentage.toStringAsFixed(0)}%",
-                                            style: const TextStyle(
-                                              color: Colors.cyanAccent,
+                                            text: "${widget.result.percentage.toStringAsFixed(0)}%",
+                                            style: TextStyle(
+                                              color: isPassed ? Colors.cyanAccent : Colors.redAccent,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
-                                          const TextSpan(text: " accuracy."),
+                                          TextSpan(text: isPassed ? " accuracy." : " accuracy. Minimum 65% needed."),
                                         ],
                                       ),
                                     ),
@@ -177,13 +213,38 @@ class _ResultScreenState extends State<ResultScreen> {
                               ),
                             ],
                           ),
+
+                          if (isPassed) ...[
+                            const SizedBox(height: 14),
+                            Container(
+                              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                              decoration: BoxDecoration(
+                                color: Colors.cyanAccent.withValues(alpha: 0.12),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(color: Colors.cyanAccent.withValues(alpha: 0.25)),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(Icons.bolt, color: Colors.cyanAccent, size: 16),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    "+$calculatedPointsEarned POINTS ADDED TO PROGRESS",
+                                    style: GoogleFonts.orbitron(
+                                      color: Colors.cyanAccent,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ]
                         ],
                       ),
                     ),
 
                     const SizedBox(height: 16),
-
-                    /// STATS
                     Row(
                       children: [
                         Expanded(
@@ -236,17 +297,12 @@ class _ResultScreenState extends State<ResultScreen> {
 
                     const SizedBox(height: 16),
 
-                    /// CHECK ANSWERS (FIXED LISTVIEW)
                     Container(
                       decoration: _glassDecoration(),
                       child: Theme(
-                        data: Theme.of(context)
-                            .copyWith(dividerColor: Colors.transparent),
+                        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
                         child: ExpansionTile(
-                          tilePadding: const EdgeInsets.symmetric(
-                            horizontal: 18,
-                            vertical: 2,
-                          ),
+                          tilePadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 2),
                           childrenPadding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
                           collapsedIconColor: Colors.cyanAccent,
                           iconColor: Colors.cyanAccent,
@@ -278,19 +334,14 @@ class _ResultScreenState extends State<ResultScreen> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Icon(
-                                        item.isCorrect
-                                            ? Icons.check_circle
-                                            : Icons.cancel,
-                                        color: item.isCorrect
-                                            ? Colors.greenAccent
-                                            : Colors.redAccent,
+                                        item.isCorrect ? Icons.check_circle : Icons.cancel,
+                                        color: item.isCorrect ? Colors.greenAccent : Colors.redAccent,
                                         size: 20,
                                       ),
                                       const SizedBox(width: 12),
                                       Expanded(
                                         child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               item.question,
@@ -323,24 +374,26 @@ class _ResultScreenState extends State<ResultScreen> {
 
                     const SizedBox(height: 16),
 
-                    /// TRY AGAIN BUTTON
-                    Container(
-                      height: 58,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(22),
-                        gradient: LinearGradient(
-                          colors: [
-                            Colors.cyanAccent.withValues(alpha: 0.9),
-                            Colors.blueAccent.withValues(alpha: 0.9),
-                          ],
+                    GestureDetector(
+                      onTap: widget.onResetChallenge,
+                      child: Container(
+                        height: 58,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(22),
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.cyanAccent.withValues(alpha: 0.9),
+                              Colors.blueAccent.withValues(alpha: 0.9),
+                            ],
+                          ),
                         ),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          "TRY AGAIN",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
+                        child: const Center(
+                          child: Text(
+                            "TRY AGAIN",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
@@ -348,59 +401,67 @@ class _ResultScreenState extends State<ResultScreen> {
 
                     const SizedBox(height: 16),
 
-                    /// NEXT CHAPTER
-                    Container(
-                      height: 82,
-                      padding: const EdgeInsets.symmetric(horizontal: 18),
-                      decoration: _glassDecoration(),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Next Topic",
-                                  style: GoogleFonts.manrope(
-                                    color: Colors.white60,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  widget.result.nextChapter.toUpperCase(),
-                                  style: GoogleFonts.manrope(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: widget.nextPage,
-                            child: Container(
-                              width: 58,
-                              height: 46,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(18),
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Colors.cyanAccent.withValues(alpha: 0.9),
-                                    Colors.blueAccent.withValues(alpha: 0.9),
+                    IgnorePointer(
+                      ignoring: !isPassed,
+                      child: AnimatedOpacity(
+                        duration: const Duration(milliseconds: 250),
+                        opacity: isPassed ? 1.0 : 0.3,
+                        child: Container(
+                          height: 82,
+                          padding: const EdgeInsets.symmetric(horizontal: 18),
+                          decoration: _glassDecoration(),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Next Topic",
+                                      style: GoogleFonts.manrope(
+                                        color: Colors.white60,
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      isPassed ? widget.result.nextChapter.toUpperCase() : "LOCKED (SCORE >= 65%)",
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.manrope(
+                                        color: isPassed ? Colors.white : Colors.white38,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
-                              child: const Icon(
-                                Icons.arrow_forward_rounded,
-                                color: Colors.black,
+                              GestureDetector(
+                                onTap: widget.nextPage,
+                                child: Container(
+                                  width: 58,
+                                  height: 46,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(18),
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Colors.cyanAccent.withValues(alpha: 0.9),
+                                        Colors.blueAccent.withValues(alpha: 0.9),
+                                      ],
+                                    ),
+                                  ),
+                                  child: const Icon(
+                                    Icons.arrow_forward_rounded,
+                                    color: Colors.black,
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
 
@@ -451,11 +512,7 @@ class _ResultScreenState extends State<ResultScreen> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            icon,
-            color: iconColor,
-            size: 20,
-          ),
+          Icon(icon, color: iconColor, size: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -472,8 +529,7 @@ class _ResultScreenState extends State<ResultScreen> {
                     builder: (context, animatedValue, child) {
                       final String displayText = value != null
                           ? animatedValue.toInt().toString()
-                          : _formatDuration(
-                          Duration(seconds: animatedValue.toInt()));
+                          : _formatDuration(Duration(seconds: animatedValue.toInt()));
 
                       return Text(
                         displayText,

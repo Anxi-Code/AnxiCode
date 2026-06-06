@@ -103,7 +103,7 @@ final class UserLanguageProgressNotifierProvider
 }
 
 String _$userLanguageProgressNotifierHash() =>
-    r'c4e88d50bbfbeb73dc2e3f2b6cccfad029cbeaae';
+    r'a3507d7d827078973f6f562949b46ec844122de6';
 
 final class UserLanguageProgressNotifierFamily extends $Family
     with

@@ -6,12 +6,16 @@ import 'package:google_fonts/google_fonts.dart';
 
 class SyntaxForge extends StatefulWidget {
   final SyntaxChallenge challenge;
-  final VoidCallback onNext; // ADDED: Triggered when user clicks the Next button
+  final VoidCallback onNext;
+  final int pointsPreview;
+  final bool isLastChallenge;
 
   const SyntaxForge({
     super.key,
     required this.challenge,
-    required this.onNext, // Make sure to pass this from your parent screen!
+    required this.onNext,
+    required this.pointsPreview,
+    required this.isLastChallenge,
   });
 
   @override
@@ -24,7 +28,6 @@ class _SyntaxForgeState extends State<SyntaxForge> {
   );
 
   late List<TextEditingController> _blankControllers;
-  // Tracks validation state of each box: null = unchecked, true = correct, false = wrong
   late List<bool?> _fieldValidations;
 
   bool _isEditorExpanded = false;
@@ -40,14 +43,13 @@ class _SyntaxForgeState extends State<SyntaxForge> {
     _blankControllers = List.generate(blankCount, (_) => TextEditingController());
     _fieldValidations = List.generate(blankCount, (_) => null);
 
-    // Listeners: If user starts typing in a red/green box, reset its validation state
     for (int i = 0; i < _blankControllers.length; i++) {
       _blankControllers[i].addListener(() {
         if (_fieldValidations[i] != null) {
           setState(() {
             _fieldValidations[i] = null;
             _showResult = false;
-            _isCorrect = false; // Reset to false so the "Verify" button comes back!
+            _isCorrect = false;
           });
         }
       });
@@ -88,8 +90,6 @@ class _SyntaxForgeState extends State<SyntaxForge> {
           : '✗ Some syntax is incorrect. Check the red boxes.';
     });
 
-    // We removed the 3-second auto-hide for correct answers so the Next button
-    // and the green banner stay on the screen until the user taps Next.
     if (!allCorrect) {
       Future.delayed(const Duration(seconds: 3), () {
         if (mounted && !_isCorrect) setState(() => _showResult = false);
@@ -109,7 +109,6 @@ class _SyntaxForgeState extends State<SyntaxForge> {
       child: Stack(
         children: [
           const BgGradient(),
-
           Scaffold(
             backgroundColor: Colors.transparent,
             resizeToAvoidBottomInset: true,
@@ -131,7 +130,6 @@ class _SyntaxForgeState extends State<SyntaxForge> {
             body: SafeArea(
               child: Stack(
                 children: [
-                  // ----- MAIN CONTENT -----
                   SingleChildScrollView(
                     physics: const BouncingScrollPhysics(),
                     padding: const EdgeInsets.fromLTRB(20, 10, 20, 80),
@@ -146,16 +144,11 @@ class _SyntaxForgeState extends State<SyntaxForge> {
                         const SizedBox(height: 20),
                         _buildBlanksEditorCard(isExpanded: false),
                         const SizedBox(height: 30),
-
-                        // Condition: Show Next if completely correct, otherwise Verify
                         _isCorrect ? _buildNextButton() : _buildVerifyButton(),
-
                         if (_showResult) _buildResultBanner(),
                       ],
                     ),
                   ),
-
-                  // ----- BLUR BACKDROP (for expanded editor) -----
                   if (_isEditorExpanded)
                     Positioned.fill(
                       child: GestureDetector(
@@ -168,8 +161,6 @@ class _SyntaxForgeState extends State<SyntaxForge> {
                         ),
                       ),
                     ),
-
-                  // ----- EDITOR MODAL -----
                   if (_isEditorExpanded)
                     Positioned.fill(
                       child: Center(
@@ -192,7 +183,6 @@ class _SyntaxForgeState extends State<SyntaxForge> {
     );
   }
 
-  // ----- HEADER -----
   Widget _buildHeader() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -236,12 +226,28 @@ class _SyntaxForgeState extends State<SyntaxForge> {
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 6),
-                Text(
-                  "Rookie Rank",
-                  style: GoogleFonts.orbitron(
-                    color: Colors.cyanAccent.withValues(alpha: 0.8),
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+
+                 Container(
+                  padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.cyanAccent.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: Colors.cyanAccent.withValues(alpha: 0.2)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.bolt, color: Colors.cyanAccent, size: 12),
+                      const SizedBox(width: 4),
+                      Text(
+                        "+${widget.pointsPreview} POINTS ON CLEAR",
+                        style: GoogleFonts.orbitron(
+                          color: Colors.cyanAccent,
+                          fontSize: 9,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -252,7 +258,6 @@ class _SyntaxForgeState extends State<SyntaxForge> {
     );
   }
 
-  // ----- TASK CARD -----
   Widget _buildTopicCard() {
     return Container(
       width: double.infinity,
@@ -284,7 +289,6 @@ class _SyntaxForgeState extends State<SyntaxForge> {
     );
   }
 
-  // ----- HINT -----
   Widget _buildHintCard() {
     return Container(
       decoration: _glassCard(),
@@ -328,7 +332,6 @@ class _SyntaxForgeState extends State<SyntaxForge> {
     );
   }
 
-  // ----- EDITOR CARD -----
   Widget _buildBlanksEditorCard({required bool isExpanded}) {
     return Container(
       padding: const EdgeInsets.all(18),
@@ -367,7 +370,6 @@ class _SyntaxForgeState extends State<SyntaxForge> {
     );
   }
 
-  // ----- THE RICH TEXT CODE RENDERER -----
   Widget _buildRichTextCode({required bool isExpanded}) {
     final parts = widget.challenge.templateParts;
 
@@ -377,15 +379,8 @@ class _SyntaxForgeState extends State<SyntaxForge> {
       decoration: BoxDecoration(
         color: const Color(0xFF12121A),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.cyanAccent.withValues(alpha: 0.2),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.5),
-            blurRadius: 10,
-          )
-        ],
+        border: Border.all(color: Colors.cyanAccent.withValues(alpha: 0.2)),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.5), blurRadius: 10)],
       ),
       child: RichText(
         text: TextSpan(
@@ -400,7 +395,6 @@ class _SyntaxForgeState extends State<SyntaxForge> {
               return TextSpan(text: parts[index ~/ 2]);
             } else {
               final blankIndex = index ~/ 2;
-
               final isValid = _fieldValidations[blankIndex];
               Color fieldBorderColor = Colors.cyanAccent;
               Color fieldTextColor = Colors.amberAccent;
@@ -433,10 +427,7 @@ class _SyntaxForgeState extends State<SyntaxForge> {
                     textAlign: TextAlign.center,
                     decoration: InputDecoration(
                       isDense: true,
-                      contentPadding: const EdgeInsets.symmetric(
-                        vertical: 8,
-                        horizontal: 8,
-                      ),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                       filled: true,
                       fillColor: fieldBgColor,
                       border: OutlineInputBorder(
@@ -444,16 +435,11 @@ class _SyntaxForgeState extends State<SyntaxForge> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: fieldBorderColor.withValues(alpha: 0.6),
-                        ),
+                        borderSide: BorderSide(color: fieldBorderColor.withValues(alpha: 0.6)),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: fieldBorderColor,
-                          width: 2,
-                        ),
+                        borderSide: BorderSide(color: fieldBorderColor, width: 2),
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
@@ -467,7 +453,6 @@ class _SyntaxForgeState extends State<SyntaxForge> {
     );
   }
 
-  // ----- VERIFY BUTTON -----
   Widget _buildVerifyButton() {
     return SizedBox(
       height: 56,
@@ -489,9 +474,7 @@ class _SyntaxForgeState extends State<SyntaxForge> {
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.transparent,
             shadowColor: Colors.transparent,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           ),
           child: Text(
             "VERIFY SYNTAX",
@@ -507,17 +490,13 @@ class _SyntaxForgeState extends State<SyntaxForge> {
     );
   }
 
-  // ----- NEW: NEXT BUTTON -----
   Widget _buildNextButton() {
     return SizedBox(
       height: 56,
       width: double.infinity,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          // Distinct green gradient to signify completion
-          gradient: const LinearGradient(
-            colors: [Color(0xFF00E676), Color(0xFF1DE9B6)],
-          ),
+          gradient: const LinearGradient(colors: [Color(0xFF00E676), Color(0xFF1DE9B6)]),
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
@@ -528,12 +507,12 @@ class _SyntaxForgeState extends State<SyntaxForge> {
           ],
         ),
         child: ElevatedButton.icon(
-          onPressed: widget.onNext, // Calls the function passed from the parent
+          onPressed: widget.onNext,
           icon: const Icon(Icons.arrow_forward_rounded, color: Colors.black, size: 24),
-          label: Text(
-            "NEXT CHALLENGE",
+           label: Text(
+            widget.isLastChallenge ? "FINISH SECTION" : "NEXT CHALLENGE",
             style: GoogleFonts.orbitron(
-              color: Colors.black, // High contrast text
+              color: Colors.black,
               fontWeight: FontWeight.bold,
               fontSize: 16,
               letterSpacing: 1.2,
@@ -542,16 +521,13 @@ class _SyntaxForgeState extends State<SyntaxForge> {
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.transparent,
             shadowColor: Colors.transparent,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           ),
         ),
       ),
     );
   }
 
-  // ----- RESULT BANNER -----
   Widget _buildResultBanner() {
     return AnimatedOpacity(
       duration: const Duration(milliseconds: 400),
@@ -565,10 +541,7 @@ class _SyntaxForgeState extends State<SyntaxForge> {
               ? Colors.greenAccent.withValues(alpha: 0.15)
               : Colors.redAccent.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: _isCorrect ? Colors.greenAccent : Colors.redAccent,
-            width: 2,
-          ),
+          border: Border.all(color: _isCorrect ? Colors.greenAccent : Colors.redAccent, width: 2),
         ),
         child: Row(
           children: [
@@ -595,7 +568,6 @@ class _SyntaxForgeState extends State<SyntaxForge> {
     );
   }
 
-  // ----- HELPER: glass card decoration -----
   BoxDecoration _glassCard() {
     return BoxDecoration(
         borderRadius: BorderRadius.circular(20),

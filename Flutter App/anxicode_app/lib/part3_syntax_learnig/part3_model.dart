@@ -2,8 +2,8 @@ class SyntaxChallenge {
   final String topic;
   final String taskDescription;
   final String hint;
-  final List<String> templateParts; // e.g. ["for(int i=0; ", " ; ", " )"]
-  final List<String> correctAnswers; // one per blank
+  final List<String> templateParts;
+  final List<String> correctAnswers;
 
   const SyntaxChallenge({
     required this.topic,
@@ -17,13 +17,12 @@ class SyntaxChallenge {
       topic: json['topic'] ?? '',
       taskDescription: json['taskDescription'] ?? '',
       hint: json['hint'] ?? '',
-      // Safely converts the dynamic lists into Dart String Lists
+
       templateParts: List<String>.from(json['templateParts'] ?? []),
       correctAnswers: List<String>.from(json['correctAnswers'] ?? []),
     );
   }
 
-  // Converts the SyntaxChallenge object back into a JSON map
   Map<String, dynamic> toJson() {
     return {
       'topic': topic,

@@ -56,7 +56,7 @@ class UserLanguageProgress {
       'current_rank_part': currentRankPart,
       'total_points': totalPoints,
       'ranks_completed': ranksCompleted,
-      'current_topic_index': currentTopicIndex, // ✅ NEW
+      'current_topic_index': currentTopicIndex,
       'updated_at': updatedAt.toIso8601String(),
     };
   }

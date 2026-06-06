@@ -13,7 +13,6 @@ BoxDecoration glassCard() => BoxDecoration(
   border: Border.all(color: Colors.cyanAccent.withValues(alpha: 0.15)),
 );
 
-// for the header display
 Container headerCard() {
   return Container(
     padding: EdgeInsets.all(10),

@@ -73,7 +73,8 @@ class _DebugCodeState extends State<DebugCode> {
     });
 
     try {
-      final int numericId = int.tryParse(widget.taskId.replaceAll(RegExp(r'[^0-9]'), '')) ?? 1;
+      final int numericId =
+          int.tryParse(widget.taskId.replaceAll(RegExp(r'[^0-9]'), '')) ?? 1;
 
       final Map<String, dynamic> payload = {
         "slug": widget.slug,
@@ -84,8 +85,13 @@ class _DebugCodeState extends State<DebugCode> {
         "code_user_debuged": workingCodeBuffer,
       };
 
-      final response = await DioClient().dio.post("/api/part4/verify", data: payload);
-      final bool backendSuccess = response.data['status'] == 'success' && response.data['all_passed'] == true;
+      final response = await DioClient().dio.post(
+        "/api/part4/verify",
+        data: payload,
+      );
+      final bool backendSuccess =
+          response.data['status'] == 'success' &&
+          response.data['all_passed'] == true;
 
       setState(() {
         isCompiling = false;
@@ -182,7 +188,9 @@ class _DebugCodeState extends State<DebugCode> {
                         onTap: closeMission,
                         child: BackdropFilter(
                           filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
-                          child: Container(color: Colors.black.withValues(alpha: 0.5)),
+                          child: Container(
+                            color: Colors.black.withValues(alpha: 0.5),
+                          ),
                         ),
                       ),
                     ),
@@ -194,7 +202,10 @@ class _DebugCodeState extends State<DebugCode> {
                           margin: const EdgeInsets.all(20),
                           padding: const EdgeInsets.all(20),
                           decoration: _glassCardDecoration(),
-                          constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.75),
+                          constraints: BoxConstraints(
+                            maxHeight:
+                                MediaQuery.of(context).size.height * 0.75,
+                          ),
                           child: Column(
                             children: [
                               Row(
@@ -203,7 +214,11 @@ class _DebugCodeState extends State<DebugCode> {
                                   const SizedBox(width: 10),
                                   Text(
                                     "MISSION OBJECTIVE",
-                                    style: GoogleFonts.orbitron(color: Colors.amber, fontWeight: FontWeight.bold, fontSize: 15),
+                                    style: GoogleFonts.orbitron(
+                                      color: Colors.amber,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                    ),
                                   ),
                                   const Spacer(),
                                   InkWell(
@@ -211,10 +226,16 @@ class _DebugCodeState extends State<DebugCode> {
                                     child: Container(
                                       padding: const EdgeInsets.all(6),
                                       decoration: BoxDecoration(
-                                        color: Colors.cyanAccent.withValues(alpha: 0.1),
+                                        color: Colors.cyanAccent.withValues(
+                                          alpha: 0.1,
+                                        ),
                                         borderRadius: BorderRadius.circular(8),
                                       ),
-                                      child: const Icon(Icons.close, color: Colors.cyanAccent, size: 20),
+                                      child: const Icon(
+                                        Icons.close,
+                                        color: Colors.cyanAccent,
+                                        size: 20,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -225,7 +246,11 @@ class _DebugCodeState extends State<DebugCode> {
                                   physics: const BouncingScrollPhysics(),
                                   child: Text(
                                     widget.taskDescription,
-                                    style: TextStyle(color: Colors.grey.shade300, height: 1.8, fontSize: 15),
+                                    style: TextStyle(
+                                      color: Colors.grey.shade300,
+                                      height: 1.8,
+                                      fontSize: 15,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -235,14 +260,19 @@ class _DebugCodeState extends State<DebugCode> {
                       ),
                     ),
 
-                 if (isEditorExpanded)
+                  if (isEditorExpanded)
                     Positioned.fill(
                       child: Stack(
                         children: [
                           const BgGradient(),
                           SafeArea(
                             child: Padding(
-                              padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+                              padding: const EdgeInsets.fromLTRB(
+                                16,
+                                16,
+                                16,
+                                24,
+                              ),
                               child: DebugCodeEditor(
                                 buggyCode: workingCodeBuffer,
                                 language: widget.language,
@@ -255,7 +285,8 @@ class _DebugCodeState extends State<DebugCode> {
                                   widget.onSuccessCleared();
                                 },
                                 isFullscreen: true,
-                                onCloseFullscreen: closeEditor, ),
+                                onCloseFullscreen: closeEditor,
+                              ),
                             ),
                           ),
                         ],
@@ -281,9 +312,15 @@ class _DebugCodeState extends State<DebugCode> {
             decoration: BoxDecoration(
               color: Colors.cyanAccent.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.cyanAccent.withValues(alpha: 0.2)),
+              border: Border.all(
+                color: Colors.cyanAccent.withValues(alpha: 0.2),
+              ),
             ),
-            child: const Icon(Icons.bug_report_rounded, color: Colors.cyanAccent, size: 28),
+            child: const Icon(
+              Icons.bug_report_rounded,
+              color: Colors.cyanAccent,
+              size: 28,
+            ),
           ),
           const SizedBox(width: 16),
           Column(
@@ -291,7 +328,12 @@ class _DebugCodeState extends State<DebugCode> {
             children: [
               Text(
                 "DE-BUG FORGE",
-                style: GoogleFonts.orbitron(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16, letterSpacing: 1.2),
+                style: GoogleFonts.orbitron(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  letterSpacing: 1.2,
+                ),
               ),
               const SizedBox(height: 6),
               Container(
@@ -302,7 +344,11 @@ class _DebugCodeState extends State<DebugCode> {
                 ),
                 child: Text(
                   "+${widget.pointsPreview} POINTS ON VERIFY",
-                  style: GoogleFonts.orbitron(color: Colors.cyanAccent, fontSize: 10, fontWeight: FontWeight.bold),
+                  style: GoogleFonts.orbitron(
+                    color: Colors.cyanAccent,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],

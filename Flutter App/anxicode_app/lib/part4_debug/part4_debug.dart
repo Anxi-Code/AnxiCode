@@ -16,6 +16,7 @@ class DebugCode extends StatefulWidget {
   final String taskId;
   final String slug;
   final int pointsPreview;
+  final String rankName;
   final VoidCallback onSuccessCleared;
 
   const DebugCode({
@@ -26,6 +27,7 @@ class DebugCode extends StatefulWidget {
     required this.taskId,
     required this.slug,
     required this.pointsPreview,
+    required this.rankName,
     required this.onSuccessCleared,
   });
 
@@ -79,11 +81,12 @@ class _DebugCodeState extends State<DebugCode> {
       final Map<String, dynamic> payload = {
         "slug": widget.slug,
         "task_id": numericId,
-        "rank": "rookie",
+        "rank": widget.rankName,
         "description": widget.taskDescription,
-        "language": _getLanguageString(widget.language),
+        "language": _getLanguageString(widget.slug),
         "code_user_debuged": workingCodeBuffer,
       };
+      print(payload);
 
       final response = await DioClient().dio.post(
         "/api/part4/verify",
@@ -113,12 +116,11 @@ class _DebugCodeState extends State<DebugCode> {
     }
   }
 
-  String _getLanguageString(dynamic languageMode) {
-    final String modeStr = languageMode.toString().toLowerCase();
-    if (modeStr.contains("python")) return "python";
-    if (modeStr.contains("cpp") || modeStr.contains("c++")) return "cpp";
-    if (modeStr.contains("java")) return "java";
-    if (modeStr.contains("javascript")) return "javascript";
+  String _getLanguageString(String language) {
+    if (language.contains("python")|| language.contains("py")) return "python";
+    if (language.contains("cpp") || language.contains("c++")) return "cpp";
+    if (language.contains("java")) return "java";
+    if (language.contains("javascript")|| language.contains("js")) return "js";
     return "python";
   }
 

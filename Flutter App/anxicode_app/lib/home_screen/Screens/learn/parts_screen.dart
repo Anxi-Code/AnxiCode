@@ -98,7 +98,7 @@ class _RankPartsScreenState extends ConsumerState<RankPartsScreen> {
                 "title": "Error Tracking Arena",
                 "subtitle": "Track, analyze, and eliminate hidden coding mistakes.",
                 "badge": "assets/ranks/${widget.rank.rankName.toLowerCase()}4.png",
-                "screen": Part4Flow(path: partModel.part4Debugging.filePath, slug: manfest.slug,languageId: manfest.languageId,)
+                "screen": Part4Flow(path: partModel.part4Debugging.filePath, slug: manfest.slug,languageId: manfest.languageId,rankName: widget.rank.rankName)
               },
               {
                 "rank": "${widget.rank.rankName} I",

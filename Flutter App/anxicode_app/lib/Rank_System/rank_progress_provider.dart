@@ -100,6 +100,8 @@ class UserLanguageProgressNotifier extends _$UserLanguageProgressNotifier {
         .from('user_language_progress')
         .update({
       'current_topic_index': updated.currentTopicIndex,
+      'total_points': updated.totalPoints,
+
     })
         .eq('id', updated.id);
   }

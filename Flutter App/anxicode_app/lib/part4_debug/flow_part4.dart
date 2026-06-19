@@ -15,13 +15,16 @@ import 'package:highlight/languages/python.dart';
 class Part4Flow extends ConsumerStatefulWidget {
   final String path;
   final String slug;
-  final String languageId; // 🧠 Passed down to track cloud table configurations
+  final String languageId;
+  final String rankName;
+
 
   const Part4Flow({
     super.key,
     required this.path,
     required this.slug,
     required this.languageId,
+    required this.rankName
   });
 
   @override
@@ -182,6 +185,7 @@ class _Part4FlowState extends ConsumerState<Part4Flow> {
                   taskDescription: taskItem.description,
                   taskId: "task_${index + 1}", slug: widget.slug,
                   pointsPreview: pointsAllocation,
+                  rankName: widget.rankName.toLowerCase(),
                   onSuccessCleared: () => onTaskCleared(index, totalTasks),
                 );
               },

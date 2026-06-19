@@ -8,6 +8,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:highlight/highlight_core.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DebugCode extends StatefulWidget {
   final Mode language;
@@ -77,6 +78,9 @@ class _DebugCodeState extends State<DebugCode> {
     try {
       final int numericId =
           int.tryParse(widget.taskId.replaceAll(RegExp(r'[^0-9]'), '')) ?? 1;
+      final session = Supabase.instance.client.auth.currentSession;
+
+      final token = session?.accessToken;
 
       final Map<String, dynamic> payload = {
         "slug": widget.slug,
@@ -91,6 +95,7 @@ class _DebugCodeState extends State<DebugCode> {
       final response = await DioClient().dio.post(
         "/api/part4/verify",
         data: payload,
+        options: Options(headers: {"Authorization": "Bearer $token"}),
       );
       final bool backendSuccess =
           response.data['status'] == 'success' &&

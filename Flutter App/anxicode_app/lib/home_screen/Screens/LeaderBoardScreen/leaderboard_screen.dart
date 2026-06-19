@@ -15,11 +15,11 @@ class _LeaderboardState extends State<Leaderboard> {
 
   final List<Map<String, String>> languages = [
     {
-      "name": "Java",
+      "name": "Python",
       "id": "450e3120-3ab5-4f78-820f-9b65f03ad45c",
     },
     {
-      "name": "Python",
+      "name": "Java",
       "id": "b27dace4-b672-437b-bc07-d753c891b177",
     },
     {

@@ -1,6 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
-
-const SUPABASE_URL = 'https://knzvyzczilxhwssxaptn.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_uwfy-Ctq4kcVpnBg8zFA1w_sgb7s0Rt';
-
-export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Supabase has been removed from this project. All persistence and auth
+// now lives in the FastAPI backend. See src/services/apiService.ts and
+// src/services/battleService.ts. Configure URLs in src/config/api.ts.
+export const supabase = null as never;

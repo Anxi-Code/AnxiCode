@@ -76,6 +76,9 @@ class _DebugCodeState extends State<DebugCode> {
     });
 
     try {
+      final session = Supabase.instance.client.auth.currentSession;
+
+      final token = session?.accessToken;
       final int numericId =
           int.tryParse(widget.taskId.replaceAll(RegExp(r'[^0-9]'), '')) ?? 1;
       final session = Supabase.instance.client.auth.currentSession;

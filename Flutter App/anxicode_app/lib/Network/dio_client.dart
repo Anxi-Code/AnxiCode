@@ -20,7 +20,7 @@ class DioClient {
       ),
     );
 
-  dio.interceptors.add(
+    dio.interceptors.add(
       LogInterceptor(
         request: true,
         requestBody: true,

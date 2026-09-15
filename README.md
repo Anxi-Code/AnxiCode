@@ -39,7 +39,7 @@ AnxiCode is an AI-powered, gamified coding learning and practice platform design
 
 ## 👥 Contributors
 
-* **[Muhammad Shahroz](https://github.com/Shahroz5373)** — Frontend & System Development
+* **[Muhammad Shahroz](https://github.com/Shahroz5373)** — Project Contributor
 * **[Meesum Afzaal](https://github.com/Meesum-Afzaal)** — Project Contributor
 * **[Waleed Khurram](https://github.com/waleedrajpoot786)** — Project Contributor
 
